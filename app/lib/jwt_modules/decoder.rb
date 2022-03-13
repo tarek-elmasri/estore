@@ -1,5 +1,3 @@
-require "jwt_modules/jwt_handler"
-
 
 module JWT_Handler
   class Decoder

@@ -1,7 +1,4 @@
-require "jwt_modules/jwt_handler"
-require 'jwt_modules/auth_tokens'
-require 'jwt_modules/tokens_core'
-module JWT_Handler
+module JwtHandler
   module AuthTokens
     class AccessToken < TokensCore
 

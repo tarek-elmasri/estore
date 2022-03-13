@@ -1,4 +1,4 @@
-require 'app_exceptions/custom_errors'
+
 class TokensCore
   attr_accessor :model
 
@@ -8,13 +8,13 @@ class TokensCore
 
   protected
   def generate_payload fields
-    raise CustomErrors.new("TokensCore generate payload error.\
+    raise JwtHandler::UndefinedModel.new("TokensCore generate payload error.\n
             unintialized model.") if model.nil?
 
     payload= {}
     fields ||= []
     fields.each do |field|
-      raise CustomErrors.new "TokenCore generate payload \
+      raise JwtHandler::UnintializedField.new "TokenCore generate payload \n
           error: undefined method #{field} for model #{model}." unless model.methods.include?(field)
 
         payload[field] = model.send("#{field}")

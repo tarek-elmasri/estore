@@ -1,8 +1,14 @@
-require "app_exceptions/custom_errors"
 
-module JWT_Handler
+module JwtHandler
 
-  JWT_SECRET_KEY =  Rails.application.credentials.jwt[:secret_key]
+  class Coder
+    def initialize 
+
+
+    end
+  end
+
+  JWT_SECRET_KEY =  Rails.application.credentials.dig(:jwt , :secret_key)
   DEFAULT_EXPIRE_TIME=  1.hour.from_now.to_i
   DEFUALT_ISSUER = "SD_API"
   HEADERS=  {type: "JWT"}
