@@ -1,12 +1,12 @@
 
-module JWT_Handler
+module JwtHandler
   class Decoder
 
     attr_reader :token
     attr_reader :payload
     attr_reader :headers
 
-    def initialize token, options={}
+    def initialize token
       self.token=token
       decode
     end
@@ -15,8 +15,8 @@ module JWT_Handler
       return false if payload.blank? || headers.blank?
 
       default_headers = JwtHandler::Coder.config.dig(:headers)
-      default_headers.map do |k,_v|
-        return false unless default_headers[k] == headers[k]
+      default_headers.map do |k,v|
+        return false unless headers[k] == v
       end if default_headers
 
       true
@@ -30,7 +30,7 @@ module JWT_Handler
     attr_writer :headers
 
     def decode 
-      data = JWT_Handler::Coder.decode token
+      data = JwtHandler::Coder.decode token
       self.payload = data.first.symbolize_keys
       self.headers = data.last.symbolize_keys
     rescue
