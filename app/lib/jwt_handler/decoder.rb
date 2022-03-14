@@ -5,27 +5,19 @@ module JWT_Handler
     attr_reader :token
     attr_reader :payload
     attr_reader :headers
-    attr_accessor :options
 
     def initialize token, options={}
       self.token=token
-      self.options=options
       decode
     end
 
-    def valid? custom_options = nil
+    def valid?
       return false if payload.blank? || headers.blank?
 
-      if custom_options.present?
-        current_options = custom_options
-      else
-        current_options = options
-      end
-      
-      if current_options[:type].present?
-        return false unless current_options[:type] == headers[:type].to_sym
-      end
-
+      default_headers = JwtHandler::Coder.config.dig(:headers)
+      default_headers.map do |k,_v|
+        return false unless default_headers[k] == headers[k]
+      end if default_headers
 
       true
       rescue
@@ -38,7 +30,7 @@ module JWT_Handler
     attr_writer :headers
 
     def decode 
-      data = JWT_Handler.decode token
+      data = JWT_Handler::Coder.decode token
       self.payload = data.first.symbolize_keys
       self.headers = data.last.symbolize_keys
     rescue

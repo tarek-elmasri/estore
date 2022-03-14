@@ -22,15 +22,15 @@ module JwtHandler
     end
 
     def generate_access_token
-      AccessToken.new(self).generate_access_token
+      JwtHandler::Tokens::AccessToken.new(self).generate_access_token
     end
 
     def reset_refresh_token
-      update_attribute :refresh_token , generate_refresh_token
+      update_attribute :refresh_token , generate_refresh_token unless new_record?
     end
 
     def generate_refresh_token
-      RefreshToken.new(self).generate_refresh_token
+      JwtHandler::Tokens::RefreshToken.new(self).generate_refresh_token
     end 
 
     private
