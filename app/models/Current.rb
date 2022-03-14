@@ -1,5 +1,5 @@
 class Current < ActiveSupport::CurrentAttributes
-  attribute :user_id, :request
+  attribute :user_id, :request, :user , :rule
 
 
 end

@@ -20,8 +20,6 @@ module JwtHandler
       end if default_headers
 
       true
-      rescue
-        return false
     end
 
     private 
@@ -33,8 +31,8 @@ module JwtHandler
       data = JwtHandler::Coder.decode token
       self.payload = data.first.symbolize_keys
       self.headers = data.last.symbolize_keys
-    rescue
-      nil
+
+    
     end
   end
 end
