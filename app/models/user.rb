@@ -2,7 +2,7 @@ class User < ApplicationRecord
   include JwtHandler::AuthTokens
 
   has_secure_password
-
+  has_secure_token :forget_password_token
   has_refresh_token_fields :first_name
   has_access_token_fields :first_name
 
@@ -33,6 +33,10 @@ class User < ApplicationRecord
     user_session = Session.where(user_id: id).first_or_initialize
     user_session.version = APP_VERRSION
     user_session.save
+  end
+
+  def delete_current_session
+    Session.where(user_id: id).delete_all
   end
 
 end

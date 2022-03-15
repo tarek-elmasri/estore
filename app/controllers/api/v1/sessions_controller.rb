@@ -43,6 +43,47 @@ class Api::V1::SessionsController < ApplicationController
     respond({message: :ok})
   end
 
+  def forget_password
+    user = User.find_by(email: params[:email])
+    if user
+      return blocked_user if user.blocked?
+      # send email with params[:reset_link] with token=user.forget_password_token
+      #set job to regenerate forget password token after 10 mins to de validate token
+    end
+
+    respond({message: ok})
+  end
+
+  def validate_forget_password_token
+    user = User.find_by(forget_password_token: params[:token])
+    if user
+      respond({email: user.email})
+    else
+      return unauthorized
+    end
+  end
+
+  def reset_password
+    user = User.find_by(forget_password_token: params[:token])
+    return unauthorized unless user
+
+    user.password= params[:password]
+    if user.save
+      user.delete_current_session
+      user.create_session
+      user.reset_refresh_token
+      user.regenerate_forget_password_token
+      respond_with_user_data(user)
+      
+    else
+      return un_processable(user.errors)
+    end
+
+    rescue => e
+      un_processable({errors: e})
+  
+  end
+
   private
 
   def signup_params
