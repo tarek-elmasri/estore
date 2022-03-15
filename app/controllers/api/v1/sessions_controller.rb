@@ -39,7 +39,7 @@ class Api::V1::SessionsController < ApplicationController
 
   def logout
     session['session_id'] = nil if Current.web_platform?
-    user_session= Session.find_by(user_id: Current.user_id)&.destroy
+    Session.where(user_id: Current.user_id).delete_all
     respond({message: :ok})
   end
 
