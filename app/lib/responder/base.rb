@@ -12,7 +12,7 @@ module Responder
       unauthorized "UA411"
     end
 
-    def respond payload
+    def respond payload, includes=[]
       render json: payload,status: :ok
     end
 

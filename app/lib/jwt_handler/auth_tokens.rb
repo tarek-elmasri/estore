@@ -33,6 +33,10 @@ module JwtHandler
       JwtHandler::Tokens::RefreshToken.new(self).generate_refresh_token
     end 
 
+    def tokens 
+      {access_token: generate_access_token, refresh_token: self.refresh_token}
+    end
+
     private
     attr_writer :refresh_token_fields, :access_token_fields
   end

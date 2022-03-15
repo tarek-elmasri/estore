@@ -18,8 +18,8 @@ class ApplicationController < ActionController::API
       return unauthorized unless Current.token
       decoder = JwtHandler::Decoder.new(Current.token)
 
-      Current.user_id = data.payload.dig(:id)
-      Current.rule = data.payload.dig(:rule)
+      Current.user_id = decoder.payload.dig(:id)
+      Current.rule = decoder.payload.dig(:rule)
     
     rescue JWT::ExpiredSignature
       return expired_token

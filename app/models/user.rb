@@ -9,12 +9,30 @@ class User < ApplicationRecord
   has_one :cart
   has_one :session
 
-  after_create: :create_session
 
+  after_create :create_session
 
-  private
+  def self.auth credentials
+    user = find_by(phone_no: credentials[:phone_no])
+          &.authenticate credentials[:password]
+
+    user.create_session if user
+    return user
+  end
+
+  def blocked?
+    status == "blocked"
+  end
+
+  def active?
+    status == "active"
+  end
+  
+  
   def create_session
-    session.create(version: :APP_VERSION)
+    user_session = Session.where(user_id: id).first_or_initialize
+    user_session.version = APP_VERRSION
+    user_session.save
   end
 
 end
