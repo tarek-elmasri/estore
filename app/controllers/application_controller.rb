@@ -12,7 +12,7 @@ class ApplicationController < ActionController::API
                           &.first
   end
 
-  private
+  protected
   def authenticate_user
     begin
       return unauthorized unless Current.token
