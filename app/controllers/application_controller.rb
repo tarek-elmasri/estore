@@ -6,22 +6,38 @@ class ApplicationController < ActionController::API
 
 
   def set_request
-    Current.request = request
+    Current.platform = request.headers["platform"]
+    Current.token= request.headers['Authorization']
+                          &.split("Bearer ")
+                          &.first
   end
 
   private
   def authenticate_user
-    token = request.headers["Authorization"]
-    data = JwtHandler::Decoder.new(token)
+    begin
+      return unauthorized unless Current.token
+      decoder = JwtHandler::Decoder.new(Current.token)
 
-    Current.user_id = data.payload.dig(:id)
-    Current.rule = data.payload.dig(:rule)
+      Current.user_id = data.payload.dig(:id)
+      Current.rule = data.payload.dig(:rule)
     
-  rescue JWT::ExpiredSignature
-    return expired_token
-  rescue JWT::DecodeError
-    return invalid_token
-  rescue
-    return unauthorized
+    rescue JWT::ExpiredSignature
+      return expired_token
+    rescue JWT::DecodeError
+      return invalid_token
+    # rescue
+    #   return unauthorized
+      
+    end
   end
+
+  def load_authenticated_user
+    # supposed to be called after authenticate user
+    Current.user = User.find(Current.user_id)
+
+    # suppoed no errors
+    rescue
+      return unauthorized
+  end
+
 end

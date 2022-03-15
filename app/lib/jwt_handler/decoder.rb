@@ -27,12 +27,13 @@ module JwtHandler
     attr_writer :payload
     attr_writer :headers
 
-    def decode 
+    def decode
+
       data = JwtHandler::Coder.decode token
       self.payload = data.first.symbolize_keys
       self.headers = data.last.symbolize_keys
-
     
+      raise JWT::DecodeError.new "unmatched headers" unless valid?
     end
   end
 end

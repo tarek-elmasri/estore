@@ -1,23 +1,32 @@
 module Responder
   module Base 
-    def unauthorized code="AU401"
+    def unauthorized code="UA401"
       render json: {code: code},status: :unauthorized
     end
 
     def invalid_token 
-      unauthorized "AU410"
+      unauthorized "UA410"
     end
 
     def expired_token
-      unauthorized "Au411"
+      unauthorized "UA411"
     end
 
     def respond payload
       render json: payload,status: :ok
     end
 
-    def un_processable payload=nil
+    def un_processable errors={}
+      payload={
+        code: "UP422",
+        errors: errors
+      }
+      
       render json: payload,status: :unprocessable_entity
+    end
+
+    def blocked_user
+      unauthorized "UA412"
     end
   end
 end

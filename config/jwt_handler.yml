@@ -1,6 +1,7 @@
 # in hours
 refresh_expire_time: 100
-# in minutes
+# app version
 access_expire_time: 5
 headers:
   iss: "ecomerce store"
+  version: "1.0.0"
