@@ -9,7 +9,7 @@ class ApplicationController < ActionController::API
     Current.platform = request.headers["platform"]
     Current.token= request.headers['Authorization']
                           &.split("Bearer ")
-                          &.first
+                          &.last
   end
 
   protected

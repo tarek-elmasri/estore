@@ -17,7 +17,7 @@ class Api::V1::SessionsController < ApplicationController
     end
   end
 
-  def signup
+  def register
     user = User.new(signup_params)
     
     if user.save
