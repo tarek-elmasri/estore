@@ -32,3 +32,8 @@
 en:
   errors:
     authorization:
+      unauthorized: "UNAUTHORIZED"
+      invalid_token: "Invalid provided token"
+      expired_token: "Expired provided token"
+      invalid_password_token: "Invalid or expired forget password token"
+      blocked_user: "Account is blocked"

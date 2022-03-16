@@ -13,7 +13,7 @@ class Api::V1::SessionsController < ApplicationController
       create_session_cookies(user)
       return respond_with_user_data(user)
     else
-      return un_processable()
+      return respond_invalid_credentials()
     end
   end
 
@@ -24,7 +24,7 @@ class Api::V1::SessionsController < ApplicationController
       create_session_cookies(user)
       return respond_with_user_data(user)
     else
-      un_processable(user.errors)
+      respond_unprocessable(user.errors)
     end
 
   end
@@ -46,7 +46,7 @@ class Api::V1::SessionsController < ApplicationController
   def forget_password
     user = User.find_by_email(params[:email])
     if user
-      return blocked_user if user.blocked?
+      return respond_blocked_user() if user.blocked?
       # send email with params[:reset_link] with token=user.forget_password_token
       #set job to regenerate forget password token after 10 mins to de validate token
     end
@@ -59,13 +59,13 @@ class Api::V1::SessionsController < ApplicationController
     if user
       respond({email: user.email})
     else
-      return unauthorized
+      return respond_invalid_password_token()
     end
   end
 
   def reset_password
     user = User.find_by_password_token(params[:token])
-    return unauthorized unless user
+    return respond_invalid_password_token() unless user
 
     user.password= params[:password]
     if user.save
@@ -77,11 +77,11 @@ class Api::V1::SessionsController < ApplicationController
       create_session_cookies(user)
       respond_with_user_data(user)
     else
-      return un_processable(user.errors)
+      return respond_unprocessable(user.errors)
     end
 
     rescue => e
-      un_processable({errors: e})
+      respond_unprocessable(e)
   end
 
   private
@@ -108,7 +108,7 @@ class Api::V1::SessionsController < ApplicationController
 
   def refresh_through_web
     current_session = Session.find_by_id_and_version(session[:session_id], APP_VERSION)
-    return unauthorized if current_session.blank?
+    return respond_unauthorized if current_session.blank?
     return respond_with_user_data(current_session.user)
   end
 
@@ -119,16 +119,16 @@ class Api::V1::SessionsController < ApplicationController
       return respond_with_user_data(user)
 
     rescue JWT::ExpiredSignature
-      return expired_token
+      return respond_expired_token
     rescue JWT::DecodeError
-      return invalid_token
+      return respond_invalid_token
       
     end
   end
 
   def respond_with_user_data user
-    return unauthorized if user.blank?
-    return blocked_user if user.blocked?
+    return respond_unauthorized if user.blank?
+    return respond_blocked_user if user.blocked?
     respond({tokens: user.tokens , user:user})
   end
 end
