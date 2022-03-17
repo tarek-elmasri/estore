@@ -31,6 +31,7 @@
 
 en:
   errors:
+    not_found: "No record for provided id"
     authorization:
       unauthorized: "UNAUTHORIZED"
       invalid_token: "Invalid provided token"

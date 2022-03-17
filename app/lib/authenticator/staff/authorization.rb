@@ -23,6 +23,10 @@ module Authenticator
         def is_admin?
           rule == "admin"
         end
+        
+        def has_authorization? action
+          authorizations.where(type: action).exists?
+        end
 
       end
     end

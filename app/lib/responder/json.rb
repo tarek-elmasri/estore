@@ -43,6 +43,13 @@ module Responder
       
       render json: payload,status: :unprocessable_entity
     end
+
+    def respond_not_found
+      render json: {
+        code: "NF422",
+        errors: "errors.not_found"
+      }, status: :unprocessable_entity
+    end
     
     def respond_invalid_credentials
       render json: {
