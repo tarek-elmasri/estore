@@ -40,7 +40,7 @@ class Api::V1::SessionsController < ApplicationController
   def logout
     session['session_id'] = nil if Current.web_platform?
     Session.kill_by_user_id Current.user_id
-    respond({message: :ok})
+    respond_ok()
   end
 
   def forget_password
@@ -51,7 +51,7 @@ class Api::V1::SessionsController < ApplicationController
       #set job to regenerate forget password token after 10 mins to de validate token
     end
 
-    respond({message: ok})
+    respond_ok()
   end
 
   def validate_password_token
@@ -109,14 +109,14 @@ class Api::V1::SessionsController < ApplicationController
   def refresh_through_web
     current_session = Session.find_by_id_and_version(session[:session_id], APP_VERSION)
     return respond_unauthorized if current_session.blank?
-    return respond_with_user_data(current_session.user)
+    return respond_with_access_token(current_session.user)
   end
 
   def refresh_through_mobile
     begin
-      decoder = JwtHandler::Decoder.new(params[:refresh_token])
+      decoder = JwtHandler::Decoder.new(params[:refresh_token], :refresh_token)
       user= User.find_by_id(decoder.payload.dig(:id))
-      return respond_with_user_data(user)
+      return respond_with_access_token(user)
 
     rescue JWT::ExpiredSignature
       return respond_expired_token
@@ -126,9 +126,5 @@ class Api::V1::SessionsController < ApplicationController
     end
   end
 
-  def respond_with_user_data user
-    return respond_unauthorized if user.blank?
-    return respond_blocked_user if user.blocked?
-    respond({tokens: user.tokens , user:user})
-  end
+
 end

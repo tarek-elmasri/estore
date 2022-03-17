@@ -16,7 +16,7 @@ class ApplicationController < ActionController::API
   def authenticate_user
     begin
       return respond_unauthorized unless Current.token
-      decoder = JwtHandler::Decoder.new(Current.token)
+      decoder = JwtHandler::Decoder.new(Current.token, :access_token)
 
       Current.user_id = decoder.payload.dig(:id)
       Current.rule = decoder.payload.dig(:rule)

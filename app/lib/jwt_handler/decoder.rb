@@ -5,9 +5,11 @@ module JwtHandler
     attr_reader :token
     attr_reader :payload
     attr_reader :headers
+    attr_reader :type
 
-    def initialize token
+    def initialize token,type
       self.token=token
+      self.type=type
       decode
     end
 
@@ -26,10 +28,11 @@ module JwtHandler
     attr_writer :token
     attr_writer :payload
     attr_writer :headers
+    attr_writer :type
 
     def decode
 
-      data = JwtHandler::Coder.decode token
+      data = JwtHandler::Coder.decode token,type
       self.payload = data.first.symbolize_keys
       self.headers = data.last.symbolize_keys
     

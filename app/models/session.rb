@@ -2,10 +2,12 @@ class Session < ApplicationRecord
   belongs_to :user
 
   def self.kill_by_user_id user_id
+    return unless user_id
     where(user_id: user_id).delete_all
   end
 
   def self.find_by_id_and_version(id,version)
+    return unless id || version
     find_by(id: id, version: version)
   end
 

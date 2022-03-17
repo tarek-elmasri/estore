@@ -12,7 +12,7 @@ Rails.application.routes.draw do
           post "register" => "sessions#register"
           patch "refresh" => "sessions#refresh"
           delete "logout" => "sessions#logout"
-          get "forget_password" => "sessions#forget_password"
+          post "forget_password" => "sessions#forget_password"
           post "validate_token" => "sessions#validate_password_token"
           patch "reset_password" => "sessions#reset_password"        
         end

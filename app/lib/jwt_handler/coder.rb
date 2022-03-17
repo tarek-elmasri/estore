@@ -1,19 +1,30 @@
 
 module JwtHandler
   module Coder
-    JWT_SECRET_KEY =  Rails.application.credentials.dig(:jwt , :secret_key)
+    JWT_ACCESS_SECRET_KEY =  Rails.application.credentials.dig(:jwt , :access_secret_key)
+    JWT_REFRESH_SECRET_KEY =  Rails.application.credentials.dig(:jwt , :refresh_secret_key)
 
-    def self.encode (data={})
+    def self.encode data={}
       payload = data[:payload] || {}
       payload[:exp] = data.dig(:expires_in)&.to_i || 1.hour.from_now.to_i
 
       headers = self.config.dig(:headers) || {}
 
-      JWT.encode(payload , JWT_SECRET_KEY, 'HS256', headers)
+      JWT.encode(
+        payload , 
+        data[:type]==:access_token ? JWT_ACCESS_SECRET_KEY : JWT_REFRESH_SECRET_KEY, 
+        'HS256', 
+        headers
+      )
     end
 
-    def self.decode token 
-      JWT.decode token , JWT_SECRET_KEY , true , { algorithm: 'HS256' }
+    def self.decode(token , type)
+      JWT.decode(
+        token , 
+        type==:access_token ? JWT_ACCESS_SECRET_KEY : JWT_REFRESH_SECRET_KEY,  
+        true , 
+        { algorithm: 'HS256' }
+      )
     end
 
     def self.config

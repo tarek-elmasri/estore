@@ -8,7 +8,8 @@ module JwtHandler
       end
 
       def generate_refresh_token
-        JwtHandler::Coder.encode payload: generate_payload(model.refresh_token_fields) , 
+        JwtHandler::Coder.encode type: :refresh_token,
+                                  payload: generate_payload(model.refresh_token_fields) , 
                                   expires_in: JwtHandler::Coder.config.dig(:refresh_expire_time)&.hours.from_now
       end
 

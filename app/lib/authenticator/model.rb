@@ -22,10 +22,12 @@ module Authenticator
       end
 
       def self.find_by_password_token token
+        return unless token
         find_by(forget_password_token: token)
       end
 
       def self.find_by_email email
+        return unless email
         find_by(email: email)
       end
 
