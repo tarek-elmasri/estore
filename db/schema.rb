@@ -10,11 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_15_205230) do
+ActiveRecord::Schema.define(version: 2022_03_17_084402) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
+
+  create_table "authorizations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.string "type", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_authorizations_on_user_id"
+  end
 
   create_table "cart_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "cart_id", null: false
@@ -82,6 +90,14 @@ ActiveRecord::Schema.define(version: 2022_03_15_205230) do
     t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
+  create_table "staff_actions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.string "type", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_staff_actions_on_user_id"
+  end
+
   create_table "user_coupons", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.uuid "coupon_id", null: false
@@ -111,11 +127,13 @@ ActiveRecord::Schema.define(version: 2022_03_15_205230) do
     t.index ["phone_no"], name: "index_users_on_phone_no", unique: true
   end
 
+  add_foreign_key "authorizations", "users"
   add_foreign_key "cart_items", "carts"
   add_foreign_key "cart_items", "items"
   add_foreign_key "carts", "users"
   add_foreign_key "items", "categories"
   add_foreign_key "sessions", "users"
+  add_foreign_key "staff_actions", "users"
   add_foreign_key "user_coupons", "coupons"
   add_foreign_key "user_coupons", "users"
 end
