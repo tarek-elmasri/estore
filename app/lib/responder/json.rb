@@ -54,6 +54,13 @@ module Responder
     def respond_blocked_user
       respond_unauthorized("UA412","errors.authorization.blocked_user")
     end
+
+    def respond_forbidden
+      render json: {
+        code: "NS401",
+        message: "errors.authorization.staff_only"
+      },status: :forbidden
+    end
   end
 end
 

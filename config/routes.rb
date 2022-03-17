@@ -17,6 +17,12 @@ Rails.application.routes.draw do
           patch "reset_password" => "sessions#reset_password"        
         end
 
+        scope module: "dashboard" do
+          scope :dashboard do
+            get "/" => "users#index"
+          end
+        end
+
 
       end
 
