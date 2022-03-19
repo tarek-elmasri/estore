@@ -38,3 +38,4 @@ en:
       expired_token: "Expired provided token"
       invalid_password_token: "Invalid or expired forget password token"
       blocked_user: "Account is blocked"
+      auth_for_staff_only: "Authorizations for staff accounts only."

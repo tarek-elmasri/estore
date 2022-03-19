@@ -2,17 +2,21 @@ module Authenticator
   module Staff
     module Authorization
       extend ActiveSupport::Concern
-      include Authenticator::Staff::AuthorizationTypes
+      
 
+      DEFUALT_RULES = ["admin", "staff" , "user"]
 
       included do
-        has_many :authorizations
+        has_one :authorization
 
-        TYPES.each do |action|
+        validates :rule, inclusion: {in: DEFUALT_RULES}
+        
+        Authenticator::Staff::AuthorizationTypes::TYPES.each do |action|
           define_method "is_authorized_to_#{action}?" do
             return true if is_admin?
             return false unless is_staff? || is_admin?
-            authorizations.where(type: action).exists?
+            return false unless authorization
+            authorization.send(action)
           end
         end
 
@@ -24,10 +28,6 @@ module Authenticator
           rule == "admin"
         end
         
-        def has_authorization? action
-          authorizations.where(type: action).exists?
-        end
-
       end
     end
   end

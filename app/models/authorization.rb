@@ -2,10 +2,32 @@ class Authorization < ApplicationRecord
   include Authenticator::Staff::AuthorizationTypes
   belongs_to :user
 
-  validates :type, uniqueness: {scope: [:user_id]}
-  validates :type, inclusion: {in: TYPES}
-  
-  def self.find_by_type auth_type
-    find_by(type: auth_type)
+  after_initialize :handle_collection
+  before_validation :generate_collection
+  validate :user_rule
+
+  private
+  def generate_collection
+    payload= ""
+
+    TYPES.each do |t|
+      if (send(t))
+        payload = payload + "#{t};"
+      end
+    end
+    self.collection = payload
   end
+
+  def handle_collection
+    return unless collection
+    collection.split(";").each do |t|
+                send("#{t}=", true)
+    end
+  end
+
+  def user_rule
+    errors.add(:user, I18n.t("errors.authorization.auth_for_staff_only")) unless user.is_staff?
+  end
+
+  
 end

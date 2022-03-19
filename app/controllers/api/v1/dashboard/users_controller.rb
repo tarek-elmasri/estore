@@ -33,7 +33,6 @@ class Api::V1::Dashboard::UsersController < Api::V1::Dashboard::Base
       :dob,
       :city,
       :status,
-      :rule,
     )
   end
 

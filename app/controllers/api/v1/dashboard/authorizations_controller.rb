@@ -1,42 +1,33 @@
 class Api::Vi::Dashboard:AuthorizationsController < Api::V1::Dashboard::Base
 
-  before_action :authorize_create, only: [:create]
-  before_action :authorize_delete, only: [:destroy]
+  before_action :authorize_update
+  before_action :set_records
 
-  def create
-    auth = Authorization.new(authorization_params)
-
-    if auth.save
-      Current.user.staff_actions.create(type: :create_authorization , model: :user , model_id: authorization_params[:user_id])
-      respond({authorization: auth})
-    else
-      respond_unprocessable(auth.errors)
+  def update
+    Authorization.transaction do
+      @user.rule = params[:rule]
+      @user.save!
+      @auth.update!(authorization_params)
+      Current.user.staff_actions.create(type: :update_authorization , model: :authorization , model_id: @auth.id )
     end
-  end
 
-  def destroy
-    if @auth.destroy
-      Current.user.staff_actions.create(type: :delete_authorization , model: :user , model_id: params[:id])
-      respond_ok()
-    else
-      respond_unprocessable(@auth.errors)
-    end
+    rescue ActiveRecord::RecordInvalid
+      respond_unprocessable({user: @user.errors, authorization: @auth.errors})
   end
 
   private
   def authorization_params
-    params.require(:authorization).permit(:user_id,:type)
+    params.require(:authorization).permit( *Authorization::TYPES)
   end
 
-  def authorize_create
-    respond_forbidden unless Current.user.is_authorized_to_create_authorization?
+  def set_records
+    @user = User.find_by_id(params[:user_id])
+    return respond_not_found unless @user
+    @auth = Authorization.where(user_id: params[:user_id]).first_or_initialize
   end
 
-  def authorize_delete
-    return respond_forbidden unless Current.user.is_authorized_to_delete_authorization?
-    @auth = Authorization.find_by_id(params[:id])
-    return respond_not_found unless @auth
-
+  def authorize_update
+    return respond_forbidden unless Current.user.is_authorized_to_update_authorization?
   end
-
+  
 end
