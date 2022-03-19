@@ -22,7 +22,12 @@ Rails.application.routes.draw do
 
         scope module: "dashboard" do
           scope :dashboard do
-            get "/" => "users#index"
+            scope :users do
+              get "/" => "users#index"
+            end
+            scope :authorizations do
+              patch "/" => "authorizations#update"
+            end
           end
         end
 

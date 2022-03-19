@@ -1,4 +1,4 @@
-class Api::Vi::Dashboard:AuthorizationsController < Api::V1::Dashboard::Base
+class Api::V1::Dashboard::AuthorizationsController < Api::V1::Dashboard::Base
 
   before_action :authorize_update
   before_action :set_records

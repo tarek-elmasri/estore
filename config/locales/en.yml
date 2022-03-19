@@ -40,3 +40,4 @@ en:
       blocked_user: "Account is blocked"
       auth_for_staff_only: "Authorizations for staff accounts only"
       invalid_rule: "rule must be one of 'user', 'staff' or 'admin'"
+      staff_only: "current user doesn't have authorization to perform this action"

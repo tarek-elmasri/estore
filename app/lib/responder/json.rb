@@ -47,7 +47,7 @@ module Responder
     def respond_not_found
       render json: {
         code: "NF422",
-        errors: "errors.not_found"
+        errors: I18n.t("errors.not_found")
       }, status: :unprocessable_entity
     end
     
@@ -65,7 +65,7 @@ module Responder
     def respond_forbidden
       render json: {
         code: "NS401",
-        message: "errors.authorization.staff_only"
+        message: I18n.t("errors.authorization.staff_only")
       },status: :forbidden
     end
   end
