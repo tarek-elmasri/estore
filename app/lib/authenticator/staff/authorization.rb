@@ -4,12 +4,12 @@ module Authenticator
       extend ActiveSupport::Concern
       
 
-      DEFUALT_RULES = ["admin", "staff" , "user"]
+      DEFAULT_RULES = ["admin", "staff" , "user"]
 
       included do
         has_one :authorization
 
-        validates :rule, inclusion: {in: DEFUALT_RULES}
+        validates :rule, inclusion: {in: DEFAULT_RULES, message: I18n.t("errors.authorization.invalid_rule")}
         
         Authenticator::Staff::AuthorizationTypes::TYPES.each do |action|
           define_method "is_authorized_to_#{action}?" do

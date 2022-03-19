@@ -1,10 +1,4 @@
 class Api::V1::SessionsController < ApplicationController
-  before_action :authenticate_user, only: [:me,:logout]
-  before_action :load_authenticated_user , only: [:me]
-
-  def me
-    respond({user: Current.user})
-  end
 
   def login
     user = User.auth(login_params)

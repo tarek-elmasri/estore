@@ -7,7 +7,6 @@ Rails.application.routes.draw do
       scope module: "v1" do
 
         scope :sessions do
-          get "/" => "sessions#me"
           post "login" => "sessions#login"
           post "register" => "sessions#register"
           patch "refresh" => "sessions#refresh"
@@ -15,6 +14,10 @@ Rails.application.routes.draw do
           post "forget_password" => "sessions#forget_password"
           post "validate_token" => "sessions#validate_password_token"
           patch "reset_password" => "sessions#reset_password"        
+        end
+        
+        scope :users do
+          get "/" => "users#index"
         end
 
         scope module: "dashboard" do

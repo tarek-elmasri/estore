@@ -26,7 +26,7 @@ class Authorization < ApplicationRecord
   end
 
   def user_rule
-    errors.add(:user, I18n.t("errors.authorization.auth_for_staff_only")) unless user.is_staff?
+    errors.add(:user, I18n.t("errors.authorization.auth_for_staff_only")) unless user.is_staff? || user.is_admin?
   end
 
   
