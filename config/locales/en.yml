@@ -32,6 +32,7 @@
 en:
   errors:
     not_found: "No record for provided id"
+
     authorization:
       unauthorized: "UNAUTHORIZED"
       invalid_token: "Invalid provided token"
@@ -39,5 +40,14 @@ en:
       invalid_password_token: "Invalid or expired forget password token"
       blocked_user: "Account is blocked"
       auth_for_staff_only: "Authorizations for staff accounts only"
-      invalid_rule: "rule must be one of 'user', 'staff' or 'admin'"
-      staff_only: "current user doesn't have authorization to perform this action"
+      invalid_rule: "Rule must be one of 'user', 'staff' or 'admin'"
+      staff_only: "Current user doesn't have authorization to perform this action"
+
+    validations:
+      required: "Required field"
+      length: "Too short"
+      uniqueness: "Already exists."
+      user:
+        invalid_phone_no: "Invalid phone no. ex: 5xxxxxxxx"
+        invalid_email: "Invalid email format"
+        gender: "Gender must be 'male' or 'female'"

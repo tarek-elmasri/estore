@@ -1,6 +1,8 @@
 class Session < ApplicationRecord
   belongs_to :user
 
+  validates :version, presence: true
+
   def self.kill_by_user_id user_id
     return unless user_id
     where(user_id: user_id).delete_all
@@ -12,6 +14,7 @@ class Session < ApplicationRecord
   end
 
   def self.create_or_update user_id
+    return unless user_id
     user_session = Session.where(user_id: user_id).first_or_initialize
     user_session.version = APP_VERSION
     user_session.save
