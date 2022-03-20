@@ -14,7 +14,7 @@ class Api::V1::Dashboard::UsersController < Api::V1::Dashboard::Base
 
   def update
     if @user.update(user_params)
-      Current.user.staff_actions.create(type: :update, model: :user, model_id: @user.id)
+      Current.user.staff_actions.create(action: :update, model: :user, model_id: @user.id)
       respond({user: @user})
     else
       respond_unprocessable(@user.errors)

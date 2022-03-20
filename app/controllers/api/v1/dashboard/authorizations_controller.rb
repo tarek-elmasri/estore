@@ -5,18 +5,13 @@ class Api::V1::Dashboard::AuthorizationsController < Api::V1::Dashboard::Base
   before_action :check_user_rule
 
   def update 
-    return kill_authorization if params[:rule] == "user"
-
-    Authorization.transaction do
-      @user.update!(rule: params[:rule])
-      @auth.update!(authorization_params) 
-      Current.user.staff_actions.create(type: :update_authorization , model: :user , model_id: @user.id )
+    if params[:rule]== "user"
+      return kill_authorization if params[:rule] == "user"
+    elsif params[:rule] == "admin"
+      return admin_authorization if params[:rule] == "admin"
+    elsif params[:rule] == "staff"
+      return staff_authorization if params[:rule] == "staff"
     end
-
-    respond({rule: @user.rule, user_id: @user.id, authorization: @auth })
-
-    rescue ActiveRecord::RecordInvalid => e
-      respond_unprocessable(e.message)
   end
 
   private
@@ -45,8 +40,28 @@ class Api::V1::Dashboard::AuthorizationsController < Api::V1::Dashboard::Base
   def kill_authorization    
     @user.update(rule: "user")
     @user.authorization&.destroy
-    Current.user.staff_actions.create(type: :update_authorization, model: :user , model_id: @user.id)
-    respond({rule: "user"})
+    Current.user.staff_actions.create(action: :update_authorization, model: :user , model_id: @user.id)
+    respond({rule: "user" , user_id: @user.id})
+  end
+
+  def admin_authorization
+    @user.update(rule: "admin")
+    @user.authorization&.destroy
+    Current.user.staff_actions.create(action: :update_authorization, model: :user ,model_id: @user.id )
+    respond({rule: :admin, user_id: @user.id})
+  end
+
+  def staff_authorization
+    Authorization.transaction do
+      @user.update!(rule: "staff")
+      @auth.update!(authorization_params) 
+      Current.user.staff_actions.create(action: :update_authorization , model: :user , model_id: @user.id )
+    end 
+
+    respond({rule: @user.rule, user_id: @user.id, authorization: @auth })
+
+    rescue ActiveRecord::RecordInvalid => e
+      respond_unprocessable(e.message)
   end
   
 end
