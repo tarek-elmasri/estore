@@ -59,11 +59,11 @@ ActiveRecord::Schema.define(version: 2022_03_17_174309) do
     t.string "type", null: false
     t.string "name", null: false
     t.float "price", null: false
-    t.boolean "has_limited_stock", null: false
+    t.boolean "has_limited_stock", default: true, null: false
     t.integer "stock"
     t.integer "low_stock"
     t.boolean "notify_on_low_stock", default: false
-    t.boolean "visible", default: true
+    t.boolean "visible", default: false
     t.uuid "category_id", null: false
     t.string "code"
     t.float "cost"
@@ -71,9 +71,10 @@ ActiveRecord::Schema.define(version: 2022_03_17_174309) do
     t.boolean "has_discount", default: false
     t.datetime "discount_end_date"
     t.datetime "discount_start_date"
+    t.boolean "limited_quantity_per_customer", default: false
     t.integer "max_quantity_per_customer"
-    t.boolean "allow_multi_quantity", default: true
-    t.boolean "allow_duplicate", default: true
+    t.boolean "allow_multi_quantity", default: false
+    t.boolean "allow_duplicate", default: false
     t.string "title"
     t.string "sub_title"
     t.string "hint"

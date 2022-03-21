@@ -54,7 +54,7 @@ module Responder
     def respond_invalid_credentials
       render json: {
         code: "UP444", 
-        errors: "invalid credentials"
+        errors: I18n.t("errors.authorization.invalid_credentials")
         },status: :unprocessable_entity
     end
 

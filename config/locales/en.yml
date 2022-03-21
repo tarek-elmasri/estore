@@ -44,10 +44,17 @@ en:
       staff_only: "Current user doesn't have authorization to perform this action"
 
     validations:
-      required: "Required field"
-      length: "Too short"
-      uniqueness: "Already exists."
+      invalid_credentials: "Invalid credentials"
       user:
         invalid_phone_no: "Invalid phone no. ex: 5xxxxxxxx"
         invalid_email: "Invalid email format"
         gender: "Gender must be 'male' or 'female'"
+
+  activerecord:
+    errors:
+      messages:
+        not_a_number: "Must be a numeric value"
+        not_an_integer: "Must be an integer value"
+        blank: "Required field"
+        taken: "Already exist"
+        format: "Invalid format"
