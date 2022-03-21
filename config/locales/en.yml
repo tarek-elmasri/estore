@@ -53,7 +53,7 @@ en:
   activerecord:
     errors:
       messages:
-        not_a_number: "Must be a numeric value"
+        not_a_number: "Must be a numerical value"
         not_an_integer: "Must be an integer value"
         blank: "Required field"
         taken: "Already exist"

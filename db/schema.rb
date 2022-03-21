@@ -113,7 +113,7 @@ ActiveRecord::Schema.define(version: 2022_03_17_174309) do
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "first_name", null: false
     t.string "last_name", null: false
-    t.integer "phone_no", null: false
+    t.string "phone_no", null: false
     t.string "email", null: false
     t.string "password_digest"
     t.string "rule", default: "user"
