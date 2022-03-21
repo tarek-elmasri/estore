@@ -57,4 +57,7 @@ en:
         not_an_integer: "Must be an integer value"
         blank: "Required field"
         taken: "Already exist"
-        format: "Invalid format"
+        invalid: "Invalid format"
+        too_long: "Too long"
+        too_short: "Too short"
+        wrong_length: "Wrong length"
