@@ -25,6 +25,7 @@ module CartManager
       check_duplicate(item) unless item.allow_duplicate
       check_customer_maximum_quantity(item, cart_item.quantity) if item.limited_quantity_per_customer
 
+      
     end
     
     def add_offer_item cart_offer_item
