@@ -3,6 +3,8 @@ class User < ApplicationRecord
   include Authenticator::Staff::Authorization
   
   has_one :cart
+  after_create :create_cart
+
   has_many :staff_actions
   
   validates :email, format: { with: /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i }
@@ -19,6 +21,13 @@ class User < ApplicationRecord
       errors.add(:phone_no, I18n.t('errors.validations.user.invalid_phone_no'))
     end
   end
+
+  private
+
+  def create_cart
+    Cart.create(user_id: id)
+  end
+
 
 
 end

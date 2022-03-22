@@ -15,8 +15,20 @@ class Item < ApplicationRecord
   validates :max_quantity_per_customer, presence: true, if: :limited_quantity_per_customer
   validates :max_quantity_per_customer, numericality: {only_integer: true}, allow_nil: true
 
+  validate :discount_dates
+
+  scope :visible, -> {where(visible: true)}
+
+  def has_stock?( amount = 1)
+    return true unless has_limited_stock
+    return true if stock && stock > amount
+    return false
+  end
 
   private
-  
+  def discount_dates
+    return unless discount_start_date || discount_end_date
+    
+  end
   
 end
