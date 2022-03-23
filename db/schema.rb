@@ -56,7 +56,7 @@ ActiveRecord::Schema.define(version: 2022_03_17_174309) do
   end
 
   create_table "items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "type", null: false
+    t.string "type_name", null: false
     t.string "name", null: false
     t.float "price", null: false
     t.boolean "has_limited_stock", default: true, null: false

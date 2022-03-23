@@ -1,7 +1,7 @@
 class CreateItems < ActiveRecord::Migration[6.1]
   def change
     create_table :items, id: :uuid do |t|
-      t.string :type, null:false
+      t.string :type_name, null:false
       t.string :name, null:false
       t.float :price, null:false
       t.boolean :has_limited_stock,null: false, default: true

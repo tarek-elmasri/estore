@@ -1,9 +1,9 @@
 class Item < ApplicationRecord
   belongs_to :category
-  has_many :carts , through: :cart_items
   has_many :cart_items, dependent: :destroy
+  has_many :carts , through: :cart_items
 
-  validates :type,:name, presence: true
+  validates :type_name,:name, presence: true
   validates :price, numericality: true
   validates :stock, presence: true , if: :has_limited_stock
   validates :stock, numericality: {only_integer: true}, allow_nil: true
