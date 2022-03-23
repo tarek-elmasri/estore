@@ -35,9 +35,9 @@ module Responder
       respond({tokens: user.tokens , user:user})
     end
 
-    def respond_unprocessable errors={}
+    def respond_unprocessable( errors={}, code="UP422")
       payload={
-        code: "UP422",
+        code: code,
         errors: errors
       }
       

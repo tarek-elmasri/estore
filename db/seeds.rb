@@ -17,4 +17,4 @@ user3.save
 
 category = Category.create(name: "apple_cards")
 
-category.items.create(type_name: "degital", name: "50 SR card" , price: 49.99 , has_limited_stock: false)
+category.items.create(type_name: "degital", name: "50 SR card" , price: 49.99 , has_limited_stock: false, visible: true)
