@@ -4,6 +4,7 @@ module CartManager
   class Cart
     
     attr_reader :errors
+    attr_reader :cart
 
     def initialize user
       self.user=user
@@ -32,7 +33,7 @@ module CartManager
       check_duplicate(item) unless item.allow_duplicate
       check_customer_maximum_quantity(item, cart_item.quantity) if item.limited_quantity_per_customer
 
-      self.cart.cart_items.create(item_id: item.id)
+      cart.cart_items.create(item_id: item.id)
     end
     
     def add_offer_item cart_offer_item
@@ -41,7 +42,7 @@ module CartManager
     
     
     private 
-    attr_accessor :cart
+    attr_writer :cart
     attr_writer :errors
     attr_accessor :user
 
