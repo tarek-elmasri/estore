@@ -19,4 +19,5 @@ category = Category.new(name: "digital cards")
 category.save
 category.sub_categories.create(name: "apple cards")
 
-# category.items.create(type_name: "degital", name: "50 SR card" , price: 49.99 , has_limited_stock: false, visible: true)
+i=Item.new(type_name: "degital", name: "50 SR card" , price: 49.99 , has_limited_stock: false, visible: true)
+i.save

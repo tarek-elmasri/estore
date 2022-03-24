@@ -10,7 +10,9 @@ module Authenticator
         :update_category,
         :delete_category,
         :show_users,
-        :update_user
+        :update_user,
+        :create_item_category,
+        :delete_item_category
       ]
 
       attr_accessor *TYPES
