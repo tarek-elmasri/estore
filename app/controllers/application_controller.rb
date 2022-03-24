@@ -1,9 +1,13 @@
 class ApplicationController < ActionController::API
   include ::ActionController::Cookies
   include Responder::Json
+  include ErrorHandler::Base
+
 
   before_action :set_request
 
+  
+  
 
   def set_request
     Current.platform = request.headers["platform"]
