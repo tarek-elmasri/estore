@@ -15,6 +15,7 @@ user2.save
 user3=User.new(first_name: "staff" , last_name: "account" , password: "12345" , email:"staff@gmail.com" , phone_no: "547114899", gender:"male", rule: "staff")
 user3.save
 
-category = Category.create(name: "apple_cards")
+category = Category.create(name: "digital cards")
+category.sub_categories.create(name: "apple cards")
 
-category.items.create(type_name: "degital", name: "50 SR card" , price: 49.99 , has_limited_stock: false, visible: true)
+# category.items.create(type_name: "degital", name: "50 SR card" , price: 49.99 , has_limited_stock: false, visible: true)
