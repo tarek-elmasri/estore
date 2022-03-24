@@ -1,5 +1,5 @@
 class Item < ApplicationRecord
-  belongs_to :category
+  has_many :categories, through: :item_categories, dependent: :destroy
   has_many :cart_items, dependent: :destroy
   has_many :carts , through: :cart_items
 

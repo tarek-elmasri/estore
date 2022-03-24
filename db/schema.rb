@@ -43,8 +43,10 @@ ActiveRecord::Schema.define(version: 2022_03_17_174309) do
 
   create_table "categories", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
+    t.uuid "primary_category_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["primary_category_id"], name: "index_categories_on_primary_category_id"
   end
 
   create_table "coupons", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -64,7 +66,6 @@ ActiveRecord::Schema.define(version: 2022_03_17_174309) do
     t.integer "low_stock"
     t.boolean "notify_on_low_stock", default: false
     t.boolean "visible", default: false
-    t.uuid "category_id", null: false
     t.string "code"
     t.float "cost"
     t.float "discount_price"
@@ -80,7 +81,6 @@ ActiveRecord::Schema.define(version: 2022_03_17_174309) do
     t.string "hint"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["category_id"], name: "index_items_on_category_id"
   end
 
   create_table "sessions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -134,7 +134,6 @@ ActiveRecord::Schema.define(version: 2022_03_17_174309) do
   add_foreign_key "cart_items", "carts"
   add_foreign_key "cart_items", "items"
   add_foreign_key "carts", "users"
-  add_foreign_key "items", "categories"
   add_foreign_key "sessions", "users"
   add_foreign_key "staff_actions", "users"
   add_foreign_key "user_coupons", "coupons"
