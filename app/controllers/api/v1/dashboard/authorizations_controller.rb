@@ -20,9 +20,7 @@ class Api::V1::Dashboard::AuthorizationsController < Api::V1::Dashboard::Base
   end
 
   def set_records
-    @user = User.find_by_id(params[:user_id])
-    return respond_not_found unless @user
-    
+    @user = User.find(params[:user_id])
     @auth = Authorization.where(user_id: params[:user_id]).first_or_initialize
   end
 

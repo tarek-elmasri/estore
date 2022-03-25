@@ -3,35 +3,23 @@ class Api::V1::Dashboard::ItemsController < Api::V1::Dashboard::Base
   before_action :find_record, except: [:create]
 
   def create
-    return respond_forbidden unless Current.user.is_authorized_to_create_item?
-    
+
     item = Item.new(items_params)
-    if item.save
-      Current.user.staff_actions.create(action: :create_item, model: :item, model_id: item.id)
-      respond(item)
-    else
-      respond_unprocessable(item.errors)
-    end
+    item.save!
+    Current.user.staff_actions.create(action: :create_item, model: :item, model_id: item.id)
+    respond(item)
   end
 
   def update
-    return respond_forbidden unless Current.user.is_authorized_to_update_item?
-    if @item.update(items_params)
-      Current.user.staff_actions.create(action: :update_item, model: :item, model_id: @item.id)
-      respond(@item)
-    else
-      respond_unprocessable(@item.errors)
-    end
+    @item.update(items_params)
+    Current.user.staff_actions.create(action: :update_item, model: :item, model_id: @item.id)
+    respond(@item)
   end
 
   def destroy
-    return respond_forbidden unless Current.user.is_authorized_to_delete_item?
-    if @item.destroy
-      Current.user.staff_actions.create(action: :delete_item, model: :item, model_id: @item.id)
-      respond_ok
-    else
-      respond_unprocessable(@item.errors)
-    end
+    @item.destroy!
+    Current.user.staff_actions.create(action: :delete_item, model: :item, model_id: @item.id)
+    respond_ok
   end
 
   private
@@ -62,7 +50,6 @@ class Api::V1::Dashboard::ItemsController < Api::V1::Dashboard::Base
   end
 
   def find_record
-    @item = Item.find_by(id: params[:id])
-    respond_not_found unless @item
+    @item = Item.find(id: params[:id])
   end
 end
