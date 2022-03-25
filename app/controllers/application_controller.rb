@@ -1,12 +1,14 @@
 class ApplicationController < ActionController::API
   include ::ActionController::Cookies
   include Responder::Json
-  include ErrorHandler::Base
+  include Errors::ErrorHandler::Base
 
-
+  # before_action :raise_error
   before_action :set_request
 
-  
+  # def raise_error
+  #   raise Errors::BlockedUser
+  # end
   
 
   def set_request
@@ -18,21 +20,9 @@ class ApplicationController < ActionController::API
 
   protected
   def authenticate_user
-    begin
-      return respond_unauthorized unless Current.token
       decoder = JwtHandler::Decoder.new(Current.token, :access_token)
-
       Current.user_id = decoder.payload.dig(:id)
       Current.rule = decoder.payload.dig(:rule)
-    
-    rescue JWT::ExpiredSignature
-      return respond_expired_token
-    rescue JWT::DecodeError
-      return respond_invalid_token
-    # rescue
-    #   return unauthorized
-      
-    end
   end
 
   def load_authenticated_user
@@ -40,8 +30,8 @@ class ApplicationController < ActionController::API
     Current.user = User.find(Current.user_id)
 
     # suppoed no errors
-    rescue
-      return respond_unauthorized
+    # rescue
+    #   return respond_unauthorized
   end
 
 end

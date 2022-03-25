@@ -13,9 +13,9 @@ module Responder
       respond_unauthorized("UA411","errors.authorization.expired_token")
     end
 
-    def respond_invalid_password_token
-      respond_unauthorized("UA413","errors.authorization.invalid_password_token")
-    end
+    # def respond_invalid_password_token
+    #   respond_unauthorized("UA413","errors.authorization.invalid_password_token")
+    # end
 
     def respond payload, includes=[]
       render json: payload
