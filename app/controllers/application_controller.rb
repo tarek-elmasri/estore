@@ -7,7 +7,7 @@ class ApplicationController < ActionController::API
   before_action :set_request
 
   # def raise_error
-  #   raise Errors::BlockedUser
+    # raise Errors::BlockedUser
   # end
   
 

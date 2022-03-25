@@ -14,8 +14,8 @@ module Authenticator
         Authenticator::Staff::AuthorizationTypes::TYPES.each do |action|
           define_method "is_authorized_to_#{action}?" do
             return true if is_admin?
-            raise Unauthorized unless is_staff? || is_admin?
-            raise Unauthorized unless authorization
+            return false unless is_staff? || is_admin?
+            return false unless authorization
             authorization.send(action)
           end
         end
@@ -31,7 +31,6 @@ module Authenticator
         
       end
 
-      class Unauthorized < StandardError; end
     end
   end
 end

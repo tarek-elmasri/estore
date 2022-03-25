@@ -1,4 +1,6 @@
 class Session < ApplicationRecord
+
+
   belongs_to :user
 
   validates :version, presence: true

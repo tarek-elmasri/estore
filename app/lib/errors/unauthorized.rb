@@ -1,0 +1,1 @@
+class Errors::Unauthorized < StandardError; end

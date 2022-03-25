@@ -8,14 +8,9 @@ class Api::V1::SessionsController < ApplicationController
 
   def register
     user = User.new(signup_params)
-    
-    if user.save
-      create_session_cookies(user)
-      return respond_with_user_data(user)
-    else
-      respond_unprocessable(user.errors)
-    end
-
+    user.save!
+    create_session_cookies(user)
+    respond_with_user_data(user)
   end
 
   def refresh
@@ -44,12 +39,10 @@ class Api::V1::SessionsController < ApplicationController
 
   def reset_password
     user = User.find_by_password_token!(params[:token])
-    if user.reset_password params[:password]
-      create_session_cookies(user)
-      respond_with_user_data(user)
-    else
-      return respond_unprocessable(user.errors)
-    end
+    user.reset_password params[:password]
+    create_session_cookies(user)
+    respond_with_user_data(user)
+    
   end
 
   private
@@ -76,13 +69,13 @@ class Api::V1::SessionsController < ApplicationController
 
   def refresh_through_web
     current_session = Session.find_by_id_and_version!(session[:session_id], APP_VERSION)
-    return respond_with_access_token(current_session.user)
+    respond_with_access_token(current_session.user)
   end
 
   def refresh_through_mobile
     decoder = JwtHandler::Decoder.new(params[:refresh_token], :refresh_token)
     user= User.find(decoder.payload.dig(:id))
-    return respond_with_access_token(user)
+    respond_with_access_token(user)
   end
 
 

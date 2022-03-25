@@ -1,4 +1,6 @@
 class Item < ApplicationRecord
+  include Authenticator::Staff::ModelAuthorizationChecker
+  
   has_many :item_categories, dependent: :destroy
   has_many :categories, through: :item_categories
   has_many :cart_items, dependent: :destroy
