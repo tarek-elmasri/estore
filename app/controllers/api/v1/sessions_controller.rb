@@ -8,6 +8,7 @@ class Api::V1::SessionsController < ApplicationController
 
   def register
     user = User.new(signup_params)
+    user.should_validate_password = true
     user.save!
     create_session_cookies(user)
     respond_with_user_data(user)

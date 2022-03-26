@@ -1,9 +1,8 @@
 class Api::V1::Dashboard::ItemsController < Api::V1::Dashboard::Base
 
-  before_action :find_record, except: [:create]
+  before_action :set_item, except: [:create]
 
   def create
-
     item = Item.new(items_params)
     item.save!
     Current.user.staff_actions.create(action: :create_item, model: :item, model_id: item.id)
@@ -11,7 +10,7 @@ class Api::V1::Dashboard::ItemsController < Api::V1::Dashboard::Base
   end
 
   def update
-    @item.update(items_params)
+    @item.update!(items_params)
     Current.user.staff_actions.create(action: :update_item, model: :item, model_id: @item.id)
     respond(@item)
   end
@@ -49,7 +48,7 @@ class Api::V1::Dashboard::ItemsController < Api::V1::Dashboard::Base
     )
   end
 
-  def find_record
+  def set_item
     @item = Item.find(id: params[:id])
   end
 end

@@ -1,9 +1,8 @@
 class Api::V1::Dashboard::CategoriesController < Api::V1::Dashboard::Base
 
-  before_action :find_record, except: [:create]
+  before_action :set_category, except: [:create]
 
   def create
-
     category = Category.new(categories_params)
     category.save!
     Current.user.staff_actions.create(action: :create_category, model: :category, model_id: category.id)
@@ -27,7 +26,7 @@ class Api::V1::Dashboard::CategoriesController < Api::V1::Dashboard::Base
     params.require(:category).permit(:name, :primary_category_id)
   end
 
-  def find_record
+  def set_category
     @category = Category.find(id: params[:id])
   end
 end

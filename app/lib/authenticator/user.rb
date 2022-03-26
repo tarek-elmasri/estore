@@ -46,16 +46,14 @@ module Authenticator
 
       def reset_password new_pass
         self.password= new_pass
-        if self.save
-          self.kill_current_session
-          self.create_session
-          self.reset_refresh_token
-          self.regenerate_forget_password_token
-          # TODO: send email successsfull password change
-          return true
-        else
-          return false
-        end
+        self.should_validate_password = true
+        self.save!
+        self.kill_current_session
+        self.create_session
+        self.reset_refresh_token
+        self.regenerate_forget_password_token
+        # TODO: send email successsfull password change
+        
       end
 
       def self.find_by_email email

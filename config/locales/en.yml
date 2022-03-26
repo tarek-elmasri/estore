@@ -31,7 +31,7 @@
 
 en:
   errors:
-    not_found: "No record for provided id"
+    not_found: "No record found"
 
     authorization:
       unauthorized: "UNAUTHORIZED"

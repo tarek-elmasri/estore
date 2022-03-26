@@ -2,7 +2,6 @@ class Session < ApplicationRecord
 
 
   belongs_to :user
-
   validates :version, presence: true
 
   def self.kill_by_user_id user_id

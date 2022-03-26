@@ -2,9 +2,7 @@ module Authenticator
   module Staff
     module AuthorizationTypes
       TYPES= [
-        :create_authorization,
         :update_authorization,
-        :delete_authorization,
         :create_item,
         :update_item,
         :delete_item,
@@ -15,7 +13,6 @@ module Authenticator
         :update_user,
         :create_item_category,
         :delete_item_category,
-        :create_session
       ]
 
       attr_accessor *TYPES
