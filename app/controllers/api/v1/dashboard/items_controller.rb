@@ -3,8 +3,8 @@ class Api::V1::Dashboard::ItemsController < Api::V1::Dashboard::Base
   before_action :set_item, except: [:create]
 
   def create
-    item = Item.new(items_params)
-    item.save!
+    # create is user to allow passing nested parameter atttributes
+    item = Item.create!(items_params)
     Current.user.staff_actions.create(action: :create_item, model: :item, model_id: item.id)
     respond(item)
   end
@@ -44,7 +44,8 @@ class Api::V1::Dashboard::ItemsController < Api::V1::Dashboard::Base
       :allow_duplicate,
       :title,
       :sub_title,
-      :hint
+      :hint,
+      item_categories_attributes: [:id, :category_id, :_destroy]
     )
   end
 

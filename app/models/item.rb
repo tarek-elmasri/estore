@@ -1,11 +1,14 @@
 class Item < ApplicationRecord
   include Authenticator::Staff::ModelAuthorizationChecker
   
+  
   has_many :item_categories, dependent: :destroy
   has_many :categories, through: :item_categories
   has_many :cart_items, dependent: :destroy
   has_many :carts , through: :cart_items
-
+  
+  accepts_nested_attributes_for :item_categories, allow_destroy: true
+  
   validates :type_name,:name, presence: true
   validates :price, numericality: true
   validates :stock, presence: true , if: :has_limited_stock

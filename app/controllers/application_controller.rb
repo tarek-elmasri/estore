@@ -22,16 +22,13 @@ class ApplicationController < ActionController::API
   def authenticate_user
       decoder = JwtHandler::Decoder.new(Current.token, :access_token)
       Current.user_id = decoder.payload.dig(:id)
-      Current.rule = decoder.payload.dig(:rule)
+      # Current.rule = decoder.payload.dig(:rule)
   end
 
   def load_authenticated_user
     # supposed to be called after authenticate user
     Current.user = User.find(Current.user_id)
 
-    # suppoed no errors
-    # rescue
-    #   return respond_unauthorized
   end
 
 end

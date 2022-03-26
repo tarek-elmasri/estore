@@ -2,7 +2,7 @@ class Api::V1::Dashboard::AuthorizationsController < Api::V1::Dashboard::Base
   before_action :set_records
 
   def update
-    @auth.update(authorization_params)
+    @auth.update!(authorization_params)
   end
 
   private 
