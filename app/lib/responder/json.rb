@@ -50,13 +50,15 @@ module Responder
         errors: I18n.t("errors.not_found")
       }, status: :unprocessable_entity
     end
+
     
-    def respond_invalid_credentials
-      render json: {
-        code: "UP444", 
-        errors: I18n.t("errors.authorization.invalid_credentials")
-        },status: :unprocessable_entity
-    end
+    
+    # def respond_invalid_credentials
+    #   render json: {
+    #     code: "UP444", 
+    #     errors: I18n.t("errors.authorization.invalid_credentials")
+    #     },status: :unprocessable_entity
+    # end
 
     def respond_blocked_user
       respond_unauthorized("UA412","errors.authorization.blocked_user")

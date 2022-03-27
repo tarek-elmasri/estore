@@ -1,17 +1,18 @@
 class Api::V1::SessionsController < ApplicationController
+  before_action :authenticate_user, only: [:logout]
 
   def login
-    user = User.auth(login_params)
-    create_session_cookies(user)
-    respond_with_user_data(user)
+    Current.user = User.auth(login_params)
+    create_session_cookies(Current.user)
+    respond_with_user_data(Current.user)
   end
 
   def register
-    user = User.new(signup_params)
-    user.should_validate_password = true
-    user.save!
-    create_session_cookies(user)
-    respond_with_user_data(user)
+    Current.user = User.new(signup_params)
+    Current.user.should_validate_password = true
+    Current.user.save!
+    create_session_cookies(Current.user)
+    respond_with_user_data(Current.user)
   end
 
   def refresh
@@ -24,7 +25,7 @@ class Api::V1::SessionsController < ApplicationController
 
   def logout
     session['session_id'] = nil if Current.web_platform?
-    user.kill_current_session
+    Session.kill_by_user_id(Current.user_id)
     respond_ok()
   end
 
@@ -39,10 +40,10 @@ class Api::V1::SessionsController < ApplicationController
   end
 
   def reset_password
-    user = User.find_by_password_token!(params[:token])
-    user.reset_password params[:password]
-    create_session_cookies(user)
-    respond_with_user_data(user)
+    Current.user = User.find_by_password_token!(params[:token])
+    Current.user.reset_password params[:password]
+    create_session_cookies(Current.user)
+    respond_with_user_data(Current.user)
     
   end
 
@@ -60,7 +61,7 @@ class Api::V1::SessionsController < ApplicationController
   end
 
   def login_params
-    params.permit(:phone_no , :password)
+    params.require(:user).permit(:phone_no , :password)
   end
 
   def create_session_cookies user

@@ -14,6 +14,8 @@ module Errors
           rescue_from ActiveRecord::RecordInvalid, with: :record_invalid 
           rescue_from ActiveRecord::RecordNotDestroyed, with: :record_invalid
 
+          rescue_from ActionController::ParameterMissing, with: :respond_bad_request
+
           rescue_from Errors::BlockedUser, with: :respond_error
         end
 
@@ -31,6 +33,12 @@ module Errors
       end
 
 
+      def respond_bad_request e
+        render json: {
+          error: e.message,
+          code: "BD400",
+        }, status: 400
+      end
     end
   end
 end

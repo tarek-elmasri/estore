@@ -41,19 +41,19 @@ module Authenticator
 
       def self.find_by_password_token! pass_token
         raise ActiveRecord::RecordNotFound unless pass_token
-        User.find_by!(forget_password_token: pass_token)
+        find_by!(forget_password_token: pass_token)
       end
 
       def reset_password new_pass
-        self.password= new_pass
-        self.should_validate_password = true
-        self.save!
-        self.kill_current_session
-        self.create_session
-        self.reset_refresh_token
-        self.regenerate_forget_password_token
+        password= new_pass
+        should_validate_password = true
+        save!
+        kill_current_session
+        create_session
+        reset_refresh_token
+        regenerate_forget_password_token
         # TODO: send email successsfull password change
-        
+        self
       end
 
       def self.find_by_email email

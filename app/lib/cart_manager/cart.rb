@@ -32,6 +32,7 @@ module CartManager
 
       cart_item.cart_id = cart.id
       cart_item.save
+      cart_item
     end
 
     def remove_item cart_item_id
@@ -72,7 +73,7 @@ module CartManager
     end
 
     def check_quantity quantity
-      raise CartManager::Errors::InvalidZeroQuantity unless quantity && quantity > 1
+      raise CartManager::Errors::InvalidZeroQuantity unless quantity && quantity > 0
     end
 
     def check_duplicate( item, exclude_cart_item_id)

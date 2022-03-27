@@ -20,6 +20,10 @@ Rails.application.routes.draw do
           get "/" => "users#index"
         end
 
+        scope :cart_items do
+          post "/" => "cart_items#create"
+        end
+
         scope module: "dashboard" do
           scope :dashboard do
             scope :users do
