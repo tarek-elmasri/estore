@@ -1,6 +1,6 @@
 class Api::V1::CartItemsController < ApplicationController
   before_action :authenticate_user
-  before_action :load_authenticated_user
+  # before_action :load_authenticated_user
   before_action :set_cart_manager
 
 

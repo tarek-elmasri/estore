@@ -25,7 +25,7 @@ class Api::V1::SessionsController < ApplicationController
 
   def logout
     session['session_id'] = nil if Current.web_platform?
-    Session.kill_by_user_id(Current.user_id)
+    Session.kill_by_user_id(Current.user.id)
     respond_ok()
   end
 
