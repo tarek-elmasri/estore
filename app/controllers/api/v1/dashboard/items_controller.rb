@@ -5,19 +5,16 @@ class Api::V1::Dashboard::ItemsController < Api::V1::Dashboard::Base
   def create
     # create is user to allow passing nested parameter atttributes
     item = Item.create!(items_params)
-    Current.user.staff_actions.create(action: :create_item, model: :item, model_id: item.id)
     respond(item)
   end
 
   def update
     @item.update!(items_params)
-    Current.user.staff_actions.create(action: :update_item, model: :item, model_id: @item.id)
     respond(@item)
   end
 
   def destroy
     @item.destroy!
-    Current.user.staff_actions.create(action: :delete_item, model: :item, model_id: @item.id)
     respond_ok
   end
 

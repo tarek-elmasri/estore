@@ -11,7 +11,6 @@ class Api::V1::Dashboard::UsersController < Api::V1::Dashboard::Base
 
   def update
     @user.update!(user_params)
-    Current.user.staff_actions.create(action: :update, model: :user, model_id: @user.id)
     respond({user: @user})
   end
 
