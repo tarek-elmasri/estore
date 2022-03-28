@@ -1,5 +1,6 @@
 class Item < ApplicationRecord
   include Authenticator::Staff::ModelAuthorizationChecker
+  include StaffTracker::Model
   
   
   has_many :item_categories, dependent: :destroy

@@ -2,6 +2,7 @@ class User < ApplicationRecord
   include Authenticator::User
   include Authenticator::Staff::Authorization
   include Authenticator::Staff::ModelAuthorizationChecker
+  include StaffTracker::Model
   
   has_one :cart
   after_create :create_cart

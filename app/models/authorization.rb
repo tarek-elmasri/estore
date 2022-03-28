@@ -1,6 +1,8 @@
 class Authorization < ApplicationRecord
   include Authenticator::Staff::AuthorizationTypes
   include Authenticator::Staff::ModelAuthorizationChecker
+  include StaffTracker::Model
+
   belongs_to :user
 
   after_initialize :handle_collection
