@@ -3,6 +3,7 @@ class Api::V1::Dashboard::AuthorizationsController < Api::V1::Dashboard::Base
 
   def update
     @auth.update!(authorization_params)
+    respond({authorization: @auth})
   end
 
   private 

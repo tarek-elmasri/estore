@@ -22,15 +22,23 @@ Rails.application.routes.draw do
 
         scope :cart_items do
           post "/" => "cart_items#create"
+          delete "/" => "cart_items#destroy"
+          patch "/" => "cart_items#update"
+          get "/" => "cart_items#index"
         end
 
         scope module: "dashboard" do
           scope :dashboard do
             scope :users do
               get "/" => "users#index"
+              patch "/" => "users#update"
             end
             scope :authorizations do
               patch "/" => "authorizations#update"
+            end
+
+            scope :category do
+              post "/" => "categories#create"
             end
           end
         end

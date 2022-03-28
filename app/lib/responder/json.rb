@@ -51,18 +51,28 @@ module Responder
       }, status: :unprocessable_entity
     end
 
-    
-    
-    # def respond_invalid_credentials
-    #   render json: {
-    #     code: "UP444", 
-    #     errors: I18n.t("errors.authorization.invalid_credentials")
-    #     },status: :unprocessable_entity
-    # end
-
-    def respond_blocked_user
-      respond_unauthorized("UA412","errors.authorization.blocked_user")
+    def record_invalid e
+      respond_unprocessable(e.record.errors)
     end
+
+    def respond_error e
+      render json: {
+        error: I18n.t(e.error),
+        code: e.code
+      }, status: e.status
+    end
+
+
+    def respond_bad_request e
+      render json: {
+        error: e.message,
+        code: "BD400",
+      }, status: 400
+    end
+
+    # def respond_blocked_user
+    #   respond_unauthorized("UA412","errors.authorization.blocked_user")
+    # end
 
     def respond_forbidden
       render json: {

@@ -3,21 +3,10 @@ class Api::V1::CartItemsController < ApplicationController
   before_action :load_authenticated_user
   before_action :set_cart_manager
 
-rescue_from CartManager::Errors::ItemNotFound,CartManager::Errors::CartItemNotFound do
-  respond_not_found
-end
 
-rescue_from CartManager::Errors::InvalidZeroQuantity,CartManager::Errors::MultipleQuantityNotAllowed do
-  respond_unprocessable({message: I18n.t('errors.cart_items.invalid_quantity')}, 'CI101')
-end
-
-rescue_from CartManager::Errors::DuplicateNotAllowed do
-  respond_unprocessable({message: I18n.t('errors.cart_items.duplicate')}, 'CI102')
-end
-
-rescue_from CartManager::Errors::NoStock do
-  respond_unprocessable({message: I18n.t('errors.cart_items.no_stock')}, 'CI103')
-end
+  def index
+    respond({cart_items: Current.user.cart.cart_items})
+  end
 
   def create
     ci = @manager.add_item(CartItem.new(cart_items_params))
