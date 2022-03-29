@@ -18,6 +18,7 @@ Rails.application.routes.draw do
         
         scope :users do
           get "/" => "users#index"
+          patch "/" => "users#update"
         end
 
         scope :cart_items do
@@ -38,7 +39,10 @@ Rails.application.routes.draw do
             end
 
             scope :category do
+              get "/" => "categories#index"
               post "/" => "categories#create"
+              patch "/" => "categories#update"
+              delete "/" => "categories#destroy"
             end
           end
         end

@@ -1,6 +1,11 @@
 class Api::V1::Dashboard::CategoriesController < Api::V1::Dashboard::Base
 
-  before_action :set_category, except: [:create]
+  before_action :set_category, except: [:index,:create]
+
+  def index
+    categories = Category.all
+    respond(categories: categories)
+  end
 
   def create
     category = Category.new(categories_params)
@@ -24,6 +29,6 @@ class Api::V1::Dashboard::CategoriesController < Api::V1::Dashboard::Base
   end
 
   def set_category
-    @category = Category.find(id: params[:id])
+    @category = Category.find(params[:id])
   end
 end

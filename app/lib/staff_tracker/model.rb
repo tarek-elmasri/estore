@@ -22,7 +22,7 @@ module StaffTracker
       
       def recorder(action)
         return unless Current.user.is_staff? || Current.user.is_admin?
-        Current.user.staff_actions.create(action: action , model: self.class.to_s.downcase, model_id: self.id)
+        Current.user.staff_actions.new(action: action , model: self.class.to_s.downcase, model_id: self.id).save
       end
     end
   end

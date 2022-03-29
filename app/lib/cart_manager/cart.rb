@@ -30,20 +30,20 @@ module CartManager
       run_checkers(item , cart_item.quantity)
 
       cart_item.cart_id = cart.id
-      cart_item.save
+      cart_item.save!
       cart_item
     end
 
     def remove_item cart_item_id
       ci= self.cart.cart_items.find(cart_item_id)
-      ci.destroy
+      ci.destroy!
     end
 
     def update_quantity cart_item_id , new_quantity
       ci = self.cart.cart_items.find(cart_item_id)
 
       run_checkers(ci.item , new_quantity, ci.id)
-      ci.update(quantity: new_quantity)
+      ci.update!(quantity: new_quantity)
     end
 
 
