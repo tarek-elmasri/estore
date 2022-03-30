@@ -3,13 +3,14 @@ class Api::V1::UsersController < ApplicationController
   # before_action :load_authenticated_user
 
   def index
-    respond({user: Current.user.reload})
+    user= User.includes(cart: [:cart_items]).includes(:authorization).find(Current.user.id)
+    respond(user)
   end
 
   def update
     Current.user.reload
     Current.user.update!(users_params)
-    respond(user: Current.user)
+    respond(Current.user)
   end
 
   private

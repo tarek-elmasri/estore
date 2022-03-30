@@ -17,23 +17,23 @@ module Responder
     #   respond_unauthorized("UA413","errors.authorization.invalid_password_token")
     # end
 
-    def respond payload, includes=[]
-      render json: payload
+    def respond payload, options={}
+      render json: payload, fields: options[:fields], include: options[:include]
     end
 
     def respond_ok
       render json: {message: :ok}
     end
 
-    def respond_with_access_token(user)
-      render json: {access_token: user.generate_access_token}
-    end
+    # def respond_with_access_token(user)
+    #   render json: {access_token: user.generate_access_token}
+    # end
 
-    def respond_with_user_data user
-      return respond_unauthorized if user.blank?
-      return respond_blocked_user if user.blocked?
-      respond({tokens: user.tokens , user:user})
-    end
+    # def respond_with_user_data user
+    #   # return respond_unauthorized if user.blank?
+    #   # return respond_blocked_user if user.blocked?
+    #   respond({tokens: user.tokens , user:user})
+    # end
 
     def respond_unprocessable( errors={}, code="UP422")
       payload={

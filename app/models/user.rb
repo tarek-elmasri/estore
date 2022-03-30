@@ -5,6 +5,7 @@ class User < ApplicationRecord
   include StaffTracker::Model
   
   has_one :cart
+  has_many :cart_items , through: :cart
   after_create :create_cart
 
   has_many :staff_actions

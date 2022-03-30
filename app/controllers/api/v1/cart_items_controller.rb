@@ -5,22 +5,22 @@ class Api::V1::CartItemsController < ApplicationController
 
 
   def index
-    respond({cart_items: Current.user.cart.cart_items})
+    respond(Current.user.cart.cart_items)
   end
 
   def create
     ci = @manager.add_item(CartItem.new(cart_items_params))
-    respond({cart_item: ci})
+    respond(ci)
   end
 
   def update
     ci = @manager.update_quantity(params[:id], params[:quantity])
-    respond({cart_item: ci})
+    respond(ci)
   end
 
   def destroy
     ci = @manager.remove_item(params[:id])
-    respond({cart_item: ci})
+    respond(ci)
   end
 
   private

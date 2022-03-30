@@ -4,7 +4,8 @@ class Api::V1::SessionsController < ApplicationController
   def login
     Current.user = User.auth(login_params)
     create_session_cookies(Current.user)
-    respond_with_user_data(Current.user)
+    # respond_with_user_data(Current.user)
+    respond(user_data)
   end
 
   def register
@@ -12,7 +13,8 @@ class Api::V1::SessionsController < ApplicationController
     Current.user.should_validate_password = true
     Current.user.save!
     create_session_cookies(Current.user)
-    respond_with_user_data(Current.user)
+    # respond_with_user_data(Current.user)
+    respond(user_data)
   end
 
   def refresh
@@ -43,7 +45,8 @@ class Api::V1::SessionsController < ApplicationController
     Current.user = User.find_by_password_token!(params[:token])
     Current.user.reset_password params[:password]
     create_session_cookies(Current.user)
-    respond_with_user_data(Current.user)
+    respond(user_data)
+    # respond_with_user_data(Current.user)
     
   end
 
@@ -60,6 +63,10 @@ class Api::V1::SessionsController < ApplicationController
     )
   end
 
+  def user_data
+    {tokens: Current.user.tokens, user: serialize_resource(Current.user)}
+  end
+
   def login_params
     params.require(:user).permit(:phone_no , :password)
   end
@@ -71,13 +78,21 @@ class Api::V1::SessionsController < ApplicationController
 
   def refresh_through_web
     current_session = Session.find_by_id_and_version!(session[:session_id], APP_VERSION)
-    respond_with_access_token(current_session.user)
+    # respond_with_access_token(current_session.user)
+    respond({
+      access_token: current_session.user.generate_access_token,
+      user: serialize_resource(current_session.user)
+      })
   end
 
   def refresh_through_mobile
     decoder = JwtHandler::Decoder.new(params[:refresh_token], :refresh_token)
     user= User.find(decoder.payload.dig(:id))
-    respond_with_access_token(user)
+    # respond_with_access_token(user)
+    respond({
+      access_token: user.generate_access_token,
+      user: serialize_resource(user)
+      })
   end
 
 
