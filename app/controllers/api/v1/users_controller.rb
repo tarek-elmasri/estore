@@ -3,7 +3,7 @@ class Api::V1::UsersController < ApplicationController
   # before_action :load_authenticated_user
 
   def index
-    user= User.includes(cart: [:cart_items]).includes(:authorization).find(Current.user.id)
+    user= User.includes(cart: [cart_items: :item]).includes(:authorization).find(Current.user.id)
     respond(user)
   end
 
