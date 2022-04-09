@@ -5,7 +5,8 @@ class Api::V1::CartItemsController < ApplicationController
 
 
   def index
-    respond(Current.user.cart.cart_items)
+    cart=Current.user.get_cart
+    respond(cart, include: 'cart_items.item')
   end
 
   def create

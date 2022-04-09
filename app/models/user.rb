@@ -21,6 +21,17 @@ class User < ApplicationRecord
   validate :valid_phone_no
 
 
+  scope :load_with_cart_and_authorization, ->(id) {
+    User.includes(:cart)
+        .includes(:authorization)
+        .find(id)
+  }
+    
+
+  def get_cart
+    Cart.includes(cart_items: [:item]).find_by(user_id: self.id)
+  end
+
   def valid_phone_no
     return unless phone_no
     unless phone_no.length == 9 && phone_no[0]== "5"
