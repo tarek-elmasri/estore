@@ -27,8 +27,8 @@ class ApplicationController < ActionController::API
       # Current.user_id = decoder.payload.dig(:id)
   end
 
-  def serialize_resource resource
-    ActiveModelSerializers::SerializableResource.new(resource)
+  def serialize_resource resource, options={}
+    ActiveModelSerializers::SerializableResource.new(resource, options)
   end
 
   # def load_authenticated_user

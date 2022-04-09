@@ -1,5 +1,5 @@
 class Api::V1::Dashboard::AuthorizationsController < Api::V1::Dashboard::Base
-  before_action :set_records
+  before_action :set_records, except: [:index]
 
   def update
     @auth.update!(authorization_params)
@@ -13,7 +13,7 @@ class Api::V1::Dashboard::AuthorizationsController < Api::V1::Dashboard::Base
   end
 
   def authorization_params
-    params.require(:authorization).permit(* Authorization::TYPES)
+    params.require(:authorization).permit(*Authorization::TYPES)
   end
 
   

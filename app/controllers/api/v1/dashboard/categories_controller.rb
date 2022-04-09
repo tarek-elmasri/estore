@@ -4,7 +4,7 @@ class Api::V1::Dashboard::CategoriesController < Api::V1::Dashboard::Base
 
   def index
     categories = Category.all
-    respond(categories: categories)
+    respond({categories: serialize_resource(categories, each_serializer: Dashboard::CategorySerializer)})
   end
 
   def create

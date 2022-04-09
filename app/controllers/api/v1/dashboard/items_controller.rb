@@ -3,7 +3,7 @@ class Api::V1::Dashboard::ItemsController < Api::V1::Dashboard::Base
   before_action :set_item, except: [:create]
 
   def create
-    # create is user to allow passing nested parameter atttributes
+    # create is used to allow passing nested parameter atttributes
     item = Item.create!(items_params)
     respond(item)
   end

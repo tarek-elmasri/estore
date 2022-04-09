@@ -5,13 +5,15 @@ class Api::V1::Dashboard::UsersController < Api::V1::Dashboard::Base
 
   def index
     users= User.all
-    respond({users: users})
+    respond({
+      users: serialize_resource(users, each_serializer: Dashboard::UserSerializer)
+    })
   end
 
 
   def update
     @user.update!(user_params)
-    respond({user: @user})
+    respond(@user)
   end
 
 

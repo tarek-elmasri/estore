@@ -44,6 +44,10 @@ Rails.application.routes.draw do
               patch "/" => "categories#update"
               delete "/" => "categories#destroy"
             end
+            
+            scope :staff_actions do
+              get "/" => "staff_actions#index"
+            end
           end
         end
 
