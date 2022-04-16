@@ -4,7 +4,7 @@ class Api::V1::CartItemsController < ApplicationController
 
 
   def index
-    cart=Current.user.get_cart
+    cart=Current.user.get_full_cart
     respond(cart, include: 'cart_items.item')
   end
 
@@ -27,8 +27,9 @@ class Api::V1::CartItemsController < ApplicationController
   end
 
   def sync
-    new_cart=@cart.sync(sync_cart_items_params)
-    respond(new_cart)
+    @cart.sync(sync_cart_items_params)
+    updated_cart=Current.user.get_full_cart
+    respond(updated_cart, include: 'cart_items.item')
   end
 
   private

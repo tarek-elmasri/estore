@@ -28,7 +28,7 @@ class User < ApplicationRecord
   }
     
 
-  def get_cart
+  def get_full_cart
     Cart.includes(cart_items: [:item]).find_by(user_id: self.id)
   end
 
