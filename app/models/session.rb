@@ -15,8 +15,10 @@ class Session < ApplicationRecord
 
   def self.create_or_update user_id
     return unless user_id
-    user_session = Session.where(user_id: user_id).first_or_initialize
-    user_session.version = APP_VERSION
-    user_session.save
+    Session.where(user_id: user_id).first_or_initialize
+            .update!(version: APP_VERSION)
+    # user_session = Session.where(user_id: user_id).first_or_initialize
+    # user_session.version = APP_VERSION
+    # user_session.save
   end
 end

@@ -1,7 +1,6 @@
 class Api::V1::CartItemsController < ApplicationController
   before_action :authenticate_user
-  # before_action :load_authenticated_user
-  before_action :set_cart_manager
+  before_action :set_cart, except: [:index]
 
 
   def index
@@ -10,28 +9,35 @@ class Api::V1::CartItemsController < ApplicationController
   end
 
   def create
-    ci = @manager.add_item(CartItem.new(cart_items_params))
+    item= Item.visible.find(params[:item_id])
+    ci= @cart.add_item(item, params[:quantity])
     respond(ci)
   end
 
   def update
-    ci = @manager.update_quantity(params[:id], params[:quantity])
-    respond(ci)
+    ci = @cart.cart_items.includes(:item).find(params[:id])
+    cart_item = @cart.update_quantity(ci, params[:quantity])
+    respond(cart_item)
   end
 
   def destroy
-    ci = @manager.remove_item(params[:id])
-    respond(ci)
+    ci = @cart.cart_items.find(params[:id])
+    cart_item = @cart.remove_item(ci)
+    respond(cart_item)
+  end
+
+  def sync
+    new_cart=@cart.sync(sync_cart_items_params)
+    respond(new_cart)
   end
 
   private
 
-  def cart_items_params
-    params.require(:cart_item).permit(:item_id, :quantity)
+  def set_cart
+    @cart= Current.user.cart
   end
 
-  def set_cart_manager
-    @manager=CartManager::Cart.new(Current.user)
+  def sync_cart_items_params
+    params.permit(cart_items: [:item_id, :quantity])[:cart_items]
   end
-
 end
