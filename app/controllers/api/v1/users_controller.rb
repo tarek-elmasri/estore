@@ -1,17 +1,23 @@
 class Api::V1::UsersController < ApplicationController 
-  before_action :authenticate_user
-  # before_action :load_authenticated_user
+  before_action :authenticate_user, except: [:create]
 
   def index
-    # user= User.includes(cart: [cart_items: :item]).includes(:authorization).find(Current.user.id)
     user= User.load_with_cart_and_authorization(Current.user.id)
-    respond(user)
+    respond(user, include: ['cart.cart_items.item', 'authorization'])
   end
 
   def update
     Current.user.reload
     Current.user.update!(users_params)
     respond(Current.user)
+  end
+
+  def create
+    Current.user = User.new(signup_params)
+    Current.user.should_validate_password = true
+    Current.user.save!
+    create_session_cookies(Current.user)
+    respond({tokens: Current.user.tokens})
   end
 
   private
@@ -22,6 +28,17 @@ class Api::V1::UsersController < ApplicationController
       :phone_no,
       :email,
       :gender,
+    )
+  end
+
+  def signup_params
+    params.require(:user).permit(
+      :first_name,
+      :last_name,
+      :phone_no,
+      :email,
+      :gender,
+      :password
     )
   end
 

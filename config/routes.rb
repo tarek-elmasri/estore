@@ -7,18 +7,25 @@ Rails.application.routes.draw do
       scope module: "v1" do
 
         scope :sessions do
-          post "login" => "sessions#login"
-          post "register" => "sessions#register"
-          patch "refresh" => "sessions#refresh"
-          delete "logout" => "sessions#logout"
-          post "forget_password" => "sessions#forget_password"
-          post "validate_token" => "sessions#validate_password_token"
-          patch "reset_password" => "sessions#reset_password"        
+          post "/" => "sessions#create"
+          patch "/" => "sessions#update"
+          delete "/" => "sessions#delete"       
+        end
+
+        scope :forget_password do
+          post "/" => "forget_passwords#create"
+          get "/" => "forget_passwords#index"
+          patch "/" => "forget_passwords#update" 
         end
         
         scope :users do
           get "/" => "users#index"
           patch "/" => "users#update"
+          post "/" => 'users#create'
+        end
+
+        scope :items do
+          get '/' => 'items#index'
         end
 
         scope :cart_items do

@@ -19,6 +19,11 @@ class ApplicationController < ActionController::API
   end
 
   protected
+  
+  def create_session_cookies user
+    session[:session_id] = user.session.id if Current.web_platform?
+  end
+
   def authenticate_user
       decoder = JwtHandler::Decoder.new(Current.token, :access_token)
       id = decoder.payload.dig(:id)
