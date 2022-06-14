@@ -12,8 +12,8 @@ class CartItem < ApplicationRecord
     false
   end
 
-  def available_quantity?
-    item.has_stock?(quantity)
+  def available_quantity?(required_quantity=quantity)
+    item.has_stock?(required_quantity)
   end
 
   private
@@ -37,8 +37,13 @@ class CartItem < ApplicationRecord
   end
 
   def required_quantity
-    unless available_quantity?
-      errors.add(:quantity, I18n.t('errors.cart_items.no_stock'))
-    end
+    total_quantity = quantity
+    CartItem.where(cart_id: cart_id, item_id: item_id).each |ci| do 
+      total_quantity += ci.quantity
+    end if item.duplicate_allowed?
+
+    errors.add(:quantity, I18n.t('errors.cart_items.no_stock')) unless available_quantity?(total_quantity)
   end
+
+  
 end
