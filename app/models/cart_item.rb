@@ -38,10 +38,9 @@ class CartItem < ApplicationRecord
 
   def required_quantity
     total_quantity = quantity
-    CartItem.where(cart_id: cart_id, item_id: item_id).each |ci| do 
-      total_quantity += ci.quantity
-    end if item.duplicate_allowed?
-
+    total_quantity += CartItem.where(cart_id: cart_id, item_id: item_id)
+                              .sum(:quantity) if item.duplicate_allowed?
+    
     errors.add(:quantity, I18n.t('errors.cart_items.no_stock')) unless available_quantity?(total_quantity)
   end
 

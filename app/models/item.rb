@@ -28,7 +28,7 @@ class Item < ApplicationRecord
 
   def has_stock?( amount = 1)
     return true unless has_limited_stock
-    return true if stock && stock > amount
+    return true if stock && stock >= amount
     return false
   end
 
