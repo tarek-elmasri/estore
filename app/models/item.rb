@@ -32,6 +32,14 @@ class Item < ApplicationRecord
     return false
   end
 
+  def multi_quantity_allowed?
+    allow_multi_quantity
+  end
+
+  def duplicate_allowed?
+    allow_duplicate
+  end
+
   private
   def discount_dates
     return unless discount_start_date || discount_end_date
