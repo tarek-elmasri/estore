@@ -40,6 +40,12 @@ class Item < ApplicationRecord
     allow_duplicate
   end
 
+  def is_available?
+    #TODO : add field available to item and switch availability according item removed from dashboard or not
+    # and keep visible to its appearence in shop nor hide
+    visible # && available
+  end
+
   private
   def discount_dates
     return unless discount_start_date || discount_end_date

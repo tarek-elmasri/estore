@@ -5,15 +5,24 @@ class CartItem < ApplicationRecord
   #new section
   #-----------------------
   validates :item, presence: true
-  validate :zero_quantity , :multi_quantity, :duplicates, :required_quantity
+  validate :zero_quantity , :multi_quantity , :duplicates
+  #validate :required_quantity
 
   def available?
     return true if (item && item.visible)
     false
   end
 
-  def available_quantity?(required_quantity=quantity)
-    item.has_stock?(required_quantity)
+  def available_quantity?
+    total_quantity = CartItem.where(cart_id: cart_id, item_id: item_id)
+                              .sum(:quantity)
+    return true if item.has_stock?(total_quantity)
+    errors.add(:quantity, I18n.t('errors.cart_items.no_stock'))
+    return false
+  end
+
+  def available_item?
+    item.is_available?
   end
 
   private
@@ -36,13 +45,13 @@ class CartItem < ApplicationRecord
     end
   end
 
-  def required_quantity
-    total_quantity = quantity
-    total_quantity += CartItem.where(cart_id: cart_id, item_id: item_id)
-                              .sum(:quantity) if item.duplicate_allowed?
+  # def required_quantity
+  #   total_quantity = quantity
+  #   total_quantity += CartItem.where(cart_id: cart_id, item_id: item_id)
+  #                             .sum(:quantity) if item.duplicate_allowed?
     
-    errors.add(:quantity, I18n.t('errors.cart_items.no_stock')) unless available_quantity?(total_quantity)
-  end
+  #   errors.add(:quantity, I18n.t('errors.cart_items.no_stock')) unless available_quantity?(total_quantity)
+  # end
 
-  
+
 end
