@@ -5,13 +5,13 @@ class CartItem < ApplicationRecord
   #new section
   #-----------------------
   validates :item, presence: true
-  validate :zero_quantity , :multi_quantity , :duplicates
+  validate :zero_quantity , :multi_quantity , :duplicates, :available_item?
   #validate :required_quantity
 
-  def available?
-    return true if (item && item.visible)
-    false
-  end
+  # def available?
+  #   return true if (item && item.visible)
+  #   false
+  # end
 
   def available_quantity?
     total_quantity = CartItem.where(cart_id: cart_id, item_id: item_id)
@@ -22,7 +22,9 @@ class CartItem < ApplicationRecord
   end
 
   def available_item?
-    item.is_available?
+    return true if item && item.is_available?
+    errors.add(:item , I18n.t('errors.cart_items.not_available'))
+    return false
   end
 
   private
