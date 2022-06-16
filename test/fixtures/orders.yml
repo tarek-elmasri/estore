@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  belongs_to: 
+  t_value: 1.5
+  t_vat: 1.5
+  status: MyString
+  payment_intent: MyString
+  t_payment: MyString
+
+two:
+  belongs_to: 
+  t_value: 1.5
+  t_vat: 1.5
+  status: MyString
+  payment_intent: MyString
+  t_payment: MyString

@@ -4,6 +4,8 @@ class User < ApplicationRecord
   include Authenticator::Staff::ModelAuthorizationChecker
   include StaffTracker::Model
   
+  has_many :orders
+  
   has_one :cart
   has_many :cart_items , through: :cart
   after_create :create_cart
