@@ -29,6 +29,8 @@ gem 'jwt'
 
 gem 'faraday'
 
+gem 'stripe'
+
 gem 'active_storage_validations'
 
 gem 'active_model_serializers'

@@ -46,6 +46,17 @@ class Item < ApplicationRecord
     visible # && available
   end
 
+  def eleminate_quantity(amount)
+    # decrement escapes is authorized to function
+    # and should be called only after order successfully completed
+    return unless has_limited_stock
+    if has_stock?(amount)
+      decrement!(:stock, amount)
+    else
+      decrement!(:stock , stock)
+    end
+  end
+
   private
   def discount_dates
     return unless discount_start_date || discount_end_date

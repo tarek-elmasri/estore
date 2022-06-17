@@ -1,5 +1,6 @@
 class Order < ApplicationRecord
-  
+  include StripeManager::Base
+
   attr_accessor :cart
 
   belongs_to :user
@@ -12,6 +13,19 @@ class Order < ApplicationRecord
   before_validation :set_user , :build_values, on: :create
 
   after_create :create_order_items
+
+  after_save :check_status
+
+  scope :not_fullfilled, -> {where.not(status: "succeeded")}
+  scope :fullfilled, -> {where(status: "succeeded")}
+  def check_status
+    if status_changed? && status== 'succeeded'
+      # decrementing item stocks after successfull payment
+      orderItems.each do |oi|
+        Item.find(oi.item_id).eleminate_quantity(oi.quantity)
+      end
+    end
+  end
 
   private
 

@@ -37,6 +37,7 @@ module Store
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
 
+    Stripe.api_key = "sk_test_51JFb7TAsVHY13rlezYtGPrS2pJRHjGG3ckIbPgEkmvTMt46tRLrF8kWkTQaw22zdgmSTFYjVUFha76C541NyVHbp00sqZGOqGH"
     # use uuid instead if numeric ids in database
     config.generators do |g|
       g.orm :active_record, primary_key_type: :uuid
