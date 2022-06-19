@@ -52,7 +52,7 @@ class Order < ApplicationRecord
   def create_order_items
     return unless self.cart
 
-    order_items =[]
+    order_items_array =[]
     self.cart.cart_items.include_item.each do |ci|
       oi= {
         order_id: id,
@@ -62,10 +62,10 @@ class Order < ApplicationRecord
         item_id: ci.item_id
       }
       oi[:t_value] = oi[:quantity] * oi[:value]
-      order_items.push(oi)
+      order_items_array.push(oi)
     end
 
-    OrderItem.create!(order_items)
+    OrderItem.create!(order_items_array)
   end
 
   def cart_checkout

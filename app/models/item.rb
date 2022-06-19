@@ -31,7 +31,8 @@ class Item < ApplicationRecord
   validate :discount_dates
 
   scope :visible, -> {where(visible: true)}
-
+  scope :available, -> {where(available: true)}
+  
   def is_card?
     type_name == 'card'
   end
@@ -53,7 +54,7 @@ class Item < ApplicationRecord
   def is_available?
     #TODO : add field available to item and switch availability according item removed from dashboard or not
     # and keep visible to its appearence in shop nor hide
-    visible # && available
+    visible  && available
   end
 
   def eleminate_quantity(amount)

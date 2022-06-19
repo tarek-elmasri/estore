@@ -25,6 +25,7 @@ class Api::V1::Dashboard::ItemsController < Api::V1::Dashboard::Base
       :type,
       :name,
       :price,
+      :available,
       :has_limited_stock,
       :stock,
       :low_stock,
