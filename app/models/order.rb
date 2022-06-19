@@ -20,10 +20,11 @@ class Order < ApplicationRecord
   scope :fullfilled, -> {where(status: "succeeded")}
   def check_status
     if status_changed? && status== 'succeeded'
-      # decrementing item stocks after successfull payment
-      orderItems.each do |oi|
-        Item.find(oi.item_id).eleminate_quantity(oi.quantity)
-      end
+      OrderHandler
+      # # decrementing item stocks after successfull payment
+      # order_items.each do |oi|
+      #   Item.find(oi.item_id).eleminate_quantity(oi.quantity)
+      # end
     end
   end
 
@@ -52,7 +53,7 @@ class Order < ApplicationRecord
     return unless self.cart
 
     order_items =[]
-    self.cart.cart_items.each do |ci|
+    self.cart.cart_items.include_item.each do |ci|
       oi= {
         order_id: id,
         quantity: ci.quantity,

@@ -7,12 +7,18 @@ class Item < ApplicationRecord
   has_many :categories, through: :item_categories
   has_many :cart_items, dependent: :destroy
   has_many :carts , through: :cart_items
+  has_many :cards
   
   accepts_nested_attributes_for :item_categories, allow_destroy: true
   
-  validates :type_name,:name, presence: true
+  before_validation :set_stock_to_zero,if: :is_card?,  on: :create
+
+  validates :name, presence: true
+  validates :type_name, inclusion: { in: ['card' , 'item']}
   validates :price, numericality: true
+  validate :stock_set_to_limited , if: :is_card?
   validates :stock, presence: true , if: :has_limited_stock
+  validate :stock_didnt_change ,if: :is_card?, unless: :new_record?
   validates :stock, numericality: {only_integer: true}, allow_nil: true
   validates :low_stock, presence: true , if: :notify_on_low_stock
   validates :low_stock, numericality: {only_integer: true}, allow_nil: true
@@ -25,6 +31,10 @@ class Item < ApplicationRecord
   validate :discount_dates
 
   scope :visible, -> {where(visible: true)}
+
+  def is_card?
+    type_name == 'card'
+  end
 
   def has_stock?( amount = 1)
     return true unless has_limited_stock
@@ -58,6 +68,26 @@ class Item < ApplicationRecord
   end
 
   private
+  def set_stock_to_zero
+    if stock && stock > 0
+      errors.add(:stock, I18n.t('errors.item.stock_must_be_zero'))
+      return
+    end
+    self.stock = 0 
+  end
+
+  def stock_set_to_limited
+    unless has_limited_stock
+      errors.add(:has_limited_stock, I18n.t('errors.item.must_limited_stock'))
+    end
+  end
+
+  def stock_didnt_change
+    if stock_changed?
+      errors.add(:stock, I18n.t('errors.item.card_stock_change'))
+    end
+  end
+
   def discount_dates
     return unless discount_start_date || discount_end_date
     

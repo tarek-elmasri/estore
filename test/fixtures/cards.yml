@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  code: MyString
+  order_item: one
+  item: one
+  active: false
+
+two:
+  code: MyString
+  order_item: two
+  item: two
+  active: false

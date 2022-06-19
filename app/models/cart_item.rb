@@ -13,6 +13,9 @@ class CartItem < ApplicationRecord
   #   false
   # end
 
+  scope :include_item , -> {includes(:item)}
+  scope :only_cards, -> {includes(:item).where(item: {type_name: 'card'})}
+
   def available_quantity?
     total_quantity = CartItem.where(cart_id: cart_id, item_id: item_id)
                               .sum(:quantity)

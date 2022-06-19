@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_17_143125) do
+ActiveRecord::Schema.define(version: 2022_06_19_095215) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -22,6 +22,17 @@ ActiveRecord::Schema.define(version: 2022_06_17_143125) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_authorizations_on_user_id"
+  end
+
+  create_table "cards", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "code", null: false
+    t.uuid "order_item_id"
+    t.uuid "item_id", null: false
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["item_id"], name: "index_cards_on_item_id"
+    t.index ["order_item_id"], name: "index_cards_on_order_item_id"
   end
 
   create_table "cart_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -166,6 +177,8 @@ ActiveRecord::Schema.define(version: 2022_06_17_143125) do
   end
 
   add_foreign_key "authorizations", "users"
+  add_foreign_key "cards", "items"
+  add_foreign_key "cards", "order_items"
   add_foreign_key "cart_items", "carts"
   add_foreign_key "cart_items", "items"
   add_foreign_key "carts", "users"
