@@ -9,12 +9,12 @@ class Api::V1::Dashboard::ItemsController < Api::V1::Dashboard::Base
   end
 
   def update
-    @item.update!(items_params)
+    @item.update!(items_params.except(:type_name))
     respond(@item)
   end
 
   def destroy
-    @item.destroy!
+    @item.terminate!
     respond_ok
   end
 
@@ -22,7 +22,7 @@ class Api::V1::Dashboard::ItemsController < Api::V1::Dashboard::Base
   def items_params
     params.require(:item).permit(
       :category_id,
-      :type,
+      :type_name,
       :name,
       :price,
       :available,
@@ -30,7 +30,6 @@ class Api::V1::Dashboard::ItemsController < Api::V1::Dashboard::Base
       :stock,
       :low_stock,
       :notify_on_low_stock,
-      :visible,
       :code,
       :cost,
       :discount_price,
@@ -48,6 +47,6 @@ class Api::V1::Dashboard::ItemsController < Api::V1::Dashboard::Base
   end
 
   def set_item
-    @item = Item.find(id: params[:id])
+    @item = Item.visible.find(id: params[:id])
   end
 end

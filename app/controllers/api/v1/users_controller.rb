@@ -8,12 +8,12 @@ class Api::V1::UsersController < ApplicationController
 
   def update
     Current.user.reload
-    Current.user.update!(users_params)
+    Current.user.update!(users_params.except(:password))
     respond(Current.user)
   end
 
   def create
-    Current.user = User.new(signup_params)
+    Current.user = User.new(users_params)
     Current.user.should_validate_password = true
     Current.user.save!
     create_session_cookies(Current.user)
@@ -28,21 +28,9 @@ class Api::V1::UsersController < ApplicationController
       :phone_no,
       :email,
       :gender,
-    )
-  end
-
-  def signup_params
-    params.require(:user).permit(
-      :first_name,
-      :last_name,
-      :phone_no,
-      :email,
-      :gender,
       :password
     )
   end
-
-  
 
 
 end

@@ -29,7 +29,7 @@ class Order < ApplicationRecord
     def handle
       order.order_items.each do |oi|
         if oi.is_card?
-          Card.attach_cards_to_order_item(oi)
+          Card.attach_codes_to_order_item(oi)
           self.require_delivery = true
         end
         eleminate_stocks(oi)

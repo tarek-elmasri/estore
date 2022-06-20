@@ -7,7 +7,12 @@ class Card < ApplicationRecord
 
   validates :order_item, presence: true, if: :order_item_id
   validates :item, :code, presence: true
-  
+  validate :item_is_card
+
+  after_create :add_stock_to_item
+  before_destroy :card_is_active
+  after_destroy :remove_stock_from_item
+
   scope :available, -> {where(active: true, order_item_id: nil).order(created_at: :asc)}
   
 
@@ -20,12 +25,25 @@ class Card < ApplicationRecord
     cards.update_all(order_item_id: oi.id, active: false)
   end
 
-  def is_active?
+  def is_available?
     active
   end
 
-  def attached?
-    order_item_id ? true : false
+  private
+  def add_stock_to_item
+    item.add_to_stock(1)
+  end
+
+  def remove_stock_from_item
+    item.eleminate_quantity(1)
+  end
+
+  def item_is_card
+    errors.add(:item, I18n.t('errors.card.item_not_card')) unless item.is_card?
+  end
+
+  def card_is_active
+    throw(:abort) unless active
   end
   
 end

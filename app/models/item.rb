@@ -37,6 +37,10 @@ class Item < ApplicationRecord
     type_name == 'card'
   end
 
+  def has_cards?
+    cards.available.any?
+  end
+
   def has_stock?( amount = 1)
     return true unless has_limited_stock
     return true if stock && stock >= amount
@@ -52,20 +56,32 @@ class Item < ApplicationRecord
   end
 
   def is_available?
-    #TODO : add field available to item and switch availability according item removed from dashboard or not
-    # and keep visible to its appearence in shop nor hide
     visible  && available
   end
 
+  # decrement escapes authorization validations
   def eleminate_quantity(amount)
-    # decrement escapes is authorized to function
-    # and should be called only after order successfully completed
     return unless has_limited_stock
     if has_stock?(amount)
       decrement!(:stock, amount)
     else
       decrement!(:stock , stock)
     end
+  end
+
+  # escapes authorization validation
+  def add_to_stock(amount)
+    return unless has_limited_stock
+    increment!(:stock,amount)
+  end
+
+  def terminate!
+    raise Errors::Unauthorized unless Current.user.is_authorized_to_delete_item?
+    if is_card? && has_cards?
+      raise Errors::ItemHasCardsError
+    end
+
+    update_columns(visible: false, available: false)
   end
 
   private
