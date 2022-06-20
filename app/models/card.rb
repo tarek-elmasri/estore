@@ -1,7 +1,13 @@
 class Card < ApplicationRecord
+  include Authenticator::Staff::ModelAuthorizationChecker
+  include StaffTracker::Model
+
   belongs_to :order_item, optional: true
   belongs_to :item
 
+  validates :order_item, presence: true, if: :order_item_id
+  validates :item, :code, presence: true
+  
   scope :available, -> {where(active: true, order_item_id: nil).order(created_at: :asc)}
   
 
@@ -18,5 +24,8 @@ class Card < ApplicationRecord
     active
   end
 
+  def attached?
+    order_item_id ? true : false
+  end
   
 end
