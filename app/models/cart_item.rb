@@ -4,8 +4,8 @@ class CartItem < ApplicationRecord
 
   #new section
   #-----------------------
-  validates :item, presence: true
-  validate :zero_quantity , :multi_quantity , :duplicates, :available_item?
+  #validates :item, presence: true
+  validate :zero_quantity , :multi_quantity , :duplicates, :available_item?, :available_quantity?
   #validate :required_quantity
 
   # def available?
@@ -17,6 +17,7 @@ class CartItem < ApplicationRecord
   scope :only_cards, -> {includes(:item).where(item: {type_name: 'card'})}
 
   def available_quantity?
+    return unless item
     total_quantity = CartItem.where(cart_id: cart_id, item_id: item_id)
                               .sum(:quantity)
     return true if item.has_stock?(total_quantity)
@@ -25,7 +26,8 @@ class CartItem < ApplicationRecord
   end
 
   def available_item?
-    return true if item && item.is_available?
+    return unless item
+    return true if item.is_available?
     errors.add(:item , I18n.t('errors.cart_items.not_available'))
     return false
   end
@@ -38,12 +40,14 @@ class CartItem < ApplicationRecord
   end
 
   def multi_quantity
+    return unless item
     unless item.multi_quantity_allowed?
       errors.add(:quantity, I18n.t('errors.cart_items.multiple_quantity')) if quantity > 1
     end
   end
 
   def duplicates
+    return unless item
     target_item = CartItem.where.not(id: id).find_by(cart_id: cart_id , item_id: item_id)
     unless item.duplicate_allowed?
       errors.add(:item, I18n.t(errors.cart_items.duplicate)) if target_item

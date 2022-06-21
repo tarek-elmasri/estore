@@ -28,11 +28,24 @@ Rails.application.routes.draw do
           get '/' => 'items#index'
         end
 
+        scope :carts do
+          get '/' => 'carts#index'
+        end
+
         scope :cart_items do
           post "/" => "cart_items#create"
           delete "/" => "cart_items#destroy"
           patch "/" => "cart_items#update"
           get "/" => "cart_items#index"
+        end
+# 927af049-af5b-4c3b-a25a-3542158a96b6
+        scope :orders do
+          post "/" => "orders#create"
+        end
+
+        scope :payments do
+          post "/" => "payments#create"
+          patch "/" => "payments#update"
         end
 
         scope module: "dashboard" do

@@ -3,7 +3,7 @@ class Api::V1::PaymentsController < ApplicationController
   before_action :set_order
 
   def create
-    amount = @order.t_payment * 100
+    amount = (@order.t_payment * 100).to_s.split(".")[0].to_i
     intent = Order::StripeIntent.new()
     intent.pay(amount, params.require(:payment_method_id))
 

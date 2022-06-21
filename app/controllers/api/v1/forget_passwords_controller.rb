@@ -1,4 +1,4 @@
-class Api::V1::ForgetPasswords < ApplicationController
+class Api::V1::ForgetPasswordsController < ApplicationController
 
   def index
     user = User.find_by_password_token!(params.require(:token))

@@ -1,4 +1,4 @@
-class Api::v1::OrdersController < ApplicationController
+class Api::V1::OrdersController < ApplicationController
   before_action :authenticate_user
 
   def create

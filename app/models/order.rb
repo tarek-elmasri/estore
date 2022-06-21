@@ -19,7 +19,7 @@ class Order < ApplicationRecord
   scope :not_fullfilled, -> {where.not(status: "succeeded")}
   scope :fullfilled, -> {where(status: "succeeded")}
 
-  def check_status
+  def check_status 
     if status_changed? && status== 'succeeded'
       OrderHandler::Stocks.new(self).handle
     end

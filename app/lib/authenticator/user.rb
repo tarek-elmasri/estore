@@ -31,7 +31,7 @@ module Authenticator
 
       def self.request_forget_password_token_by_email user_email
         return unless user_email
-        user = User.find_by_email(user_email)
+        user = find_by_email(user_email)
         if user
           raise Errors::BlockedUser if user.blocked?
           # send email with params[:reset_link] with token=user.forget_password_token
@@ -45,13 +45,13 @@ module Authenticator
       end
 
       def reset_password new_pass
-        password= new_pass
-        should_validate_password = true
-        save!
-        kill_current_session
-        create_session
-        reset_refresh_token
-        regenerate_forget_password_token
+        self.password= new_pass
+        self.should_validate_password = true
+        self.save!
+        self.kill_current_session
+        self.create_session
+        self.reset_refresh_token
+        self.regenerate_forget_password_token
         # TODO: send email successsfull password change
         self
       end
