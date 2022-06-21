@@ -1,5 +1,5 @@
 class Api::V1::SessionsController < ApplicationController
-  before_action :authenticate_user, only: [:logout]
+  before_action :authenticate_user, only: [:delete]
 
   def create
     Current.user = User.auth(login_params)
