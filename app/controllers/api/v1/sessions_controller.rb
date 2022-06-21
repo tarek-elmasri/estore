@@ -37,7 +37,7 @@ class Api::V1::SessionsController < ApplicationController
   end
 
   def refresh_through_mobile
-    decoder = JwtHandler::Decoder.new(params[:refresh_token], :refresh_token)
+    decoder = JwtHandler::Decoder.new(params.require(:refresh_token), :refresh_token)
     user= User.find(decoder.payload.dig(:id))
 
     respond({

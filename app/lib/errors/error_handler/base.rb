@@ -18,7 +18,7 @@ module Errors
 
           rescue_from ActionController::ParameterMissing, with: :respond_bad_request
 
-          rescue_from Errors::BlockedUser
+          rescue_from Errors::BlockedUser,
                       Errors::ItemHasCardsError, with: :respond_error
         end
 
