@@ -47,6 +47,6 @@ class Api::V1::Dashboard::ItemsController < Api::V1::Dashboard::Base
   end
 
   def set_item
-    @item = Item.visible.find(id: params[:id])
+    @item = Item.visible.find(id: params.require(:id))
   end
 end

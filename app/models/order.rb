@@ -19,45 +19,9 @@ class Order < ApplicationRecord
   scope :not_fullfilled, -> {where.not(status: "succeeded")}
   scope :fullfilled, -> {where(status: "succeeded")}
 
-  class OrderHandler
-
-    attr_reader :order
-    def initialize(order)
-      self.order=order
-    end
-
-    def handle
-      order.order_items.each do |oi|
-        if oi.is_card?
-          Card.attach_codes_to_order_item(oi)
-          self.require_delivery = true
-        end
-        eleminate_stocks(oi)
-      end
-
-      # DeliveryManager.new(self.order).deliver_cards if self.require_delivery
-    end
-
-    private
-    attr_writer :order
-    attr_accessor :require_delivery
-    def eleminate_stocks(oi)
-      item=Item.find(oi.item_id)
-      report(oi) unless item.has_stock?
-      item.eleminate_quantity(oi.quantity)
-    end
-
-    def report(oi)
-      # reporting quantites miss count
-    end
-  end
   def check_status
     if status_changed? && status== 'succeeded'
-      OrderHandler
-      # # decrementing item stocks after successfull payment
-      # order_items.each do |oi|
-      #   Item.find(oi.item_id).eleminate_quantity(oi.quantity)
-      # end
+      OrderHandler::Stocks.new(self).handle
     end
   end
 

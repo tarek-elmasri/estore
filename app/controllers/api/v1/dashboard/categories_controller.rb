@@ -29,6 +29,6 @@ class Api::V1::Dashboard::CategoriesController < Api::V1::Dashboard::Base
   end
 
   def set_category
-    @category = Category.find(params[:id])
+    @category = Category.find(params.require(:id))
   end
 end

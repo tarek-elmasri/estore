@@ -9,7 +9,7 @@ class Api::V1::Dashboard::AuthorizationsController < Api::V1::Dashboard::Base
   private 
 
   def set_records
-    @auth = Authorization.where(user_id: params[:user_id]).first_or_initialize
+    @auth = Authorization.where(user_id: params.require(:user_id)).first_or_initialize
   end
 
   def authorization_params

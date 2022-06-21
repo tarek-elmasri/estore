@@ -3,7 +3,7 @@ class Api::V1::Dashboard::CardsController < Api::V1::Dashboard::Base
   before_action :set_card, except: [:index , :create]
 
   def index
-    cards= Card.available.where(item_id: params[:item_id])
+    cards= Card.available.where(item_id: params.require(:item_id))
     respond(cards)
   end
 
@@ -14,13 +14,13 @@ class Api::V1::Dashboard::CardsController < Api::V1::Dashboard::Base
   end
 
   def update
-    @card.update!(code: params[:code])
+    @card.update!(code: params.require(:code))
     respond(@card)
   end
 
   def destroy
     @card.destroy!
-    respond(@card)
+    respond_ok
   end
 
   private
@@ -32,7 +32,7 @@ class Api::V1::Dashboard::CardsController < Api::V1::Dashboard::Base
   end
 
   def set_card
-    @card= Card.available.find(params[:id])
+    @card= Card.available.find(params.require(:id))
   end
 
 end

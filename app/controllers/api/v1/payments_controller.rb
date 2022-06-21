@@ -5,7 +5,7 @@ class Api::V1::PaymentsController < ApplicationController
   def create
     amount = @order.t_payment * 100
     intent = Order::StripeIntent.new()
-    intent.pay(amount, params[:payment_method_id])
+    intent.pay(amount, params.require(:payment_method_id))
 
     return handle_response(intent)
   end
@@ -13,13 +13,13 @@ class Api::V1::PaymentsController < ApplicationController
 
   def update
     intent = Order::StripeIntent.new()
-    intent.confirm(params[:payment_intent_id])
+    intent.confirm(params.require(:payment_intent_id))
     return handle_response(intent)
   end
 
   private
   def set_order
-    @order= Current.user.orders.not_fullfilled.find(params[:order_id])
+    @order= Current.user.orders.not_fullfilled.find(params.require(:order_id))
   end
 
   def handle_response(intent)
@@ -38,6 +38,7 @@ class Api::V1::PaymentsController < ApplicationController
       return respond_unprocessable({errors: "invalid status"})
     end
   end
+
 
 
 
