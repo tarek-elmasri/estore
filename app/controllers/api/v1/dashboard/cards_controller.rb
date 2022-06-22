@@ -18,7 +18,7 @@ class Api::V1::Dashboard::CardsController < Api::V1::Dashboard::Base
     respond(@card)
   end
 
-  def destroy
+  def delete
     @card.destroy!
     respond_ok
   end

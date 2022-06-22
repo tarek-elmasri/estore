@@ -68,6 +68,13 @@ Rails.application.routes.draw do
             scope :staff_actions do
               get "/" => "staff_actions#index"
             end
+
+            scope :cards do
+              get "/" => "cards#index"
+              post "/" => "cards#create"
+              patch "/" => "cards#update"
+              delete "/" => "cards#delete"
+            end
           end
         end
 

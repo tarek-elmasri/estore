@@ -30,6 +30,7 @@ module OrderHandler
 
     def report(oi)
       # reporting quantites miss count
+      puts "Order Item of id #{oi.id} \n ran out of stock"
     end
 
   end

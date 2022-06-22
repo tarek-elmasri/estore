@@ -22,6 +22,7 @@ module StaffTracker
       end
       
       def recorder(action)
+        return unless Current.user
         return unless Current.user.is_staff? || Current.user.is_admin?
         Current.user.staff_actions.new(action: action , model: self.class.to_s.downcase, model_id: self.id).save
       end
