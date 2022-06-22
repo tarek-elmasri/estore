@@ -13,6 +13,7 @@ module StaffTracker
       end
 
       def record_update
+        return if self.is_a?(User) && self.id == Current.user.id
         recorder(:update)
       end
 

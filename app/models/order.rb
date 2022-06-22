@@ -14,18 +14,24 @@ class Order < ApplicationRecord
 
   after_create :create_order_items
 
-  after_save :check_status
+  before_save :set_should_handle
+  after_save :handle_order
 
   scope :not_fullfilled, -> {where.not(status: "succeeded")}
   scope :fullfilled, -> {where(status: "succeeded")}
 
-  def check_status 
-    if status_changed? && status== 'succeeded'
-      OrderHandler::Stocks.new(self).handle
-    end
-  end
-
   private
+  attr_accessor :should_handle
+
+  def set_should_handle
+    self.should_handle = (status_changed? && status == 'succeeded')
+  end
+  
+  # pm_1LDOInAsVHY13rlefyeYwayU
+
+  def handle_order
+    OrderHandler::Stocks.new(self).handle if should_handle
+  end
 
   def set_user
     return unless self.cart

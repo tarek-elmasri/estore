@@ -5,6 +5,10 @@ class Cart < ApplicationRecord
 
   attr_reader :checkout_errors
 
+  def clear!
+    cart_items.destroy_all
+  end
+
   def sync mem_cart=[]
     mem_cart.each do |mem_ci|
       new_ci= CartItem.new(mem_ci)
@@ -21,6 +25,7 @@ class Cart < ApplicationRecord
 
   def valid_for_checkout? 
     self.checkout_errors={}
+    self.checkout_errors['items'] = [I18n.t("errors.cart.empty")] if cart_items.empty?
     cart_items.each do |ci|
       unless ci.valid? && ci.available_quantity?
         self.checkout_errors["#{ci.id}"] = ci.errors

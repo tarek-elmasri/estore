@@ -7,7 +7,7 @@ class Card < ApplicationRecord
 
   validates :order_item, presence: true, if: :order_item_id
   validates :item, :code, presence: true
-  validate :item_is_card
+  validate :item_is_visible, :item_is_card
 
   after_create :add_stock_to_item
   before_destroy :card_is_active
@@ -38,7 +38,13 @@ class Card < ApplicationRecord
     item.eleminate_quantity(1)
   end
 
+  def item_is_visible
+    return unless item
+    errors.add(:item, I18n.t('errors.card.item_not_visible')) unless item.visible
+  end
+
   def item_is_card
+    return unless item
     errors.add(:item, I18n.t('errors.card.item_not_card')) unless item.is_card?
   end
 
