@@ -1,6 +1,7 @@
 class Order < ApplicationRecord
   include StripeManager::Base
-
+  include StaffTracker::Model
+  
   attr_accessor :cart
 
   belongs_to :user
@@ -19,6 +20,10 @@ class Order < ApplicationRecord
 
   scope :not_fullfilled, -> {where.not(status: "succeeded")}
   scope :fullfilled, -> {where(status: "succeeded")}
+
+  def is_fullfilled?
+    status == 'succeeded'
+  end
 
   private
   attr_accessor :should_handle

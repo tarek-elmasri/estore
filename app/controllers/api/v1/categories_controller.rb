@@ -7,8 +7,7 @@ class Api::V1::CategoriesController < ApplicationController
     respond({
       categories: serialize_resource(
                     categories,
-                    each_serializer: CategorySerializer, 
-                    include: ['items','sub_categories.items']
+                    each_serializer: CategorySerializer
                   )
     })
   end

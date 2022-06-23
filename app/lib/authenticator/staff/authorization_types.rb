@@ -12,10 +12,12 @@ module Authenticator
         :create_category,
         :update_category,
         :delete_category,
-        :show_users,
-        :update_user,
         :create_item_category,
         :delete_item_category,
+        :show_users,
+        :update_user,
+        :show_orders,
+        :update_order_item,
       ]
 
       attr_accessor *TYPES
