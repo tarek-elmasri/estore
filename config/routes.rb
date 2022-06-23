@@ -32,6 +32,10 @@ Rails.application.routes.draw do
           get '/' => 'carts#index'
         end
 
+        scope :categories do
+          get "/" => "categories#index"
+        end
+
         scope :cart_items do
           post "/" => "cart_items#create"
           delete "/" => "cart_items#destroy"

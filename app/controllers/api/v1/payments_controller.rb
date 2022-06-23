@@ -28,6 +28,7 @@ class Api::V1::PaymentsController < ApplicationController
     @order.save!
 
     if intent.payment_require_auth?
+      Current.user.cart.clear!
       return respond({
         requires_action: true,
         payment_intent_client_secret: intent.client_secret
