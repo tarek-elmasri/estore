@@ -3,7 +3,7 @@ module OrderHandler
 
     attr_reader :order
     def initialize(order)
-      raise StandardError.new('Order is not fullfilled.') unless order.status == 'succeeded'
+      raise StandardError.new('Order is not fullfilled.') unless order.is_fullfilled?
       self.order=order
     end
 
@@ -24,13 +24,13 @@ module OrderHandler
     attr_accessor :require_delivery
     def eleminate_stocks(oi)
       item=Item.find(oi.item_id)
-      report(oi) unless item.has_stock?
+      report(oi.order) unless item.has_stock?(oi.quantity)
       item.eleminate_quantity(oi.quantity)
     end
 
-    def report(oi)
+    def report(o)
       # reporting quantites miss count
-      puts "Order Item of id #{oi.id} \n ran out of stock"
+      puts "Order Item of id #{o.id} \n ran out of stock"
     end
 
   end

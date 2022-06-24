@@ -13,10 +13,10 @@ class Order < ApplicationRecord
 
   before_validation :set_user , :build_values, on: :create
 
-  after_create :create_order_items
+  after_create :create_order_items, :create_cleanup_job
 
-  before_save :set_should_handle
-  after_save :handle_order
+  #before_save :set_should_handle
+  after_save_commit :handle_order
 
   scope :not_fullfilled, -> {where.not(status: "succeeded")}
   scope :fullfilled, -> {where(status: "succeeded")}
@@ -26,16 +26,14 @@ class Order < ApplicationRecord
   end
 
   private
-  attr_accessor :should_handle
+  #attr_accessor :should_handle
 
-  def set_should_handle
-    self.should_handle = (status_changed? && status == 'succeeded')
-  end
-  
-  # pm_1LDOInAsVHY13rlefyeYwayU
+  # def set_should_handle
+  #   self.should_handle = (status_changed? && status == 'succeeded')
+  # end
 
   def handle_order
-    OrderHandler::Stocks.new(self).handle if should_handle
+    OrderHandler::Stocks.new(self).handle if (status_previously_changed? && self.status == 'succeeded')
   end
 
   def set_user
@@ -84,6 +82,9 @@ class Order < ApplicationRecord
     end
   end
 
+  def create_cleanup_job
+    OrderCleanupJob.set(wait: 24.hours).perform_later(id)
+  end
 
 
 end
