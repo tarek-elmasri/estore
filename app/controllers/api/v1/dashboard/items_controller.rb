@@ -13,7 +13,7 @@ class Api::V1::Dashboard::ItemsController < Api::V1::Dashboard::Base
     respond(@item)
   end
 
-  def destroy
+  def delete
     @item.terminate!
     respond_ok
   end

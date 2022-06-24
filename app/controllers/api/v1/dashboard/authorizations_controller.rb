@@ -3,7 +3,10 @@ class Api::V1::Dashboard::AuthorizationsController < Api::V1::Dashboard::Base
 
   def update
     @auth.update!(authorization_params)
-    respond({authorization: @auth})
+    respond({authorization: serialize_resource(
+      @auth,
+      serializer: Dashboard::AuthorizationSerializer
+    )})
   end
 
   private 

@@ -4,7 +4,12 @@ class Api::V1::Dashboard::CategoriesController < Api::V1::Dashboard::Base
 
   def index
     categories = Category.all
-    respond({categories: serialize_resource(categories, each_serializer: Dashboard::CategorySerializer)})
+    respond({categories: 
+      serialize_resource(
+        categories, 
+        each_serializer: Dashboard::CategorySerializer,
+        include: ['sub_categories.sub_categories']
+      )})
   end
 
   def create
@@ -18,7 +23,7 @@ class Api::V1::Dashboard::CategoriesController < Api::V1::Dashboard::Base
     respond(@category)
   end
 
-  def destroy
+  def delete
     @category.destroy!
     respond_ok
   end

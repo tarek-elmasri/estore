@@ -44,6 +44,7 @@ Rails.application.routes.draw do
         end
 # 927af049-af5b-4c3b-a25a-3542158a96b6
         scope :orders do
+          get "/" => "orders#index"
           post "/" => "orders#create"
         end
 
@@ -62,11 +63,11 @@ Rails.application.routes.draw do
               patch "/" => "authorizations#update"
             end
 
-            scope :category do
+            scope :categories do
               get "/" => "categories#index"
               post "/" => "categories#create"
               patch "/" => "categories#update"
-              delete "/" => "categories#destroy"
+              delete "/" => "categories#delete"
             end
             
             scope :staff_actions do
@@ -78,6 +79,20 @@ Rails.application.routes.draw do
               post "/" => "cards#create"
               patch "/" => "cards#update"
               delete "/" => "cards#delete"
+            end
+
+            scope :items do
+              post "/" => "items#create"
+              patch "/" => "items#update"
+              delete "/" => "items#delete"
+            end
+
+            scope :orders do
+              get '/' => "orders#index"
+            end
+
+            scope :order_items do
+              patch '/' => "order_items#update"
             end
           end
         end
