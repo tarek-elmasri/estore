@@ -15,10 +15,16 @@ class OrderItem < ApplicationRecord
     type_name == 'item'
   end
 
-  def self.deliver_cards(order)
-    return unless order.is_fullfilled?
-    order.order_items.only_cards
-              .update_all(delivery_status)
+  def set_to_delivered!
+    update!(delivery_status: 'delivered')
+  end
+
+  def set_to_partial_delivery!
+    update!(delivery_status: 'partial_delivery')
+  end
+
+  def set_to_failed_delivery!
+    update!(delivery_status: 'failed')
   end
 
 end

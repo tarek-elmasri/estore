@@ -50,7 +50,7 @@ class CartItem < ApplicationRecord
     return unless item
     target_item = CartItem.where.not(id: id).find_by(cart_id: cart_id , item_id: item_id)
     unless item.duplicate_allowed?
-      errors.add(:item, I18n.t(errors.cart_items.duplicate)) if target_item
+      errors.add(:item, I18n.t('errors.cart_items.duplicate')) if target_item
     end
   end
 

@@ -18,11 +18,20 @@ class Card < ApplicationRecord
 
   def self.attach_codes_to_order_item(oi)
     cards = Card.available.where(item_id: oi.item_id)
-                .limit(oi.quantity)
                 .order(created_at: :asc)
+                .limit(oi.quantity)
 
     # update_all escapes callbacks and validations
     cards.update_all(order_item_id: oi.id, active: false)
+    oi.reload
+    if oi.cards.size == oi.quantity
+      oi.set_to_delivered!
+    elsif oi.cards.any?
+      oi.set_to_partial_delivery!
+    else
+      oi.set_to_failed_delivery!
+    end
+    
   end
 
   def is_available?

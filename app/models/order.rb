@@ -28,6 +28,10 @@ class Order < ApplicationRecord
     status == 'succeeded'
   end
 
+  def deliver_cards
+    CardsMailer.deliver_cards(id).deliver_later
+  end
+
   private
   #attr_accessor :should_handle
 
