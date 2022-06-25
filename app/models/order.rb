@@ -20,6 +20,9 @@ class Order < ApplicationRecord
 
   scope :not_fullfilled, -> {where.not(status: "succeeded")}
   scope :fullfilled, -> {where(status: "succeeded")}
+  scope :include_user, -> {includes(:user)}
+  scope :include_order_items, -> {includes(:order_items)}
+  scope :include_order_cards, -> {includes(order_items: [:cards])}
 
   def is_fullfilled?
     status == 'succeeded'
@@ -33,7 +36,10 @@ class Order < ApplicationRecord
   # end
 
   def handle_order
-    OrderHandler::Stocks.new(self).handle if (status_previously_changed? && self.status == 'succeeded')
+    if (status_previously_changed? && self.status == 'succeeded')
+      OrderHandlerJob.perform_later(self.id)
+      InvoicesMailer.send_invoice(self.id).deliver_later
+    end
   end
 
   def set_user

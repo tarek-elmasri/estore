@@ -5,9 +5,9 @@ class InvoicesMailer < ApplicationMailer
   #
   #   en.invoices_mailer.send_invoice.subject
   #
-  def send_invoice
-    @greeting = "Hi"
-
-    mail to: "tito4g@gmail.com"
+  def send_invoice(order_id)
+    @order=Order.find(order_id)
+    @user= @order.user
+    mail to: @user.email, subject: 'Order Confirmation'
   end
 end

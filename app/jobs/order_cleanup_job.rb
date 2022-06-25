@@ -1,8 +1,8 @@
 class OrderCleanupJob < ApplicationJob
-  queue_as :default
+  queue_as :low
 
   def perform(order_id)
-    order = Order.find_by(id: order_id)
+    order = Order.find(order_id)
     return if order.is_fullfilled?
     
     order.destroy!

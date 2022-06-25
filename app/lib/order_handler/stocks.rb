@@ -3,11 +3,11 @@ module OrderHandler
 
     attr_reader :order
     def initialize(order)
-      raise StandardError.new('Order is not fullfilled.') unless order.is_fullfilled?
       self.order=order
     end
 
     def handle
+      return unless order
       order.order_items.each do |oi|
         if oi.is_card?
           Card.attach_codes_to_order_item(oi)
@@ -16,7 +16,7 @@ module OrderHandler
         eleminate_stocks(oi)
       end
 
-      # DeliveryManager.new(self.order).deliver_cards if self.require_delivery
+      order.deliver_cards if self.require_delivery
     end
 
     private

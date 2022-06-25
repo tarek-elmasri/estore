@@ -1,0 +1,16 @@
+<h3>Thank you <%= @user.first_name%> for using our store.</h3>
+<hr/>
+<br/>
+<h4> Here is down below the codes related to your order:</h4>
+<p>
+  <div>
+    <% @order.order_items.each do |oi| %>
+      <%= oi.description %>
+      <br/>
+      <% oi.cards.each do |card| %>
+        <strong>Code:</strong><%= " #{card.code}"%>
+      <% end %>
+      <hr/>
+    <% end %>
+  </div>
+</p>
