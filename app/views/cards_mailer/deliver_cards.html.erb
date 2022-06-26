@@ -5,10 +5,12 @@
 <p>
   <div>
     <% @order.order_items.each do |oi| %>
-      <%= oi.description %>
-      <br/>
-      <% oi.cards.each do |card| %>
-        <strong>Code:</strong><%= " #{card.code}"%>
+      <% if oi.cards.any? %>
+        <%= oi.description %>
+        <br/>
+        <% oi.cards.each do |card| %>
+          <strong>Code:</strong><%= " #{card.code}"%>
+        <% end %>
       <% end %>
       <hr/>
     <% end %>
