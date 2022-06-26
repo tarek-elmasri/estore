@@ -4,9 +4,9 @@ class OrderHandlerJob < ApplicationJob
   def perform(order_id)
     order=Order.include_user
                 .include_order_items
-                .include_order_cards
                 .find(order_id)
-                
-    OrderHandler::Stocks.new(order).handle 
+    order.transaction do
+      OrderHandler::Stocks.new(order).handle 
+    end            
   end
 end

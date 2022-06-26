@@ -8,6 +8,8 @@ module OrderHandler
 
     def handle
       return unless order
+      require_delivery = false
+      
       order.order_items.each do |oi|
         if oi.is_card?
           Card.attach_codes_to_order_item(oi)
@@ -21,7 +23,6 @@ module OrderHandler
 
     private
     attr_writer :order
-    attr_accessor :require_delivery
     def eleminate_stocks(oi)
       item=Item.find(oi.item_id)
       report(oi.order) unless item.has_stock?(oi.quantity)

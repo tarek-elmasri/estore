@@ -23,7 +23,6 @@ class Card < ApplicationRecord
 
     # update_all escapes callbacks and validations
     cards.update_all(order_item_id: oi.id, active: false)
-    oi.reload
     if oi.cards.size == oi.quantity
       oi.set_to_delivered!
     elsif oi.cards.any?
