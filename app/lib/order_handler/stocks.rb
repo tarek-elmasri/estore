@@ -25,8 +25,10 @@ module OrderHandler
     attr_writer :order
     def eleminate_stocks(oi)
       item=Item.find(oi.item_id)
-      report(oi.order) unless item.has_stock?(oi.quantity)
-      item.eleminate_quantity(oi.quantity)
+      item.with_lock do
+        report(oi.order) unless item.has_stock?(oi.quantity)
+        item.eleminate_quantity(oi.quantity)
+      end
     end
 
     def report(o)

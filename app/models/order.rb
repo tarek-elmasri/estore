@@ -28,7 +28,12 @@ class Order < ApplicationRecord
     status == 'succeeded'
   end
 
+  def has_cards_attached?
+    order_items.include_cards.any?{|oi| oi.is_card? && oi.has_cards?}
+  end
+
   def deliver_cards
+    return unless has_cards_attached?
     CardsMailer.deliver_cards(id).deliver_later
   end
 

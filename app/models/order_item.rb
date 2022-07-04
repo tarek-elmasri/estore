@@ -11,6 +11,11 @@ class OrderItem < ApplicationRecord
     type_name == 'card'
   end
 
+  def has_cards?
+    return false unless is_card?
+    cards.any?
+  end
+
   def is_item?
     type_name == 'item'
   end
