@@ -2,7 +2,7 @@ class Item < ApplicationRecord
   include Authenticator::Staff::ModelAuthorizationChecker
   include StaffTracker::Model
   
-  
+  has_one :item_stock
   has_many :item_categories, dependent: :destroy
   has_many :categories, through: :item_categories
   has_many :cart_items, dependent: :destroy
@@ -29,6 +29,8 @@ class Item < ApplicationRecord
   validates :max_quantity_per_customer, numericality: {only_integer: true}, allow_nil: true
 
   validate :discount_dates
+
+  after_save :handle_stock
 
   scope :visible, -> {where(visible: true)}
   scope :available, -> {where(available: true)}
@@ -91,6 +93,14 @@ class Item < ApplicationRecord
   end
 
   private
+  def handle_stock 
+    item_stock = ItemStock.where(item_id: id).first_or_initialize
+    item_stock.with_lock do
+      item_stock.active=stock
+      item_stock.save
+    end
+  end
+
   def set_stock_to_zero
     if stock && stock > 0
       errors.add(:stock, I18n.t('errors.item.stock_must_be_zero'))

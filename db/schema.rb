@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_20_092511) do
+ActiveRecord::Schema.define(version: 2022_07_05_095428) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -75,6 +75,16 @@ ActiveRecord::Schema.define(version: 2022_06_20_092511) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["category_id"], name: "index_item_categories_on_category_id"
     t.index ["item_id"], name: "index_item_categories_on_item_id"
+  end
+
+  create_table "item_stocks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.integer "active", default: 0, null: false
+    t.integer "pending", default: 0, null: false
+    t.integer "sales", default: 0, null: false
+    t.uuid "item_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["item_id"], name: "index_item_stocks_on_item_id"
   end
 
   create_table "items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -186,6 +196,7 @@ ActiveRecord::Schema.define(version: 2022_06_20_092511) do
   add_foreign_key "carts", "users"
   add_foreign_key "item_categories", "categories"
   add_foreign_key "item_categories", "items"
+  add_foreign_key "item_stocks", "items"
   add_foreign_key "order_items", "orders"
   add_foreign_key "orders", "users"
   add_foreign_key "sessions", "users"
