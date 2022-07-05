@@ -63,7 +63,7 @@ class Order < ApplicationRecord
     #TODO implement vat mechanism
     self.t_vat = 0.00
     self.cart.cart_items.each do |ci|
-      self.t_value += ci.item.has_discount ? ci.item.discount_price : ci.item.price
+      self.t_value += (ci.item.has_discount ? ci.item.discount_price : ci.item.price) * ci.quantity
     end
 
     self.t_payment= self.t_value + self.t_vat
