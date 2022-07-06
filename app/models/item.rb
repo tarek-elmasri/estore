@@ -16,10 +16,12 @@ class Item < ApplicationRecord
   validates :name, presence: true
   validates :type_name, inclusion: { in: ['card' , 'item']}
   validates :price, numericality: true
+  validates :has_limited_stock, inclusion: {in: [true,false,nil]}
   validate :stock_set_to_limited , if: :is_card?
   validates :stock, presence: true , if: :has_limited_stock
   validate :stock_didnt_change ,if: :is_card?, unless: :new_record?
   validates :stock, numericality: {only_integer: true}, allow_nil: true
+  validates :notify_on_low_stock, inclusion: {in: [true , false , nil]}
   validates :low_stock, presence: true , if: :notify_on_low_stock
   validates :low_stock, numericality: {only_integer: true}, allow_nil: true
   validates :cost, numericality: true, allow_nil: true
@@ -49,10 +51,14 @@ class Item < ApplicationRecord
     cards.available.any?
   end
 
-  def has_stock?( amount = 1)
-    return true unless has_limited_stock
-    return true if stock && stock >= amount
-    return false
+  # old version of stock handling
+  # def has_stock?( amount = 1)
+  #   return true unless has_limited_stock
+  #   return true if stock && stock >= amount
+  #   return false
+  # end
+  def has_stock?(amount = 1)
+    item_stock.has_active_stock?(amount)
   end
 
   def multi_quantity_allowed?
@@ -67,6 +73,7 @@ class Item < ApplicationRecord
     visible  && available
   end
 
+  #old version
   # decrement escapes authorization validations
   def eleminate_quantity(amount)
     return unless has_limited_stock
@@ -75,6 +82,15 @@ class Item < ApplicationRecord
     else
       decrement!(:stock , stock)
     end
+  end
+
+
+  def reserve_quantity!(amount)
+    item_stock.move_to_pending!(amount)
+  end
+
+  def sell_quantity!(amount)
+    item_stock.sell!(amount)
   end
 
   # escapes authorization validation
@@ -96,8 +112,11 @@ class Item < ApplicationRecord
   def handle_stock 
     item_stock = ItemStock.where(item_id: id).first_or_initialize
     item_stock.with_lock do
+      item_stock.has_limited_stock = has_limited_stock
       item_stock.active=stock
-      item_stock.save
+      item_stock.notify_on_low_stock = notify_on_low_stock
+      item_stock.low_stock = low_stock
+      item_stock.save!
     end
   end
 

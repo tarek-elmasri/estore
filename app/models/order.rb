@@ -7,11 +7,12 @@ class Order < ApplicationRecord
   belongs_to :user
   has_many :order_items , dependent: :destroy
 
+  before_validation :set_user , :build_values, on: :create
 
   validates :cart, presence: true , on: :create
+  
   validate :cart_checkout, on: :create
 
-  before_validation :set_user , :build_values, on: :create
 
   after_create :create_order_items, :create_cleanup_job
 
@@ -92,8 +93,8 @@ class Order < ApplicationRecord
 
   def cart_checkout
     return unless self.cart
-    unless self.cart.valid_for_checkout?
-      errors.add(:cart , self.cart.checkout_errors)
+    unless self.cart.checkout
+      errors.add(:cart, self.cart.checkout_errors)
     end
   end
 

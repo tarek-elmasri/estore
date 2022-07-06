@@ -5,6 +5,10 @@ class Cart < ApplicationRecord
 
   attr_reader :checkout_errors
 
+  def is_empty?
+    cart_items.empty?
+  end
+
   def clear!
     cart_items.destroy_all
   end
@@ -34,6 +38,29 @@ class Cart < ApplicationRecord
     self.checkout_errors = nil unless self.checkout_errors.length > 0
     return false if self.checkout_errors
     return true
+  end
+
+  def checkout
+    transaction do
+      self.checkout_errors={}
+      self.checkout_errors['items'] = [I18n.t("errors.cart.empty")] if cart_items.empty?
+      cart_items.each do |ci|
+        begin
+          if ci.valid?
+            raise StandardError
+            ci.freeze_quantity!
+          else
+            self.checkout_errors["#{ci.id}"] = ci.errors 
+          end
+        rescue => exception
+          self.checkout_errors["#{ci.id}"] = I18n.t('errors.cart_items.no_stock')
+        end
+      end
+      self.checkout_errors = nil unless self.checkout_errors.length > 0
+      throw(:abort) if self.checkout_errors
+    end
+    return false if self.checkout_errors
+    true
   end
 
   private 

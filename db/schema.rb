@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_05_095428) do
+ActiveRecord::Schema.define(version: 2022_07_05_172441) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -84,6 +84,9 @@ ActiveRecord::Schema.define(version: 2022_07_05_095428) do
     t.uuid "item_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "low_stock", default: 0
+    t.boolean "notify_on_low_stock", default: false
+    t.boolean "has_limited_stock", default: false
     t.index ["item_id"], name: "index_item_stocks_on_item_id"
   end
 

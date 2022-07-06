@@ -32,6 +32,10 @@ class CartItem < ApplicationRecord
     return false
   end
 
+  def freeze_quantity!
+    item.reserve_quantity!(quantity)
+  end
+
   private
   def zero_quantity
     if quantity < 1
