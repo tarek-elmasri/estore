@@ -46,21 +46,22 @@ class Cart < ApplicationRecord
       self.checkout_errors['items'] = [I18n.t("errors.cart.empty")] if cart_items.empty?
       cart_items.each do |ci|
         begin
-          if ci.valid?
+          if ci.valid? && ci.available_quantity?
             raise StandardError
             ci.freeze_quantity!
           else
             self.checkout_errors["#{ci.id}"] = ci.errors 
           end
         rescue => exception
-          self.checkout_errors["#{ci.id}"] = I18n.t('errors.cart_items.no_stock')
+          self.checkout_errors["#{ci.id}"] = {quantity: [I18n.t('errors.cart_items.no_stock')]}
         end
       end
       self.checkout_errors = nil unless self.checkout_errors.length > 0
-      throw(:abort) if self.checkout_errors
+      raise StandardError if self.checkout_errors
     end
-    return false if self.checkout_errors
-    true
+
+    # return false if self.checkout_errors
+    # true
   end
 
   private 

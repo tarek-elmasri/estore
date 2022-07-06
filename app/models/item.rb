@@ -112,10 +112,10 @@ class Item < ApplicationRecord
   def handle_stock 
     item_stock = ItemStock.where(item_id: id).first_or_initialize
     item_stock.with_lock do
-      item_stock.has_limited_stock = has_limited_stock
-      item_stock.active=stock
-      item_stock.notify_on_low_stock = notify_on_low_stock
-      item_stock.low_stock = low_stock
+      item_stock.has_limited_stock = has_limited_stock if has_limited_stock
+      item_stock.active=stock if stock
+      item_stock.notify_on_low_stock = notify_on_low_stock if notify_on_low_stock
+      item_stock.low_stock = low_stock if low_stock
       item_stock.save!
     end
   end

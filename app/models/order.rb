@@ -11,8 +11,8 @@ class Order < ApplicationRecord
 
   validates :cart, presence: true , on: :create
   
-  validate :cart_checkout, on: :create
-
+  #validate :cart_checkout, on: :create
+  before_create :cart_checkout
 
   after_create :create_order_items, :create_cleanup_job
 
@@ -92,10 +92,13 @@ class Order < ApplicationRecord
   end
 
   def cart_checkout
+
     return unless self.cart
-    unless self.cart.checkout
-      errors.add(:cart, self.cart.checkout_errors)
-    end
+    throw(:abort)
+    #self.cart.checkout
+  # rescue
+  #   errors.add(:cart, self.cart.checkout_errors)
+  #   #return false
   end
 
   def create_cleanup_job
