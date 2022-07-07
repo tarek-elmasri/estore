@@ -11,11 +11,17 @@ class Api::V1::OrdersController < ApplicationController
     })
   end
 
-  def create
-    order = Order.new(cart: Current.user.get_full_cart)
-    order.save!
+  # def create
+  #   order = Order.new(cart: Current.user.get_full_cart)
+  #   order.save!
 
-    # TODO: Background job to destroy the order if not finished 
+  #   # TODO: Background job to destroy the order if not finished 
+  #   respond(order)
+  # end
+
+  def create
+    order = Interfaces::Orders::OrderCreation.new(Current.user.get_full_cart, Current.user)
+                                              .create!
     respond(order)
   end
 end

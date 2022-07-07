@@ -47,7 +47,7 @@ class Cart < ApplicationRecord
       cart_items.each do |ci|
         begin
           if ci.valid? && ci.available_quantity?
-            raise StandardError
+            #raise StandardError
             ci.freeze_quantity!
           else
             self.checkout_errors["#{ci.id}"] = ci.errors 

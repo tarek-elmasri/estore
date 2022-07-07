@@ -7,14 +7,14 @@ class Order < ApplicationRecord
   belongs_to :user
   has_many :order_items , dependent: :destroy
 
-  before_validation :set_user , :build_values, on: :create
+  #before_validation :set_user , :build_values, on: :create
 
-  validates :cart, presence: true , on: :create
+  #validates :cart, presence: true , on: :create
   
   #validate :cart_checkout, on: :create
-  before_create :cart_checkout
+  #before_create :cart_checkout
 
-  after_create :create_order_items, :create_cleanup_job
+  #after_create :create_order_items, :create_cleanup_job
 
   #before_save :set_should_handle
   after_save_commit :handle_order
