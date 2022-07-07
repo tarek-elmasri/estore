@@ -20,6 +20,14 @@ class OrderItem < ApplicationRecord
     type_name == 'item'
   end
 
+  def is_delivered?
+    delivery_status == 'delivered'
+  end
+
+  def is_pending?
+    delivery_status == 'pending'
+  end
+
   def set_to_delivered!
     update!(delivery_status: 'delivered')
   end

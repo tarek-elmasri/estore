@@ -27,18 +27,18 @@ class Cart < ApplicationRecord
 
   end
 
-  def valid_for_checkout? 
-    self.checkout_errors={}
-    self.checkout_errors['items'] = [I18n.t("errors.cart.empty")] if cart_items.empty?
-    cart_items.each do |ci|
-      unless ci.valid? && ci.available_quantity?
-        self.checkout_errors["#{ci.id}"] = ci.errors
-      end
-    end
-    self.checkout_errors = nil unless self.checkout_errors.length > 0
-    return false if self.checkout_errors
-    return true
-  end
+  # def valid_for_checkout? 
+  #   self.checkout_errors={}
+  #   self.checkout_errors['items'] = [I18n.t("errors.cart.empty")] if cart_items.empty?
+  #   cart_items.each do |ci|
+  #     unless ci.valid? && ci.available_quantity?
+  #       self.checkout_errors["#{ci.id}"] = ci.errors
+  #     end
+  #   end
+  #   self.checkout_errors = nil unless self.checkout_errors.length > 0
+  #   return false if self.checkout_errors
+  #   return true
+  # end
 
   def checkout
     transaction do

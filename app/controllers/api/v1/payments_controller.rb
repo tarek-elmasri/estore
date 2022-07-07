@@ -7,6 +7,7 @@ class Api::V1::PaymentsController < ApplicationController
     intent = Order::StripeIntent.new()
     intent.pay(amount, params.require(:payment_method_id))
 
+    update_order_status(intent)
     return handle_response(intent)
   end
 
@@ -14,18 +15,20 @@ class Api::V1::PaymentsController < ApplicationController
   def update
     intent = Order::StripeIntent.new()
     intent.confirm(params.require(:payment_intent_id))
+    update_order_status(intent)
     return handle_response(intent)
   end
 
   private
   def set_order
-    @order= Current.user.orders.not_fullfilled.find(params.require(:order_id))
+    @order= Current.user.orders.not_fullfilled.find(params.require(:order_id)) 
   end
 
   def handle_response(intent)
-    @order.payment_intent = intent.id
-    @order.status = intent.status
-    @order.save!
+
+    # @order.payment_intent = intent.id
+    # @order.status = intent.status
+    # @order.save!
 
     if intent.payment_require_auth?
       return respond({
@@ -41,6 +44,10 @@ class Api::V1::PaymentsController < ApplicationController
   end
 
 
-
+private
+def update_order_status intent
+  Order::OrderUpdate.new(@order)
+                    .update_payment_status!(intent.id, intent.status)
+end
 
 end

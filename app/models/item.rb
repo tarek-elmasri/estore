@@ -1,6 +1,7 @@
 class Item < ApplicationRecord
-  include Authenticator::Staff::ModelAuthorizationChecker
-  include StaffTracker::Model
+  include Interfaces::Items
+  # include Authenticator::Staff::ModelAuthorizationChecker
+  # include StaffTracker::Model
   
   has_one :item_stock
   has_many :item_categories, dependent: :destroy
@@ -11,7 +12,7 @@ class Item < ApplicationRecord
   
   accepts_nested_attributes_for :item_categories, allow_destroy: true
   
-  before_validation :set_stock_to_zero,if: :is_card?,  on: :create
+  #before_validation :set_stock_to_zero,if: :is_card?,  on: :create
 
   validates :name, presence: true
   validates :type_name, inclusion: { in: ['card' , 'item']}
@@ -32,7 +33,7 @@ class Item < ApplicationRecord
 
   validate :discount_dates
 
-  after_save :handle_stock
+  #after_save :handle_stock
 
   scope :visible, -> {where(visible: true)}
   scope :available, -> {where(available: true)}
@@ -109,16 +110,7 @@ class Item < ApplicationRecord
   end
 
   private
-  def handle_stock 
-    item_stock = ItemStock.where(item_id: id).first_or_initialize
-    item_stock.with_lock do
-      item_stock.has_limited_stock = has_limited_stock if has_limited_stock
-      item_stock.active=stock if stock
-      item_stock.notify_on_low_stock = notify_on_low_stock if notify_on_low_stock
-      item_stock.low_stock = low_stock if low_stock
-      item_stock.save!
-    end
-  end
+  
 
   def set_stock_to_zero
     if stock && stock > 0
