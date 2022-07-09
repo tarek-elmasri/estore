@@ -5,8 +5,11 @@ class OrderHandlerJob < ApplicationJob
     order=Order.include_user
                 .include_order_items
                 .find(order_id)
-    order.transaction do
-      OrderHandler::Stocks.new(order).handle 
-    end            
+
+    return unless order.is_fullfilled?
+    # order.transaction do
+    #   OrderHandler::Stocks.new(order).handle 
+    # end
+    Order::OrderConfirm.new(order).confirm!            
   end
 end

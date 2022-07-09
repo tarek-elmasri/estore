@@ -23,6 +23,7 @@ class ItemStock < ApplicationRecord
   def release_from_pending!(amount)
     return unless has_limited_stock
     with_lock do
+      raise StandardError.new('no stock available in pending ') if pending < amount
       self.active = active + amount
       self.pending = pending - amount
       save!
@@ -32,10 +33,26 @@ class ItemStock < ApplicationRecord
   def sell! amount
     with_lock do
       if has_limited_stock
+        raise StandardError.new('no stock available in pending ') if pending < amount
         self.pending = pending - amount
       end
       self.sales = sales + amount
       save!
+    end
+  end
+
+  def add_to_stock! amount
+    return unless has_limited_stock
+    with_lock do
+      self.increment!(:active, amount)
+    end
+  end
+
+  def remove_from_stock! amount
+    return unless has_limited_stock
+    with_lock do
+      raise StandardError.new('exceeds available stock') if active < amount
+      decrement!(:active, amount)
     end
   end
 

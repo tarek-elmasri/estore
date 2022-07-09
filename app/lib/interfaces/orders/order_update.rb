@@ -11,7 +11,9 @@ class Interfaces::Orders::OrderUpdate
       order.delivery_status = 'delivered'
     elsif order.order_items.all? {|oi| oi.is_pending?}
       order.delivery_status = 'pending'
-    else
+    elsif order.order_items.all? {|oi| oi.is_failed?}
+      order.delivery_status = 'failed'
+    elsif order.order_items.any? {|oi| oi.is_delivered?}
       order.delivery_status = 'partial_delivery'
     end
     
@@ -19,6 +21,7 @@ class Interfaces::Orders::OrderUpdate
   end
 
   def update_payment_status! intent_id, status
+    check_order_current_status
     self.order.update!(
       payment_intent: intent_id,
       status: status 
@@ -27,6 +30,8 @@ class Interfaces::Orders::OrderUpdate
     if (self.order.status_previously_changed? && self.order.status == 'succeeded')
       OrderHandlerJob.perform_later(self.order.id)
       InvoicesMailer.send_invoice(self.order.id).deliver_later
+    elsif self.order.failed_payment?
+      Order::OrderDestroy.new(self.order).destroy!
     end
 
     return self.order
@@ -35,4 +40,7 @@ class Interfaces::Orders::OrderUpdate
   private
   attr_writer :order
 
+  def check_order_current_status
+    raise Errors::Unauthorized if order.is_fullfilled?
+  end
 end

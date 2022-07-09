@@ -1,5 +1,5 @@
 class Interfaces::Items::ItemCreation 
-  include Interfaces::Items::ItemStockHandler
+
   include StaffTracker::Recorder
 
   attr_reader :item
@@ -12,8 +12,9 @@ class Interfaces::Items::ItemCreation
     check_authorization
     self.item.stock = 0 if self.item.is_card?
     Item.transaction do
-      self.item.save!
-      update_item_stock!
+      # create is used to pass nested parameters attributes
+      self.item.create!
+      Items::ItemStocker.new(self.item).update_item_stock!
     end
 
     record(

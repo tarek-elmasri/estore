@@ -5,18 +5,21 @@ class Api::V1::CartItemsController < ApplicationController
 
 
   def create
-    ci = @cart.cart_items.build(cart_item_params)
-    ci.save!
-    respond(ci)
+    cart_item = CartItem::CartItemCreation.new(@cart, cart_item_params).create!
+    # ci = @cart.cart_items.build(cart_item_params)
+    # ci.save!
+    respond(cart_item)
   end
 
   def update
-    @cart_item.update!(cart_item_params)
-    respond(@cart_item)
+    updated_cart_item = CartItem::CartItemUpdate.new(@cart_item).update!
+    # @cart_item.update!(cart_item_params)
+    respond(updated_cart_item)
   end
 
   def destroy
-    @cart_item.destroy!
+    CartItem::CartItemDestroy.new(@cart_item).destroy!
+    # @cart_item.destroy!
     respond_ok()
   end
 

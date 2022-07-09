@@ -4,17 +4,19 @@ class Api::V1::Dashboard::ItemsController < Api::V1::Dashboard::Base
 
   def create
     # create is used to allow passing nested parameter atttributes
-    item = Item.create!(items_params)
+    item = Item::ItemCreation.new(items_params).create!
     respond(item)
   end
 
   def update
-    @item.update!(items_params.except(:type_name))
-    respond(@item)
+    updated_item = Item::ItemUpdate.new(@item).update!(items_params)
+    # @item.update!(items_params.except(:type_name))
+    respond(updated_item)
   end
 
   def delete
-    @item.terminate!
+    destroyed_item = Item::ItemDestroy.new(@item).destroy!
+    # @item.terminate!
     respond_ok
   end
 

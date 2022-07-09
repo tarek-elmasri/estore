@@ -15,11 +15,11 @@ class Interfaces::Orders::OrderCreation
     Order.transaction do
       build_order_values
       proceed_checkout
-      self.order.save!
+      order.save!
       create_order_items
       create_cleanup_job
     end
-    return self.order
+    return order
   end
 
 
@@ -28,34 +28,35 @@ class Interfaces::Orders::OrderCreation
   attr_writer :order
 
   def build_order_values
-    self.order.user_id = user.id
+    order.user_id = user.id
 
-    self.order.t_value = 0.00
+    order.t_value = 0.00
     #TODO implement vat mechanism
-    self.order.t_vat = 0.00
-    self.cart.cart_items.each do |ci|
-      self.order.t_value += (ci.item.has_discount ? ci.item.discount_price : ci.item.price) * ci.quantity
+    order.t_vat = 0.00
+    cart.cart_items.each do |ci|
+      order.t_value += (ci.item.has_discount ? ci.item.discount_price : ci.item.price) * ci.quantity
     end
 
-    self.order.t_payment= self.order.t_value + self.order.t_vat
+    order.t_payment= order.t_value + order.t_vat
   end
 
 
   def proceed_checkout
     begin
-      self.cart.checkout
+      Cart::Checkout.new(cart).checkout
+      #cart.checkout
     rescue => exception
-      self.order.errors.add(:cart, self.cart.checkout_errors)
+      order.errors.add(:cart, cart.checkout_errors)
     end
 
-    raise ActiveRecord::RecordInvalid.new(self.order) unless self.order.errors.empty?
+    raise ActiveRecord::RecordInvalid.new(order) unless order.errors.empty?
   end
 
   def create_order_items
     order_items_array =[]
-    self.cart.cart_items.include_item.each do |ci|
+    cart.cart_items.include_item.each do |ci|
       oi= {
-        order_id: self.order.id,
+        order_id: order.id,
         quantity: ci.quantity,
         value: ci.item.has_discount ? ci.item.discount_price : ci.item.price,
         description: ci.item.name,
@@ -70,7 +71,7 @@ class Interfaces::Orders::OrderCreation
   end
 
   def create_cleanup_job
-    OrderCleanupJob.set(wait: 30.seconds).perform_later(self.order.id)
+    OrderCleanupJob.set(wait: 5.minutes).perform_later(order.id)
   end
 
 end

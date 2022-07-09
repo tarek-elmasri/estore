@@ -1,4 +1,6 @@
 class OrderItem < ApplicationRecord
+  include Interfaces::OrderItems
+  
   belongs_to :order
   has_many :cards
 
@@ -7,6 +9,7 @@ class OrderItem < ApplicationRecord
 
   scope :only_cards, -> {where(type_name: 'card')}
   scope :include_cards, -> {includes(:cards)}
+  scope :include_order, -> {includes(:order)}
   def is_card?
     type_name == 'card'
   end
@@ -26,6 +29,10 @@ class OrderItem < ApplicationRecord
 
   def is_pending?
     delivery_status == 'pending'
+  end
+
+  def is_failed?
+    delivery_status == 'failed'
   end
 
   def set_to_delivered!

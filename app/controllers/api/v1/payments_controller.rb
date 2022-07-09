@@ -36,7 +36,8 @@ class Api::V1::PaymentsController < ApplicationController
         payment_intent_client_secret: intent.client_secret
         })
     elsif intent.payment_succeed?
-      Current.user.cart.clear!
+      Cart::Clear.new(Current.user.cart).clear!
+      # Current.user.cart.clear!
       return respond({success: true})
     else
       return respond_unprocessable({errors: "invalid status"})

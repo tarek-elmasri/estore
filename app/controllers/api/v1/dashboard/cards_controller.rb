@@ -8,18 +8,21 @@ class Api::V1::Dashboard::CardsController < Api::V1::Dashboard::Base
   end
 
   def create
-    card=Card.new(cards_params)
-    card.save!
+    card = Card::CardCreation.new(cards_params).create!
+    # card=Card.new(cards_params)
+    # card.save!
     respond(card)
   end
 
   def update
-    @card.update!(code: params.require(:code))
-    respond(@card)
+    updated_card = Card::CardUpdate.new(@card).update!(cards_params)
+    # @card.update!(code: params.require(:code))
+    respond(updated_card)
   end
 
   def delete
-    @card.destroy!
+    deleted_card = Card::CardDestroy.new(@card).destroy!
+    # @card.destroy!
     respond_ok
   end
 

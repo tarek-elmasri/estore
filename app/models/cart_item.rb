@@ -1,4 +1,6 @@
 class CartItem < ApplicationRecord
+  include Interfaces::CartItems
+  
   belongs_to :cart
   belongs_to :item
 
@@ -16,11 +18,17 @@ class CartItem < ApplicationRecord
   scope :include_item , -> {includes(:item)}
   scope :only_cards, -> {includes(:item).where(item: {type_name: 'card'})}
 
+  # def available_quantity?
+  #   return unless item
+  #   total_quantity = CartItem.where(cart_id: cart_id, item_id: item_id)
+  #                             .sum(:quantity)
+  #   return true if item.has_stock?(total_quantity)
+  #   errors.add(:quantity, I18n.t('errors.cart_items.no_stock'))
+  #   return false
+  # end
   def available_quantity?
     return unless item
-    total_quantity = CartItem.where(cart_id: cart_id, item_id: item_id)
-                              .sum(:quantity)
-    return true if item.has_stock?(total_quantity)
+    return true if item.has_stock?(quantity)
     errors.add(:quantity, I18n.t('errors.cart_items.no_stock'))
     return false
   end
@@ -32,9 +40,10 @@ class CartItem < ApplicationRecord
     return false
   end
 
-  def freeze_quantity!
-    item.reserve_quantity!(quantity)
-  end
+  # def freeze_quantity!
+  #   Item::ItemStocker.new(item).reserve_stock!(quantity)
+  #   #item.reserve_quantity!(quantity)
+  # end
 
   private
   def zero_quantity

@@ -1,6 +1,6 @@
 class CardsMailer < ApplicationMailer
 
-  after_action :set_delivery_status
+  #after_action :set_delivery_status
   # Subject can be set in your I18n file at config/locales/en.yml
   # with the following lookup:
   #
@@ -9,15 +9,18 @@ class CardsMailer < ApplicationMailer
   def deliver_cards(order_id)
     @order = Order.include_user
                   .include_order_items
-                  .include_order_cards
                   .find(order_id)
 
-    
-    mail to: @order.user.email, subject: 'Your Codes Are Here!'
+    @user = @order.user
+    @order_items = @order.order_items
+
+    return unless @order.has_cards_attached?
+
+    mail to: @user.email, subject: 'Your Codes Are Here!'
   end
 
   private
   def set_delivery_status
-    
+    OrderItem::CardsMailerUpdateDeliveryStatus.new(@order_items).update_all
   end
 end

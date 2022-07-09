@@ -1,5 +1,4 @@
 class Interfaces::Items::ItemUpdate 
-  include Interfaces::Items::ItemStockHandler
   include StaffTracker::Recorder
 
   attr_reader :item
@@ -9,12 +8,26 @@ class Interfaces::Items::ItemUpdate
   end
 
   def update! params
+    check_authorization
+
     Item.transaction do
-      self.item.update!(params)
-      
+      self.item.update!(params.except(:type_name))
+      Items::ItemStocker.new(self.item).update_item_stock!
     end
+
+    recorder(
+      :update,
+      "item",
+      self.item.id
+    )
+
+    return self.item
   end
 
   private
   attr_writer :item
+
+  def check_authorization
+    raise Errors::Unauthorized unless Current.user.is_authorized_to_update_item?
+  end
 end

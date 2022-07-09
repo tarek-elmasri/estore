@@ -24,7 +24,7 @@ class Order < ApplicationRecord
   scope :fullfilled, -> {where(status: "succeeded")}
   scope :include_user, -> {includes(:user)}
   scope :include_order_items, -> {includes(:order_items)}
-  scope :include_order_cards, -> {includes(order_items: [:cards])}
+  #scope :include_order_cards, -> {includes(order_items: [:cards])}
 
   def is_fullfilled?
     status == 'succeeded'
