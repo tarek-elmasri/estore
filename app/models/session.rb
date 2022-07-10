@@ -1,5 +1,6 @@
 class Session < ApplicationRecord
 
+  default_scope {where(version: APP_VERSION)}
 
   belongs_to :user
   validates :version, presence: true

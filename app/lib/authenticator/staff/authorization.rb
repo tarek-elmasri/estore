@@ -31,6 +31,10 @@ module Authenticator
           rule == "admin"
         end
 
+        def is_user?
+          rule == 'user'
+        end
+
         private
         def check_authorization
           if self.rule_changed?

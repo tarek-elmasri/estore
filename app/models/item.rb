@@ -10,6 +10,8 @@ class Item < ApplicationRecord
   has_many :carts , through: :cart_items
   has_many :cards
   
+  default_scope {includes(:item_stock)}
+
   accepts_nested_attributes_for :item_categories, allow_destroy: true
   
   before_validation :set_stock_to_zero,if: :is_card?,  on: :create
@@ -38,7 +40,6 @@ class Item < ApplicationRecord
 
   scope :visible, -> {where(visible: true)}
   scope :available, -> {where(available: true)}
-
   # scopes for finders 
   scope :in_categories_ids, -> (ids=[]) {includes(:item_categories).where(item_categories: {category_id: ids})}
 

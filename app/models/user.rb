@@ -1,8 +1,8 @@
 class User < ApplicationRecord
   include Authenticator::User
   include Authenticator::Staff::Authorization
-  include Authenticator::Staff::ModelAuthorizationChecker
-  include StaffTracker::Model
+  #include Authenticator::Staff::ModelAuthorizationChecker
+  #include StaffTracker::Model
   
   has_many :orders
   

@@ -16,7 +16,7 @@ class Api::V1::SessionsController < ApplicationController
   end
 
   def delete
-    session['session_id'] = nil if Current.web_platform?
+    session['id'] = nil if Current.web_platform?
     Session.kill_by_user_id(Current.user.id)
     respond_ok()
   end
@@ -30,7 +30,7 @@ class Api::V1::SessionsController < ApplicationController
 
 
   def refresh_through_web
-    current_session = Session.find_by_id_and_version!(session[:session_id], APP_VERSION)
+    current_session = Session.find_by_id_and_version!(session[:id], APP_VERSION)
     respond({
       access_token: current_session.user.generate_access_token
       })

@@ -12,16 +12,18 @@ class ApplicationController < ActionController::API
   
 
   def set_request
-    Current.platform = request.headers["platform"]
+    broweser = Browser.new(request.headers['user-agent'])
+    Current.platform = browser.device.mobile? ? 'mobile' : 'web'
     Current.token= request.headers['Authorization']
                           &.split("Bearer ")
                           &.last
+
   end
 
   protected
   
   def create_session_cookies user
-    session[:session_id] = user.session.id if Current.web_platform?
+    session[:id] = user.session.id if Current.web_platform?
   end
 
   def authenticate_user
