@@ -3,7 +3,7 @@ class Interfaces::Items::ItemUpdate
 
   attr_reader :item
 
-  def initialize
+  def initialize item
     self.item = item
   end
 
@@ -12,10 +12,10 @@ class Interfaces::Items::ItemUpdate
 
     Item.transaction do
       self.item.update!(params.except(:type_name))
-      Items::ItemStocker.new(self.item).update_item_stock!
+      Item::ItemStocker.new(self.item).update_item_stock!
     end
 
-    recorder(
+    record(
       :update,
       "item",
       self.item.id

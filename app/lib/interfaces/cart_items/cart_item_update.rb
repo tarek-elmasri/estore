@@ -8,6 +8,7 @@ class Interfaces::CartItems::CartItemUpdate
 
   def update! params
     self.cart_item.update!(params)
+    return self.cart_item
   end
 
   private

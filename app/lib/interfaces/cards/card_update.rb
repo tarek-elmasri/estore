@@ -16,6 +16,8 @@ class Interfaces::Cards::CardUpdate
       "card",
       self.card.id
     )
+
+    return self.card
   end
 
   private

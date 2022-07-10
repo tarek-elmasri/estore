@@ -12,7 +12,7 @@ class Item < ApplicationRecord
   
   accepts_nested_attributes_for :item_categories, allow_destroy: true
   
-  #before_validation :set_stock_to_zero,if: :is_card?,  on: :create
+  before_validation :set_stock_to_zero,if: :is_card?,  on: :create
 
   validates :name, presence: true
   validates :type_name, inclusion: { in: ['card' , 'item']}
@@ -33,6 +33,7 @@ class Item < ApplicationRecord
 
   validate :discount_dates
 
+  validate :stock_is_zero, if: :is_card?, on: :create
   #after_save :handle_stock
 
   scope :visible, -> {where(visible: true)}
@@ -74,49 +75,66 @@ class Item < ApplicationRecord
     visible  && available
   end
 
-  #old version
-  # decrement escapes authorization validations
-  def eleminate_quantity(amount)
-    return unless has_limited_stock
-    if has_stock?(amount)
-      decrement!(:stock, amount)
-    else
-      decrement!(:stock , stock)
-    end
+  def active_stock
+    item_stock.active
   end
 
-
-  def reserve_quantity!(amount)
-    item_stock.move_to_pending!(amount)
+  def pending_stock
+    item_stock.pending
   end
 
-  def sell_quantity!(amount)
-    item_stock.sell!(amount)
+  def sold_quantity
+    item_stock.sales
   end
 
-  # escapes authorization validation
-  def add_to_stock(amount)
-    return unless has_limited_stock
-    increment!(:stock,amount)
-  end
+  # #old version
+  # # decrement escapes authorization validations
+  # def eleminate_quantity(amount)
+  #   return unless has_limited_stock
+  #   if has_stock?(amount)
+  #     decrement!(:stock, amount)
+  #   else
+  #     decrement!(:stock , stock)
+  #   end
+  # end
 
-  def terminate!
-    raise Errors::Unauthorized unless Current.user.is_authorized_to_delete_item?
-    if is_card? && has_cards?
-      raise Errors::ItemHasCardsError
-    end
 
-    update_columns(visible: false, available: false)
-  end
+  # def reserve_quantity!(amount)
+  #   item_stock.move_to_pending!(amount)
+  # end
+
+  # def sell_quantity!(amount)
+  #   item_stock.sell!(amount)
+  # end
+
+  # # escapes authorization validation
+  # def add_to_stock(amount)
+  #   return unless has_limited_stock
+  #   increment!(:stock,amount)
+  # end
+
+  # def terminate!
+  #   raise Errors::Unauthorized unless Current.user.is_authorized_to_delete_item?
+  #   if is_card? && has_cards?
+  #     raise Errors::ItemHasCardsError
+  #   end
+
+  #   update_columns(visible: false, available: false)
+  # end
 
   private
   
+  def stock_is_zero
+    return if stock == 0
+    errors.add(:stock, I18n.t('errors.item.stock_must_be_zero'))
+  end
 
   def set_stock_to_zero
-    if stock && stock > 0
-      errors.add(:stock, I18n.t('errors.item.stock_must_be_zero'))
-      return
-    end
+    return if stock
+    # if stock && stock > 0
+    #   errors.add(:stock, I18n.t('errors.item.stock_must_be_zero'))
+    #   return
+    # end
     self.stock = 0 
   end
 

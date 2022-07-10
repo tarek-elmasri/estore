@@ -21,6 +21,6 @@ class CardsMailer < ApplicationMailer
 
   private
   def set_delivery_status
-    OrderItem::CardsMailerUpdateDeliveryStatus.new(@order_items).update_all
+    OrderItem::CardsMailerUpdateDeliveryStatus.new(@order_items).update_all('delivered')
   end
 end

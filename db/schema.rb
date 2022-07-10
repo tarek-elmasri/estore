@@ -98,7 +98,7 @@ ActiveRecord::Schema.define(version: 2022_07_05_172441) do
     t.integer "stock"
     t.integer "low_stock"
     t.boolean "notify_on_low_stock", default: false
-    t.boolean "visible", default: false
+    t.boolean "visible", default: true
     t.string "code"
     t.float "cost"
     t.float "discount_price"

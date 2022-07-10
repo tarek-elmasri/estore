@@ -8,6 +8,7 @@ class Interfaces::CartItems::CartItemDestroy
 
   def destroy!
     self.cart_item.destroy!
+    return self.cart_item
   end
 
   private

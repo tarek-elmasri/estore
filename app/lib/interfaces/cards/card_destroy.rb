@@ -4,7 +4,7 @@ class Interfaces::Cards::CardDestroy
   attr_reader :card
 
   def initialize card
-    this.card = card
+    self.card = card
   end
 
   def destroy!
@@ -14,11 +14,11 @@ class Interfaces::Cards::CardDestroy
     #                   .remove_from_stock!(1)
     # end
 
-    this.card.with_lock do
-      raise StandardError.new('card attached to order') unless thid.card.active
-      this.card.destroy!
-      Item::ItemStocker.new(cart.item)
-                        .remove_from_stock!(1)
+    self.card.with_lock do
+      raise StandardError.new('card attached to order') unless self.card.active
+      self.card.destroy!
+      Item::ItemStocker.new(self.card.item)
+                        .remove_stock!(1)
     end
 
     record(
@@ -31,6 +31,7 @@ class Interfaces::Cards::CardDestroy
   end
 
   private
+  attr_writer :card
   def check_authorization
     raise Errors::Unauthorized unless Current.user.is_authorized_to_delete_card?
   end

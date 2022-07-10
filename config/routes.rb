@@ -82,6 +82,7 @@ Rails.application.routes.draw do
             end
 
             scope :items do
+              get "/" => "items#index"
               post "/" => "items#create"
               patch "/" => "items#update"
               delete "/" => "items#delete"

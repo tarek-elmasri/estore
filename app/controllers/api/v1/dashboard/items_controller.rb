@@ -1,6 +1,16 @@
 class Api::V1::Dashboard::ItemsController < Api::V1::Dashboard::Base
 
-  before_action :set_item, except: [:create]
+  before_action :set_item, except: [:create, :index]
+
+  def index
+
+    items= Item.visible.all
+    respond({
+      items: serialize_resource(
+        items,
+        each_serializer: ItemSerializer
+      )})
+  end
 
   def create
     # create is used to allow passing nested parameter atttributes
@@ -49,6 +59,6 @@ class Api::V1::Dashboard::ItemsController < Api::V1::Dashboard::Base
   end
 
   def set_item
-    @item = Item.visible.find(id: params.require(:id))
+    @item = Item.visible.find(params.require(:id))
   end
 end
