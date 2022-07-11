@@ -1,4 +1,4 @@
-class Interfaces::Users::RequestResetPasswordEmail
+class Interfaces::Users::RequestResetPasswordByEmail
 
   attr_reader :email
   attr_reader :reset_link
@@ -14,7 +14,7 @@ class Interfaces::Users::RequestResetPasswordEmail
       raise Errors::BlockedUser if user.blocked?
       
       send_mail(user.forget_password_token)
-      devalidating_job()
+      devalidating_job(user)
     end
   end
 
@@ -27,7 +27,7 @@ class Interfaces::Users::RequestResetPasswordEmail
                           .deliver_later
   end
 
-  def devalidating_job
+  def devalidating_job user
     DevalidatePasswordTokensJob
     .set(wait: 30.minutes)
     .perform_later(user.id, user.forget_password_token)

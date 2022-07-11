@@ -2,9 +2,11 @@ class Api::V1::SessionsController < ApplicationController
   before_action :authenticate_user, only: [:delete]
 
   def create
-    Current.user = User.auth(login_params)
-    create_session_cookies(Current.user)
-    respond({tokens: Current.user.tokens})
+    user= User::Authentication.login(login_params)
+    create_session_cookies(user)
+    # Current.user = User.auth(login_params)
+    # create_session_cookies(Current.user)
+    respond({tokens: user.tokens})
   end
 
   def update
@@ -16,8 +18,10 @@ class Api::V1::SessionsController < ApplicationController
   end
 
   def delete
-    session['id'] = nil if Current.web_platform?
-    Session.kill_by_user_id(Current.user.id)
+    #session['id'] = nil if Current.web_platform?
+    session[:refresh_token] = nil if Current.web_platform?
+    #User::Authentication.logout(Current.user.id)
+    #Session.kill_by_user_id(Current.user.id)
     respond_ok()
   end
 
@@ -30,9 +34,10 @@ class Api::V1::SessionsController < ApplicationController
 
 
   def refresh_through_web
-    current_session = Session.find_by_id_and_version!(session[:id], APP_VERSION)
+    #current_session = Session.find_by_id_and_version!(session[:id], APP_VERSION)
+    user= User.find_by_refresh_token!(session[:refresh_token])
     respond({
-      access_token: current_session.user.generate_access_token
+      access_token: user.generate_access_token
       })
   end
 

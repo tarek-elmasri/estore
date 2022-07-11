@@ -7,17 +7,23 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def update
-    Current.user.reload
-    Current.user.update!(users_params.except(:password))
-    respond(Current.user)
+    user = User::UserUpdate.new(Current.user.reload)
+                            .update!(users_params.except(:password))
+    respond(user)
+    # Current.user.reload
+    # Current.user.update!(users_params.except(:password))
+    # respond(Current.user)
   end
 
   def create
-    Current.user = User.new(users_params)
-    Current.user.should_validate_password = true
-    Current.user.save!
-    create_session_cookies(Current.user)
-    respond({tokens: Current.user.tokens})
+    user= User::Authentication.register(users_params)
+    create_session_cookies(user)
+    respond({tokens: user.tokens})
+    # Current.user = User.new(users_params)
+    # Current.user.should_validate_password = true
+    # Current.user.save!
+    # create_session_cookies(Current.user)
+    # respond({tokens: Current.user.tokens})
   end
 
   private
@@ -26,6 +32,7 @@ class Api::V1::UsersController < ApplicationController
       :first_name,
       :last_name,
       :phone_no,
+      :city,
       :email,
       :gender,
       :password

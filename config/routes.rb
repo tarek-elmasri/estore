@@ -17,6 +17,10 @@ Rails.application.routes.draw do
           get "/" => "forget_passwords#index"
           patch "/" => "forget_passwords#update" 
         end
+
+        scope :reset_password do
+          patch "/" => "update_passwords#update"
+        end
         
         scope :users do
           get "/" => "users#index"

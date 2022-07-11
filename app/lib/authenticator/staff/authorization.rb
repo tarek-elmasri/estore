@@ -11,8 +11,8 @@ module Authenticator
 
         validates :rule, inclusion: {in: DEFAULT_RULES, message: I18n.t("errors.authorization.invalid_rule")}
 
-        before_update :check_authorization
-        after_update :check_rule
+        #before_update :check_authorization
+        #after_update :check_rule
 
         Authenticator::Staff::AuthorizationTypes::TYPES.each do |action|
           define_method "is_authorized_to_#{action}?" do

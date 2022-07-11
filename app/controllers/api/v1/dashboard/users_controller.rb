@@ -12,8 +12,9 @@ class Api::V1::Dashboard::UsersController < Api::V1::Dashboard::Base
 
 
   def update
-    @user.update!(user_params)
-    respond(@user)
+    #@user.update!(user_params)
+    updated_user= User::UserUpdate.new(@user).update!(user_params)
+    respond(updated_user)
   end
 
 
@@ -25,6 +26,7 @@ class Api::V1::Dashboard::UsersController < Api::V1::Dashboard::Base
       :phone_no,
       :email,
       :gender,
+      :status,
       :dob,
       :city,
       :status,

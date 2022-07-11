@@ -16,7 +16,8 @@ class CardsMailer < ApplicationMailer
 
     return unless @order.has_cards_attached?
 
-    mail to: @user.email, subject: 'Your Codes Are Here!'
+    mail to: @user.email, subject: 'Your Codes Are Here!' do |format|
+    end
   end
 
   private

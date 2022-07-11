@@ -1,7 +1,8 @@
 class Authorization < ApplicationRecord
   include Authenticator::Staff::AuthorizationTypes
-  include Authenticator::Staff::ModelAuthorizationChecker
-  include StaffTracker::Model
+  include Interfaces::Authorizations
+  #include Authenticator::Staff::ModelAuthorizationChecker
+  #include StaffTracker::Model
 
   belongs_to :user
 

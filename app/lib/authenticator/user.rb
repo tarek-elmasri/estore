@@ -4,25 +4,25 @@ module Authenticator
 
     included do
       include JwtHandler::AuthTokens
-      has_one :session
+      #has_one :session
       has_refresh_token_fields :id, :rule
       has_access_token_fields :id, :rule
       has_secure_password
       has_secure_token :forget_password_token
 
-      after_create :create_session
+      #after_create :create_session
 
-      def self.auth credentials
-        raise ActiveRecord::RecordNotFound if credentials[:phone_no].blank? || credentials[:password].blank?
+      # def self.auth credentials
+      #   raise ActiveRecord::RecordNotFound if credentials[:phone_no].blank? || credentials[:password].blank?
         
-        user = find_by(phone_no: credentials[:phone_no])
-              &.authenticate credentials[:password]
+      #   user = find_by(phone_no: credentials[:phone_no])
+      #         &.authenticate credentials[:password]
     
-        raise ActiveRecord::RecordNotFound unless user
-        raise Errors::BlockedUser if user.blocked?
-        user.create_session
-        return user
-      end
+      #   raise ActiveRecord::RecordNotFound unless user
+      #   raise Errors::BlockedUser if user.blocked?
+      #   user.create_session
+      #   return user
+      # end
 
       # def self.find_by_password_token token
       #   return unless token
@@ -56,6 +56,11 @@ module Authenticator
         self
       end
 
+      def find_by_refresh_token! token
+        raise ActiveRecord::RecordNotFound unless token
+        find_by!(refresh_token: token)
+      end
+
       def self.find_by_email email
         return unless email
         find_by(email: email)
@@ -70,9 +75,9 @@ module Authenticator
       end
       
       
-      def create_session
-        Session.create_or_update id
-      end
+      # def create_session
+      #   Session.create_or_update id
+      # end
 
       
       def kill_current_session

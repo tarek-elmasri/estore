@@ -20,7 +20,7 @@ class Api::V1::OrdersController < ApplicationController
   # end
 
   def create
-    order = Order::OrderCreation.new(Current.user.get_full_cart, Current.user)
+    order = Order::OrderCreation.new(Current.user.get_full_cart)
                                 .create!
     respond(order)
   end

@@ -49,6 +49,7 @@ en:
         invalid_phone_no: "Invalid phone no. ex: 5xxxxxxxx"
         invalid_email: "Invalid email format"
         gender: "Gender must be 'male' or 'female'"
+        wrong_password: "Password don't match."
 
   activerecord:
     errors:

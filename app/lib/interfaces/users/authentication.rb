@@ -9,26 +9,26 @@ class Interfaces::Users::Authentication
     raise ActiveRecord::RecordNotFound unless user
     raise Errors::BlockedUser if user.blocked?
     self.handle_refresh_token(user)
-    self.create_session(user.id)
+    #self.create_session(user.id)
     return user
   end
 
   def self.register params
+    user= User.new(params)
+    user.should_validate_password = true
     User.transaction do
-      user= User.new(params)
-      user.should_validate_password = true
       user.save!
       self.create_cart(user.id)
-      self.create_session(user.id)
+      #self.create_session(user.id)
     end
 
     return user
   end
 
   private
-  def self.create_session(id)
-    Session.create_or_update(id)
-  end
+  # def self.create_session(id)
+  #   Session.create_or_update(id)
+  # end
 
   def self.create_cart(id)
     Cart.create(user_id: id)

@@ -23,7 +23,8 @@ class ApplicationController < ActionController::API
   protected
   
   def create_session_cookies user
-    session[:id] = user.session.id if Current.web_platform?
+    #session[:id] = user.session.id if Current.web_platform?
+    session[:refresh_token] = user.refresh_token if Current.web_platform?
   end
 
   def authenticate_user

@@ -1,13 +1,13 @@
 class Interfaces::Orders::OrderCreation
 
-  attr_accessor :cart
-  attr_accessor :user
+  attr_reader :cart
+  #attr_accessor :user
   attr_reader :order
   attr_reader :checkout_errors
 
-  def initialize cart , user
+  def initialize cart #, user
     self.cart= cart
-    self.user=user
+    #self.user=user
     self.order=Order.new
   end
 
@@ -26,9 +26,10 @@ class Interfaces::Orders::OrderCreation
   private
   attr_writer :checkout_errors
   attr_writer :order
-
+  attr_writer :cart
+  
   def build_order_values
-    order.user_id = user.id
+    order.user_id = cart.user_id
 
     order.t_value = 0.00
     #TODO implement vat mechanism

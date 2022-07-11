@@ -3,12 +3,12 @@ class User < ApplicationRecord
   include Authenticator::Staff::Authorization
   #include Authenticator::Staff::ModelAuthorizationChecker
   #include StaffTracker::Model
-  
+  include Interfaces::Users
   has_many :orders
   
   has_one :cart
   has_many :cart_items , through: :cart
-  after_create :create_cart
+  #after_create :create_cart
 
   has_many :staff_actions
   attr_accessor :should_validate_password
@@ -20,6 +20,7 @@ class User < ApplicationRecord
   validates :first_name , length: { minimum: 1, maximum: 20}
   validates :last_name, length: { minimum: 1, maximum: 20}
   validates :phone_no, numericality: { only_integer: true, message: I18n.t('errors.validations.user.invalid_phone_no') }
+  validates :status, inclusion: {in: ['active', 'blocked'] , message: I18n.t('errors.validations.user.status')}
   validate :valid_phone_no
 
 
@@ -43,9 +44,9 @@ class User < ApplicationRecord
 
   private
 
-  def create_cart
-    Cart.create(user_id: id)
-  end
+  # def create_cart
+  #   Cart.create(user_id: id)
+  # end
 
 
 
