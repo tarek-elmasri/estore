@@ -12,8 +12,6 @@ module Authenticator
         :create_category,
         :update_category,
         :delete_category,
-        :create_item_category,
-        :delete_item_category,
         :show_users,
         :update_user,
         :update_user_status,

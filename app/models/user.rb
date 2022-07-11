@@ -35,15 +35,15 @@ class User < ApplicationRecord
     Cart.includes(cart_items: [:item]).find_by(user_id: self.id)
   end
 
+  
+  private
   def valid_phone_no
     return unless phone_no
     unless phone_no.length == 9 && phone_no[0]== "5"
       errors.add(:phone_no, I18n.t('errors.validations.user.invalid_phone_no'))
     end
   end
-
-  private
-
+  
   # def create_cart
   #   Cart.create(user_id: id)
   # end

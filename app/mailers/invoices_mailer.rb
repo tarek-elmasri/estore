@@ -8,6 +8,7 @@ class InvoicesMailer < ApplicationMailer
   def send_invoice(order_id)
     @order=Order.find(order_id)
     @user= @order.user
-    mail to: @user.email, subject: 'Order Confirmation'
+    mail to: @user.email, subject: 'Order Confirmation' do |format|
+    end
   end
 end

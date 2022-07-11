@@ -11,23 +11,23 @@ class Cart < ApplicationRecord
     cart_items.empty?
   end
 
-  def clear!
-    cart_items.destroy_all
-  end
+  # def clear!
+  #   cart_items.destroy_all
+  # end
 
-  def sync mem_cart=[]
-    mem_cart.each do |mem_ci|
-      new_ci= CartItem.new(mem_ci)
-      existed_ci = cart_items.find_by(item_id: new_ci.item_id)
-      if existed_ci
-        existed_ci.item.duplicate_allowed? ?
-          create_ci(new_ci) : update_ci(existed_ci,new_ci)
-      else
-        create_ci(new_ci)
-      end
-    end
+  # def sync mem_cart=[]
+  #   mem_cart.each do |mem_ci|
+  #     new_ci= CartItem.new(mem_ci)
+  #     existed_ci = cart_items.find_by(item_id: new_ci.item_id)
+  #     if existed_ci
+  #       existed_ci.item.duplicate_allowed? ?
+  #         create_ci(new_ci) : update_ci(existed_ci,new_ci)
+  #     else
+  #       create_ci(new_ci)
+  #     end
+  #   end
 
-  end
+  # end
 
   # def valid_for_checkout? 
   #   self.checkout_errors={}

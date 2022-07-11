@@ -13,18 +13,19 @@ class Api::V1::Dashboard::CategoriesController < Api::V1::Dashboard::Base
   end
 
   def create
-    category = Category.new(categories_params)
-    category.save!
+    category = Category.::CategoryCreation.new(categories_params)
+                                          .create!
     respond(category)
   end
 
   def update
-    @category.update!(categories_params)
-    respond(@category)
+    updated_category = Category::CategoryUpdate.new(@category)
+                                              .update!(categories_params)
+    respond(updated_category)
   end
 
   def delete
-    @category.destroy!
+    Category::CategoryDestroy.new(@category).destroy!
     respond_ok
   end
 

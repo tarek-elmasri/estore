@@ -12,7 +12,7 @@ class Api::V1::CartItemsController < ApplicationController
   end
 
   def update
-    updated_cart_item = CartItem::CartItemUpdate.new(@cart_item).update!
+    updated_cart_item = CartItem::CartItemUpdate.new(@cart_item).update!(cart_item_params)
     # @cart_item.update!(cart_item_params)
     respond(updated_cart_item)
   end

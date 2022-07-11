@@ -3,19 +3,18 @@ class Api::V1::PaymentsController < ApplicationController
   before_action :set_order
 
   def create
-    amount = (@order.t_payment * 100).to_s.split(".")[0].to_i
-    intent = Order::StripeIntent.new()
-    intent.pay(amount, params.require(:payment_method_id))
+    #amount = (@order.t_payment * 100).to_s.split(".")[0].to_i
+    intent = Order::StripeIntent.new(@order)
+    intent.pay(params.require(:payment_method_id))
 
-    update_order_status(intent)
+    #update_order_status(intent)
     return handle_response(intent)
   end
 
 
   def update
-    intent = Order::StripeIntent.new()
-    intent.confirm(params.require(:payment_intent_id))
-    update_order_status(intent)
+    intent = Order::StripeIntent.new(@order).confirm
+    #update_order_status(intent)
     return handle_response(intent)
   end
 

@@ -36,18 +36,18 @@ module Authenticator
         end
 
         private
-        def check_authorization
-          if self.rule_changed?
-            raise Errors::Unauthorized unless Current.user.is_authorized_to_update_authorization?
-            raise Errors::Unauthorized if self.rule == "admin" && Current.user.rule == "staff"
-          end
-        end
+        # def check_authorization
+        #   if self.rule_changed?
+        #     raise Errors::Unauthorized unless Current.user.is_authorized_to_update_authorization?
+        #     raise Errors::Unauthorized if self.rule == "admin" && Current.user.rule == "staff"
+        #   end
+        # end
 
-        def check_rule
-          if self.rule == 'user' || self.rule == 'admin'
-            self.authorization&.destroy
-          end
-        end
+        # def check_rule
+        #   if self.rule == 'user' || self.rule == 'admin'
+        #     self.authorization&.destroy
+        #   end
+        # end
       end
 
     end

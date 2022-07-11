@@ -1,5 +1,6 @@
 module StaffTracker::Recorder
 
+  # TODO: switch to job
   def record(action , model_name , model_id)
     Current.user.staff_actions.new(
       action: action, 

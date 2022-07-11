@@ -35,16 +35,16 @@ class OrderItem < ApplicationRecord
     delivery_status == 'failed'
   end
 
-  def set_to_delivered!
-    update!(delivery_status: 'delivered')
-  end
+  # def set_to_delivered!
+  #   update!(delivery_status: 'delivered')
+  # end
 
-  def set_to_partial_delivery!
-    update!(delivery_status: 'partial_delivery')
-  end
+  # def set_to_partial_delivery!
+  #   update!(delivery_status: 'partial_delivery')
+  # end
 
-  def set_to_failed_delivery!
-    update!(delivery_status: 'failed')
-  end
+  # def set_to_failed_delivery!
+  #   update!(delivery_status: 'failed')
+  # end
 
 end
