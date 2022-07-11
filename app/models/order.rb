@@ -26,6 +26,13 @@ class Order < ApplicationRecord
   scope :include_order_items, -> {includes(:order_items)}
   #scope :include_order_cards, -> {includes(order_items: [:cards])}
 
+  # finder scoped -------
+  scope :only_cards, -> {include_order_items.where(order_items: {type_name: 'card'})}
+  scope :delivered, -> {where(delivery_status: 'delivered')}
+  scope :pending_delivery, -> { where(delivery_status: ['partial_delivery','pending'])}
+  scope :failed_delivery, -> {where( delivery_status: 'failed')}
+  #--------
+
   def is_fullfilled?
     status == 'succeeded'
   end

@@ -41,8 +41,10 @@ class Item < ApplicationRecord
   scope :visible, -> {where(visible: true)}
   scope :available, -> {where(available: true)}
   # scopes for finders 
-  scope :in_categories_ids, -> (ids=[]) {includes(:item_categories).where(item_categories: {category_id: ids})}
-
+  scope :of_category_ids, -> (ids=[]) {includes(:item_categories).where(item_categories: {category_id: ids})}
+  scope :of_category_id, -> (id) { of_category_ids(id) }
+  scope :only_cards, ->  {where(type_name: 'card')}
+  scope :has_discount, -> {where(has_discount: true)}
   # ---
 
 

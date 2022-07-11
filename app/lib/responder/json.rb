@@ -62,6 +62,13 @@ module Responder
       }, status: e.status
     end
 
+    def route_not_found
+      render json: {
+        error: I18n.t('error.routes.not_found'),
+        code: '404'
+      }, status: 404
+    end
+
 
     def respond_bad_request e
       render json: {

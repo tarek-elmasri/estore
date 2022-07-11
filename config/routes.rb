@@ -44,7 +44,7 @@ Rails.application.routes.draw do
           post "/" => "cart_items#create"
           delete "/" => "cart_items#destroy"
           patch "/" => "cart_items#update"
-          get "/" => "cart_items#index"
+          #get "/" => "cart_items#index"
         end
 # 927af049-af5b-4c3b-a25a-3542158a96b6
         scope :orders do
