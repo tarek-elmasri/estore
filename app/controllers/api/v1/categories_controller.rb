@@ -1,14 +1,18 @@
 class Api::V1::CategoriesController < ApplicationController
   
+  has_scope :primary, type: :boolean, default: true
+  has_scope :name_like, as: :name
+  has_scope :paginate, using: %i[page per], type: :hash, allow_blank: true
 
   def index
-    # e3447d0c-7e0e-4a1e-b725-fb2f94d7e1b9
-    categories =  Category.primary.all
+    categories =  apply_scopes(Category.page(1))
     respond({
       categories: serialize_resource(
                     categories,
+                    include: ['sub_categories.sub_categories'],
                     each_serializer: CategorySerializer
-                  )
+                  ),
+      pagination_details: pagination_details(categories)
     })
   end
 end

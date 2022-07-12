@@ -25,4 +25,5 @@ class Interfaces::Categories::CategoryCreation
 
   def check_authorization
     raise Errors::Unauthorized unless Current.user.is_authorized_to_create_category?
+  end
 end

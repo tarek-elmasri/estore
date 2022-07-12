@@ -6,7 +6,8 @@ class Api::V1::OrdersController < ApplicationController
   has_scope :delivered, type: :boolean, only: [:index]
   has_scope :pending_delivery, type: :boolean, only: [:index]
   has_scope :failed_delivery, type: :boolean, only: [:index]
-
+  has_scope :order_by_recent, type: :boolean, only: [:index]
+  
   def index
     orders= apply_scopes(Current.user.orders.fullfilled)
     data= {order: serialize_resource(orders)}

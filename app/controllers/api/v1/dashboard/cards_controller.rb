@@ -1,10 +1,19 @@
 class Api::V1::Dashboard::CardsController < Api::V1::Dashboard::Base
 
   before_action :set_card, except: [:index , :create]
+  
+  has_scope :paginate, using: %i[page per], type: :hash, allow_blank: true, only: [:index]
+
 
   def index
-    cards= Card.available.where(item_id: params.require(:item_id))
-    respond(cards)
+    cards= Card.available.where(item_id: params.require(:item_id)).page(1)
+    respond({
+      cards: serialize_resource(
+        cards,
+        each_serializer: Dashboard::CardSerializer
+      ),
+      pagination_details: pagination_details(cards)
+    })
   end
 
   def create

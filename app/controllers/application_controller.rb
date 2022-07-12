@@ -46,7 +46,7 @@ class ApplicationController < ActionController::API
     result[:limit_per_page] = collection.limit_value
     result[:next_page] = collection.next_page
     result[:prev_page]= collection.prev_page
-    result[:has_next] = !!collection.next_page
+    result[:has_next] = !!collection.next_page 
     return result
     rescue
       nil

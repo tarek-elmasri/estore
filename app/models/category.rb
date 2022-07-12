@@ -12,9 +12,11 @@ class Category < ApplicationRecord
   validates :name , presence: true
   validates :primary_category, presence: true , if: :primary_category_id
 
-  # scopes for loading
+  # scopes for loading ----
     scope :primary, -> {where(primary_category_id: nil)}
-    
+    scope :name_like, -> (value)  {match_key_with_value(:name, value)}
+
+  #-------
 
 
 end

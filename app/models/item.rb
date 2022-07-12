@@ -39,12 +39,24 @@ class Item < ApplicationRecord
   #after_save :handle_stock
 
   scope :visible, -> {where(visible: true)}
-  scope :available, -> {where(available: true)}
+  scope :available, -> {visible.where(available: true)}
+  scope :include_categories, -> {includes(item_categories: [:category])}
   # scopes for finders 
+  scope :not_available, ->{visible.where(available: false)}
   scope :of_category_ids, -> (ids=[]) {includes(:item_categories).where(item_categories: {category_id: ids})}
   scope :of_category_id, -> (id) { of_category_ids(id) }
   scope :only_cards, ->  {where(type_name: 'card')}
   scope :has_discount, -> {where(has_discount: true)}
+  scope :order_by_best_sales, -> {includes(:item_stock).order('item_stocks.sales DESC')}
+  scope :order_by_high_price,-> {order(price: :desc)}
+  scope :order_by_low_price, -> {order(price: :asc)}
+  scope :order_by_low_stock, -> {includes(:item_stock).order("item_stocks.active ASC")}
+  scope :order_by_high_stock, -> {includes(:item_stock).order("item_stocks.active DESC")}
+  scope :empty_stock, -> {includes(:item_stock).where(item_stock: {active: 0})}
+  scope :low_stock,-> {includes(:item_stock).where(item_stocks: {has_limited_stock: true}).where('item_stocks.active <= item_stocks.low_stock')}
+  scope :only_limited_stock, -> {includes(:item_stock).where(item_stocks: {has_limited_stock: true})}
+  scope :only_unlimited_stock, -> {includes(:item_stock).where(item_stocks: {has_limited_stock: false})}
+  scope :name_like, -> (value) {match_key_with_value(:name, value)}
   # ---
 
 

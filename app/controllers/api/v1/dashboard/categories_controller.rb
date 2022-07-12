@@ -2,18 +2,24 @@ class Api::V1::Dashboard::CategoriesController < Api::V1::Dashboard::Base
 
   before_action :set_category, except: [:index,:create]
 
+  has_scope :paginate, using: %i[page per], type: :hash, allow_blank: true, only: [:index]
+  has_scope :primary, type: :boolean, default: true
+  has_scope :name_like, as: :name
+  
   def index
-    categories = Category.all
+    categories = apply_scopes(Category.page(1))
     respond({categories: 
       serialize_resource(
         categories, 
         each_serializer: Dashboard::CategorySerializer,
         include: ['sub_categories.sub_categories']
-      )})
+      ),
+      pagination_details: pagination_details(categories)
+      })
   end
 
   def create
-    category = Category.::CategoryCreation.new(categories_params)
+    category = Category::CategoryCreation.new(categories_params)
                                           .create!
     respond(category)
   end
