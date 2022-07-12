@@ -5,6 +5,7 @@ class Api::V1::Dashboard::CategoriesController < Api::V1::Dashboard::Base
   has_scope :paginate, using: %i[page per], type: :hash, allow_blank: true, only: [:index]
   has_scope :primary, type: :boolean, default: true
   has_scope :name_like, as: :name
+  has_scope :of_ids, as: :id
   
   def index
     categories = apply_scopes(Category.page(1))

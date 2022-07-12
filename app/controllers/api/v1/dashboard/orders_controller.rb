@@ -8,6 +8,7 @@ class Api::V1::Dashboard::OrdersController < Api::V1::Dashboard::Base
   has_scope :pending_delivery, type: :boolean
   has_scope :failed_delivery, type: :boolean
   has_scope :order_by_recent, type: :boolean
+  has_scope :of_ids, as: :id
   
   def index
     orders= apply_scopes(Order.fullfilled.include_order_items.page(1))

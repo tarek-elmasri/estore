@@ -6,7 +6,8 @@ class Api::V1::Dashboard::StaffActionsController < Api::V1::Dashboard::Base
   has_scope :of_model_id, as: :model_id
   has_scope :by_user_id
   has_scope :order_by_recent, type: :boolean, default: true
-
+  has_scope :of_ids, as: :id
+  
   def index
     actions = apply_scopes(StaffAction.include_user.page(1))
 

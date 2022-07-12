@@ -29,6 +29,15 @@ class User < ApplicationRecord
         .includes(:authorization)
         .find(id)
   }
+
+  # finder scoopes
+  scope :only_blocked, -> {where(blocked: true)}
+  scope :by_gender, -> (value) { where(gender: value) }
+  scope :by_phone_no, -> (value) { where(phone_no: value) }
+  scope :by_email, -> (value) { where(email: email) }
+  scope :by_city, -> (value) { where(city: value)}
+  scope :only_staff, -> { where( rule: ['admin','staff']) }
+  #-----
     
 
   def get_full_cart

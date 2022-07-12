@@ -7,7 +7,6 @@ class Api::V1::Dashboard::ItemsController < Api::V1::Dashboard::Base
   has_scope :only_cards, type: :boolean, as: :cards
   has_scope :has_discount, type: :boolean
   has_scope :paginate, using: %i[page per], type: :hash, allow_blank: true
-  has_scope :of_ids, as: :ids, type: :array
   has_scope :order_by_best_sales, type: :boolean
   has_scope :order_by_high_price, type: :boolean
   has_scope :order_by_low_price, type: :boolean
@@ -18,6 +17,7 @@ class Api::V1::Dashboard::ItemsController < Api::V1::Dashboard::Base
   has_scope :order_by_high_stock, type: :boolean
   has_scope :only_limited_stock, as: :limited_stock, type: :boolean
   has_scope :only_unlimited_stock, as: :unlimited_stock, type: :boolean
+  has_scope :of_ids, as: :id
 
   def index
 

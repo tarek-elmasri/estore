@@ -3,7 +3,7 @@ class Api::V1::Dashboard::CardsController < Api::V1::Dashboard::Base
   before_action :set_card, except: [:index , :create]
   
   has_scope :paginate, using: %i[page per], type: :hash, allow_blank: true, only: [:index]
-
+  has_scope :of_ids, as: :id
 
   def index
     cards= Card.available.where(item_id: params.require(:item_id)).page(1)
