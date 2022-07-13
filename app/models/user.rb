@@ -1,16 +1,13 @@
 class User < ApplicationRecord
   include Authenticator::User
   include Authenticator::Staff::Authorization
-  #include Authenticator::Staff::ModelAuthorizationChecker
-  #include StaffTracker::Model
   include Interfaces::Users
-  has_many :orders
-  
-  has_one :cart
-  has_many :cart_items , through: :cart
-  #after_create :create_cart
 
   has_many :staff_actions
+  has_many :orders
+  has_one :cart
+  has_many :cart_items , through: :cart
+
   attr_accessor :should_validate_password
 
   validates :email, format: { with: /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i }
@@ -52,11 +49,5 @@ class User < ApplicationRecord
       errors.add(:phone_no, I18n.t('errors.validations.user.invalid_phone_no'))
     end
   end
-  
-  # def create_cart
-  #   Cart.create(user_id: id)
-  # end
-
-
 
 end

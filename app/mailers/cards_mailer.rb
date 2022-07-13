@@ -10,18 +10,24 @@ class CardsMailer < ApplicationMailer
     @order = Order.include_user
                   .include_order_items
                   .find(order_id)
-
+    
     @user = @order.user
     @order_items = @order.order_items
+    #raise StandardError.new
 
-    return unless @order.has_cards_attached?
+    #return unless @order.has_cards_attached?
 
     mail to: @user.email, subject: 'Your Codes Are Here!' do |format|
     end
+
+    set_delivery_status('delivered')
+  rescue
+    set_delivery_status('failed')
+  end
+    
+  private
+  def set_delivery_status status
+    OrderItem::CardsMailerUpdateDeliveryStatus.new(@order_items).update_all(status)
   end
 
-  private
-  def set_delivery_status
-    OrderItem::CardsMailerUpdateDeliveryStatus.new(@order_items).update_all('delivered')
-  end
 end

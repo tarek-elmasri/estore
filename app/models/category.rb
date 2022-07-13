@@ -1,7 +1,5 @@
 class Category < ApplicationRecord
   include Interfaces::Categories
-  #include Authenticator::Staff::ModelAuthorizationChecker
-  #include StaffTracker::Model
 
   has_many :item_categories, dependent: :destroy
   has_many :items, through: :item_categories
@@ -12,10 +10,10 @@ class Category < ApplicationRecord
   validates :name , presence: true
   validates :primary_category, presence: true , if: :primary_category_id
 
-  # scopes for loading ----
+  # scopes for finders ----
     scope :primary, -> {where(primary_category_id: nil)}
     scope :name_like, -> (value)  {match_key_with_value(:name, value)}
-
+    scope :only_pinned, -> { where(pinned: true) }
   #-------
 
 

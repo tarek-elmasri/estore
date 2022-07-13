@@ -13,10 +13,6 @@ module Responder
       respond_unauthorized("UA411","errors.authorization.expired_token")
     end
 
-    # def respond_invalid_password_token
-    #   respond_unauthorized("UA413","errors.authorization.invalid_password_token")
-    # end
-
     def respond payload, options={}
       render json: payload, fields: options[:fields], include: options[:include]
     end
@@ -24,16 +20,6 @@ module Responder
     def respond_ok
       render json: {message: :ok}
     end
-
-    # def respond_with_access_token(user)
-    #   render json: {access_token: user.generate_access_token}
-    # end
-
-    # def respond_with_user_data user
-    #   # return respond_unauthorized if user.blank?
-    #   # return respond_blocked_user if user.blocked?
-    #   respond({tokens: user.tokens , user:user})
-    # end
 
     def respond_unprocessable( errors={}, code="UP422")
       payload={
@@ -76,10 +62,6 @@ module Responder
         code: "BD400",
       }, status: 400
     end
-
-    # def respond_blocked_user
-    #   respond_unauthorized("UA412","errors.authorization.blocked_user")
-    # end
 
     def respond_forbidden
       render json: {

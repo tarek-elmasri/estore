@@ -3,7 +3,7 @@ class Interfaces::OrderItems::CardsMailerUpdateDeliveryStatus
   attr_reader :order_items
 
   def initialize order_items
-    self.order_items order_items
+    self.order_items= order_items
   end
 
   def update_all status

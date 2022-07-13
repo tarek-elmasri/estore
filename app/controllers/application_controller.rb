@@ -23,7 +23,6 @@ class ApplicationController < ActionController::API
   protected
   
   def create_session_cookies user
-    #session[:id] = user.session.id if Current.web_platform?
     session[:refresh_token] = user.refresh_token if Current.web_platform?
   end
 
@@ -32,7 +31,6 @@ class ApplicationController < ActionController::API
       id = decoder.payload.dig(:id)
       rule = decoder.payload.dig(:rule)
       Current.user = User.new(id: id, rule: rule)
-      # Current.user_id = decoder.payload.dig(:id)
   end
 
   def serialize_resource resource, options={}
@@ -51,11 +49,5 @@ class ApplicationController < ActionController::API
     rescue
       nil
   end
-
-  # def load_authenticated_user
-  #   # supposed to be called after authenticate user
-  #   Current.user.reload
-
-  # end
 
 end

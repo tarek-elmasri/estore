@@ -1,8 +1,6 @@
 class Item < ApplicationRecord
   include Interfaces::Items
-  # include Authenticator::Staff::ModelAuthorizationChecker
-  # include StaffTracker::Model
-  
+
   has_one :item_stock
   has_many :item_categories, dependent: :destroy
   has_many :categories, through: :item_categories
@@ -36,7 +34,6 @@ class Item < ApplicationRecord
   validate :discount_dates
 
   validate :stock_is_zero, if: :is_card?, on: :create
-  #after_save :handle_stock
 
   scope :visible, -> {where(visible: true)}
   scope :available, -> {visible.where(available: true)}
@@ -57,6 +54,7 @@ class Item < ApplicationRecord
   scope :only_limited_stock, -> {includes(:item_stock).where(item_stocks: {has_limited_stock: true})}
   scope :only_unlimited_stock, -> {includes(:item_stock).where(item_stocks: {has_limited_stock: false})}
   scope :name_like, -> (value) {match_key_with_value(:name, value)}
+  scope :only_pinned, -> { where(pinned: true) }
   # ---
 
 
@@ -68,12 +66,6 @@ class Item < ApplicationRecord
     cards.available.any?
   end
 
-  # old version of stock handling
-  # def has_stock?( amount = 1)
-  #   return true unless has_limited_stock
-  #   return true if stock && stock >= amount
-  #   return false
-  # end
   def has_stock?(amount = 1)
     item_stock.has_active_stock?(amount)
   end
@@ -102,41 +94,6 @@ class Item < ApplicationRecord
     item_stock.sales
   end
 
-  # #old version
-  # # decrement escapes authorization validations
-  # def eleminate_quantity(amount)
-  #   return unless has_limited_stock
-  #   if has_stock?(amount)
-  #     decrement!(:stock, amount)
-  #   else
-  #     decrement!(:stock , stock)
-  #   end
-  # end
-
-
-  # def reserve_quantity!(amount)
-  #   item_stock.move_to_pending!(amount)
-  # end
-
-  # def sell_quantity!(amount)
-  #   item_stock.sell!(amount)
-  # end
-
-  # # escapes authorization validation
-  # def add_to_stock(amount)
-  #   return unless has_limited_stock
-  #   increment!(:stock,amount)
-  # end
-
-  # def terminate!
-  #   raise Errors::Unauthorized unless Current.user.is_authorized_to_delete_item?
-  #   if is_card? && has_cards?
-  #     raise Errors::ItemHasCardsError
-  #   end
-
-  #   update_columns(visible: false, available: false)
-  # end
-
   private
   
   def stock_is_zero
@@ -146,10 +103,6 @@ class Item < ApplicationRecord
 
   def set_stock_to_zero
     return if stock
-    # if stock && stock > 0
-    #   errors.add(:stock, I18n.t('errors.item.stock_must_be_zero'))
-    #   return
-    # end
     self.stock = 0 
   end
 

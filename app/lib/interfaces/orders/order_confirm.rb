@@ -21,7 +21,7 @@ class Interfaces::Orders::OrderConfirm
       end
     end
 
-    CardsMailer.deliver_cards(self.order.id).deliver_later if require_delivery
+    CardsMailer.deliver_cards(self.order.id).deliver_later if require_delivery && order.has_cards_attached?
   end
 
 

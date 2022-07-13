@@ -4,28 +4,11 @@ class CartItem < ApplicationRecord
   belongs_to :cart
   belongs_to :item
 
-  #new section
-  #-----------------------
-  #validates :item, presence: true
   validate :zero_quantity , :multi_quantity , :duplicates, :available_item?, :available_quantity?
-  #validate :required_quantity
-
-  # def available?
-  #   return true if (item && item.visible)
-  #   false
-  # end
 
   scope :include_item , -> {includes(:item)}
   scope :only_cards, -> {includes(:item).where(item: {type_name: 'card'})}
 
-  # def available_quantity?
-  #   return unless item
-  #   total_quantity = CartItem.where(cart_id: cart_id, item_id: item_id)
-  #                             .sum(:quantity)
-  #   return true if item.has_stock?(total_quantity)
-  #   errors.add(:quantity, I18n.t('errors.cart_items.no_stock'))
-  #   return false
-  # end
   def available_quantity?
     return unless item
     return true if item.has_stock?(quantity)
@@ -39,11 +22,6 @@ class CartItem < ApplicationRecord
     errors.add(:item , I18n.t('errors.cart_items.not_available'))
     return false
   end
-
-  # def freeze_quantity!
-  #   Item::ItemStocker.new(item).reserve_stock!(quantity)
-  #   #item.reserve_quantity!(quantity)
-  # end
 
   private
   def zero_quantity
