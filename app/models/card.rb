@@ -5,7 +5,7 @@ class Card < ApplicationRecord
   belongs_to :item
 
   validates :order_item, presence: true, if: :order_item_id
-  validates :item, :code, presence: true
+  validates :code, presence: true
   validate :item_is_visible, :item_is_card
 
   scope :available, -> {where(active: true, order_item_id: nil).order(created_at: :asc)}

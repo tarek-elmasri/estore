@@ -3,6 +3,10 @@ class User < ApplicationRecord
   include Authenticator::Staff::Authorization
   include Interfaces::Users
 
+  DIRTY_CHARACTERS =['(',')','{','}','[',']','|',"`","¬","¦", '"',
+                      '^','*',"'",'<','>',':',';',"~","_","-","+"]
+  PASS_PATTERN = /\A(?=.*{6,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[[@!$%*]])/x
+  
   has_many :staff_actions
   has_many :orders
   has_one :cart
@@ -10,15 +14,19 @@ class User < ApplicationRecord
 
   attr_accessor :should_validate_password
 
-  validates :email, format: { with: /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i }
+  validates :email, format: { with: /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\Z/i }
   validates :email,:phone_no, uniqueness:true
   validates :password, length: {minimum: 5}, if: :should_validate_password
+  validate :password_pattern, if: :should_validate_password
+  #validates :password, format: {with: /\A(?=.*{6,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[[@!$%*]])/x }
+  validates :city, length: {maximum: 253}
   validates :gender, inclusion: {in: ['male','female'], message: I18n.t('errors.validations.user.gender')}
-  validates :first_name , length: { minimum: 1, maximum: 20}
-  validates :last_name, length: { minimum: 1, maximum: 20}
+  validates :first_name , length: { minimum: 2, maximum: 20}
+  validates :last_name, length: { minimum: 2, maximum: 20}
   validates :phone_no, numericality: { only_integer: true, message: I18n.t('errors.validations.user.invalid_phone_no') }
   validates :status, inclusion: {in: ['active', 'blocked'] , message: I18n.t('errors.validations.user.status')}
   validate :valid_phone_no
+  validate :valid_dob
 
 
   scope :load_with_cart_and_authorization, ->(id) {
@@ -43,10 +51,27 @@ class User < ApplicationRecord
 
   
   private
+  def password_pattern
+    return unless password
+    unless Regexp.new(PASS_PATTERN).match?(password)
+      errors.add(:password, I18n.t('errors.validations.password.invalid_pattern'))
+    end
+    if password.split('').any?{|char| DIRTY_CHARACTERS.include?(char)}
+      errors.add(:password, I18n.t('errors.validations.password.dirty_characters'))
+    end
+  end
+
   def valid_phone_no
     return unless phone_no
     unless phone_no.length == 9 && phone_no[0]== "5"
       errors.add(:phone_no, I18n.t('errors.validations.user.invalid_phone_no'))
+    end
+  end
+
+  def valid_dob
+    return unless dob
+    if dob < Date.today
+      errors.add(:dob, I18n.t('errors.validations.user.invalid_dob'))
     end
   end
 

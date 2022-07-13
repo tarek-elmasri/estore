@@ -4,6 +4,7 @@ class CartItem < ApplicationRecord
   belongs_to :cart
   belongs_to :item
 
+  validates :quantity, numericality: {only_integer: true}
   validate :zero_quantity , :multi_quantity , :duplicates, :available_item?, :available_quantity?
 
   scope :include_item , -> {includes(:item)}

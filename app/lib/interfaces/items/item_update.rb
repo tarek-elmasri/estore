@@ -21,7 +21,7 @@ class Interfaces::Items::ItemUpdate
       self.item.id
     )
 
-    return self.item
+    return self.item.reload
   end
 
   private

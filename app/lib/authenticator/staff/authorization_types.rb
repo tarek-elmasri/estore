@@ -3,12 +3,15 @@ module Authenticator
     module AuthorizationTypes
       TYPES= [
         :update_authorization,
+        :show_items,
         :create_item,
         :update_item,
         :delete_item,
+        :show_cards,
         :create_card,
         :update_card,
         :delete_card,
+        :show_categories,
         :create_category,
         :update_category,
         :delete_category,

@@ -3,7 +3,12 @@ class Api::V1::Dashboard::OrderItemsController < Api::V1::Dashboard::Base
 
   def update
     updated_oi = OrderItem::UpdateDeliveryStatus.new(@order_item).update!(params.require(:delivery_status))
-    respond(updated_oi)
+    respond(
+      serialize_resource(
+        updated_oi,
+        serializer: Dashboard::OrderItemSerializer
+      )
+    )
   end
 
   private

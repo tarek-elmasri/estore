@@ -20,7 +20,12 @@ class Api::V1::Dashboard::UsersController < Api::V1::Dashboard::Base
 
   def update
     updated_user= User::UserUpdate.new(@user).update!(user_params)
-    respond(updated_user)
+    respond(
+      serialize_resource(
+        updated_user,
+        serializer: Dashboard::UserSerializer
+      )
+    )
   end
 
 

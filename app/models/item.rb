@@ -11,29 +11,36 @@ class Item < ApplicationRecord
   default_scope {includes(:item_stock)}
 
   accepts_nested_attributes_for :item_categories, allow_destroy: true
-  
+
+  attr_accessor :has_limited_stock,:stock,:notify_on_low_stock,:low_stock
+  after_initialize {
+    self.has_limited_stock ||= item_stock&.has_limited_stock
+    self.stock ||= item_stock&.active
+    self.notify_on_low_stock ||= item_stock&.notify_on_low_stock
+    self.low_stock ||= item_stock&.low_stock
+  }
   before_validation :set_stock_to_zero,if: :is_card?,  on: :create
 
   validates :name, presence: true
+  validates :name, length: { maximum: 253}
   validates :type_name, inclusion: { in: ['card' , 'item']}
   validates :price, numericality: true
   validates :has_limited_stock, inclusion: {in: [true,false,nil]}
   validate :stock_set_to_limited , if: :is_card?
-  validates :stock, presence: true , if: :has_limited_stock
-  validate :stock_didnt_change ,if: :is_card?, unless: :new_record?
+  validates :stock, presence: true , if: :has_limited_stock, unless: :is_card?
+  #validate :stock_didnt_change ,if: :is_card?, unless: :new_record?
   validates :stock, numericality: {only_integer: true}, allow_nil: true
-  validates :notify_on_low_stock, inclusion: {in: [true , false , nil]}
+  validates :notify_on_low_stock, inclusion: {in: [true , false, nil]}
   validates :low_stock, presence: true , if: :notify_on_low_stock
   validates :low_stock, numericality: {only_integer: true}, allow_nil: true
   validates :cost, numericality: true, allow_nil: true
   validates :discount_price,:discount_end_date,:discount_start_date, presence: true, if: :has_discount
   validates :discount_price, numericality: true, allow_nil: true
+  validate :discount_dates, if: :has_discount
   validates :max_quantity_per_customer, presence: true, if: :limited_quantity_per_customer
   validates :max_quantity_per_customer, numericality: {only_integer: true}, allow_nil: true
 
-  validate :discount_dates
-
-  validate :stock_is_zero, if: :is_card?, on: :create
+  #validate :stock_is_zero, if: :is_card?, on: :create
 
   scope :visible, -> {where(visible: true)}
   scope :available, -> {visible.where(available: true)}
@@ -96,13 +103,13 @@ class Item < ApplicationRecord
 
   private
   
-  def stock_is_zero
-    return if stock == 0
-    errors.add(:stock, I18n.t('errors.item.stock_must_be_zero'))
-  end
+  # def stock_is_zero
+  #   return if stock == 0
+  #   errors.add(:stock, I18n.t('errors.item.stock_must_be_zero'))
+  # end
 
   def set_stock_to_zero
-    return if stock
+    #return if stock
     self.stock = 0 
   end
 
@@ -120,7 +127,9 @@ class Item < ApplicationRecord
 
   def discount_dates
     return unless discount_start_date || discount_end_date
-    
+    if discount_start_date > discount_end_date
+      errors.add(:discount_start_date, I18n.t('errors.validations.items.discount_start_date_invalid'))
+    end
   end
   
 end

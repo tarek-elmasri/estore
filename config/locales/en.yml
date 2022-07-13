@@ -35,11 +35,11 @@ en:
 
     authorization:
       unauthorized: "UNAUTHORIZED"
-      invalid_token: "Invalid provided token"
-      expired_token: "Expired provided token"
+      invalid_token: "Invalid provided token."
+      expired_token: "Expired provided token."
       invalid_password_token: "Invalid or expired forget password token"
       blocked_user: "Account is blocked"
-      auth_for_staff_only: "Authorizations for staff accounts only"
+      auth_for_staff_only: "Authorizations for staff accounts only."
       invalid_rule: "Rule must be one of 'user', 'staff' or 'admin'"
       staff_only: "Current user doesn't have authorization to perform this action"
 
@@ -51,9 +51,12 @@ en:
         gender: "Gender must be 'male' or 'female'"
         wrong_password: "Password don't match."
 
+  # githup complete refrence
+  # https://github.com/svenfuchs/rails-i18n/blob/master/rails/locale/en.yml
   activerecord:
     errors:
       messages:
+        required: "Must exist"
         not_a_number: "Must be a numerical value"
         not_an_integer: "Must be an integer value"
         blank: "Required field"

@@ -2,7 +2,7 @@ class Api::V1::Dashboard::ItemsController < Api::V1::Dashboard::Base
   include Scopes::Dashboard::ItemsScopes
 
   before_action :set_item, except: [:create, :index]
-
+  before_action :authorize_show, only: [:index]
   apply_controller_scopes only: [:index]
 
   def index
@@ -20,12 +20,24 @@ class Api::V1::Dashboard::ItemsController < Api::V1::Dashboard::Base
 
   def create
     item = Item::ItemCreation.new(items_params).create!
-    respond(item)
+    respond(
+      serialize_resource(
+        item,
+        serializer: Dashboard::ItemSerializer,
+        include: ['item_categories.category']
+      ).to_json
+    )
   end
 
   def update
     updated_item = Item::ItemUpdate.new(@item).update!(items_params)
-    respond(updated_item)
+    respond(
+      serialize_resource(
+        updated_item,
+        serializer: Dashboard::ItemSerializer,
+        include: ['item_categories.category']
+      ).to_json
+    )
   end
 
   def delete
@@ -63,5 +75,9 @@ class Api::V1::Dashboard::ItemsController < Api::V1::Dashboard::Base
 
   def set_item
     @item = Item.visible.find(params.require(:id))
+  end
+
+  def authorize_show
+    raise Errors::Unauthorized unless Current.user.is_authorized_to_show_items?
   end
 end

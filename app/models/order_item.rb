@@ -4,12 +4,15 @@ class OrderItem < ApplicationRecord
   belongs_to :order
   has_many :cards
 
-  validates :value, :t_value, :description, :type_name, presence: true
+  validates :quantity, :value, :t_value, :description, :type_name, :item_id,:delivery_status, presence: true
   validates :delivery_status, inclusion: {in: ['pending', 'delivered', 'partial_delivery', 'failed']}
+  validates :quantity, numericality: {only_integer: true}
+  validates :value, :t_value, numericality: true
 
   scope :only_cards, -> {where(type_name: 'card')}
   scope :include_cards, -> {includes(:cards)}
   scope :include_order, -> {includes(:order)}
+  
   def is_card?
     type_name == 'card'
   end

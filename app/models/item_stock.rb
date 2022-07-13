@@ -1,6 +1,8 @@
 class ItemStock < ApplicationRecord
   belongs_to :item
 
+  validates :active, :pending, :sales, :low_stock, numericality: {only_integer: true}
+
   def has_active_stock? amount
     return true unless has_limited_stock
     return active_stock >= amount

@@ -2,6 +2,7 @@ class Api::V1::Dashboard::CategoriesController < Api::V1::Dashboard::Base
   include Scopes::Dashboard::CategoriesScopes
 
   before_action :set_category, except: [:index,:create]
+  before_action :authorize_show, only: [:index]
 
   apply_controller_scopes only: [:index]
 
@@ -20,13 +21,25 @@ class Api::V1::Dashboard::CategoriesController < Api::V1::Dashboard::Base
   def create
     category = Category::CategoryCreation.new(categories_params)
                                           .create!
-    respond(category)
+    respond(
+      serialize_resource(
+        category,
+        serializer: Dashboard::CategorySerializer,
+        include: ['sub_categories.sub_categories']
+      ).to_json
+    )
   end
 
   def update
     updated_category = Category::CategoryUpdate.new(@category)
                                               .update!(categories_params)
-    respond(updated_category)
+    respond(
+      serialize_resource(
+        updated_category,
+        serializer: Dashboard::CategorySerializer,
+        include: ['sub_categories.sub_categories']
+      ).to_json
+      )
   end
 
   def delete
@@ -42,4 +55,7 @@ class Api::V1::Dashboard::CategoriesController < Api::V1::Dashboard::Base
   def set_category
     @category = Category.find(params.require(:id))
   end
+
+  def authorize_show
+    raise Errors::Unauthorized unless Current.user.is_authorized_to_show_categories?
 end

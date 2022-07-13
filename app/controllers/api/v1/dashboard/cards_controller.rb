@@ -2,7 +2,8 @@ class Api::V1::Dashboard::CardsController < Api::V1::Dashboard::Base
   include Scopes::Dashboard::CardsScopes
 
   before_action :set_card, except: [:index , :create]
-  
+  before_action :authorize_show, only: [:index]
+
   apply_controller_scopes only: [:index]
 
   def index
@@ -18,12 +19,22 @@ class Api::V1::Dashboard::CardsController < Api::V1::Dashboard::Base
 
   def create
     card = Card::CardCreation.new(cards_params).create!
-    respond(card)
+    respond(
+      serialize_resource(
+        card,
+        serializer: Dashboard::CardSerializer
+      ).to_json
+    )
   end
 
   def update
     updated_card = Card::CardUpdate.new(@card).update!(cards_params)
-    respond(updated_card)
+    respond(
+      serialize_resource(
+        updated_card,
+        serializer: Dashboard::CardSerializer
+      ).to_json
+    )
   end
 
   def delete
@@ -41,6 +52,10 @@ class Api::V1::Dashboard::CardsController < Api::V1::Dashboard::Base
 
   def set_card
     @card= Card.available.find(params.require(:id))
+  end
+
+  def authorize_show
+    raise Errors::Unauthorized unless Current.user.is_authorized_to_show_cards?
   end
 
 end

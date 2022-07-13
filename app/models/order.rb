@@ -4,6 +4,10 @@ class Order < ApplicationRecord
   
   attr_accessor :cart
 
+  validates :status, :t_value, :t_vat, :t_payment, :delivery_status, presence: true
+  validates :t_value, :t_vat, :t_payment, numericality: true
+  
+
   belongs_to :user
   has_many :order_items , dependent: :destroy
 
