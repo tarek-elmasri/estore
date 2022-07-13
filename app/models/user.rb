@@ -42,16 +42,8 @@ class User < ApplicationRecord
   scope :by_email, -> (value) { where(email: email) }
   scope :by_city, -> (value) { where(city: value)}
   scope :only_staff, -> { where( rule: ['admin','staff']) }
-  scope :age_above,-> (value) {
-    value.is_i? ?
-      where(arel_table[:dob].lt(value.to_i.years.ago)) : nil
-  }
-  scope :age_below,-> (value) {where(arel_table[:dob].lt(value.to_i.years.ago)) if value.is_i?}
-  #scope :age_below,-> (value) {where(arel_table[:dob].gt(value.years.ago))}
-  # scope :age_below, lambda { |value|
-  #   value.is_a?(Integer) ?
-  #     where(arel_table[:dob].gt(value.years.ago)) : nil
-  # }
+  scope :age_above,-> (value) {where(arel_table[:dob].lt(value.to_i.years.ago)) if Integer(value, exception:false)}
+  scope :age_below,-> (value) {where(arel_table[:dob].gt(value.to_i.years.ago)) if Integer(value, exception: false)}
   #-----
     
 
