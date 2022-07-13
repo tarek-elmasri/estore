@@ -44,6 +44,7 @@ class ItemStock < ApplicationRecord
   def add_to_stock! amount
     return unless has_limited_stock
     with_lock do
+      active # hack to perform lock
       self.increment!(:active, amount)
     end
   end
@@ -52,6 +53,7 @@ class ItemStock < ApplicationRecord
     return unless has_limited_stock
     with_lock do
       raise StandardError.new('exceeds available stock') if active < amount
+      active #hack to perform lock
       decrement!(:active, amount)
     end
   end
