@@ -12,7 +12,12 @@ module Scopes::Dashboard::UsersScopes
       has_scope :by_email, as: :email, only: options[:only], except: options[:except]
       has_scope :by_city, as: :city, only: options[:only], except: options[:except]
       has_scope :by_gender, only: options[:only], except: options[:except]
-      
+      has_scope :age_below, only: options[:only], except: options[:except] #do |controller, scope, value|
+        #value.is_a?(Integer)  ? scope.age_below(value) : scope
+      #end
+      # has_scope :age_above, only: options[:only], except: options[:except] do |controller, scope, value|
+      #   value !=15 ? scope.age_above(value) : scope
+      # end
     end
   end
 

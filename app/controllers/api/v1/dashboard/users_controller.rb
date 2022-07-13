@@ -7,7 +7,7 @@ class Api::V1::Dashboard::UsersController < Api::V1::Dashboard::Base
   apply_controller_scopes only: [:index]
 
   def index
-    users = apply_scopes(User.page(1))
+    users = apply_scopes(User.include_authorization.page(1))
     respond({
       users: serialize_resource(
                 users, 

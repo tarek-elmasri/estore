@@ -18,7 +18,6 @@ class User < ApplicationRecord
   validates :email,:phone_no, uniqueness:true
   validates :password, length: {minimum: 5}, if: :should_validate_password
   validate :password_pattern, if: :should_validate_password
-  #validates :password, format: {with: /\A(?=.*{6,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[[@!$%*]])/x }
   validates :city, length: {maximum: 253}
   validates :gender, inclusion: {in: ['male','female'], message: I18n.t('errors.validations.user.gender')}
   validates :first_name , length: { minimum: 2, maximum: 20}
@@ -35,6 +34,7 @@ class User < ApplicationRecord
         .find(id)
   }
 
+  scope :include_authorization, -> {includes(:authorization)}
   # finder scoopes
   scope :only_blocked, -> {where(blocked: true)}
   scope :by_gender, -> (value) { where(gender: value) }
@@ -42,6 +42,16 @@ class User < ApplicationRecord
   scope :by_email, -> (value) { where(email: email) }
   scope :by_city, -> (value) { where(city: value)}
   scope :only_staff, -> { where( rule: ['admin','staff']) }
+  scope :age_above,-> (value) {
+    value.is_i? ?
+      where(arel_table[:dob].lt(value.to_i.years.ago)) : nil
+  }
+  scope :age_below,-> (value) {where(arel_table[:dob].lt(value.to_i.years.ago)) if value.is_i?}
+  #scope :age_below,-> (value) {where(arel_table[:dob].gt(value.years.ago))}
+  # scope :age_below, lambda { |value|
+  #   value.is_a?(Integer) ?
+  #     where(arel_table[:dob].gt(value.years.ago)) : nil
+  # }
   #-----
     
 
