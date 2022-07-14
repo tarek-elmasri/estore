@@ -49,7 +49,7 @@ class Api::V1::Dashboard::CategoriesController < Api::V1::Dashboard::Base
 
   private
   def categories_params
-    params.require(:category).permit(:name, :primary_category_id)
+    params.require(:category).permit(:name,:pinned, :primary_category_id)
   end
 
   def set_category

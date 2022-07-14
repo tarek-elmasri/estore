@@ -5,7 +5,8 @@ module Scopes::Dashboard::CardsScopes
 
   class_methods do
     define_method :apply_controller_scopes do |options={}|
-      apply_common_scopes only: options[:only], except: options[:except]
+      accepted_options = {only: options.dig(:only), except: options.dig(:except)}
+      apply_common_scopes **accepted_options
       
     end
   end

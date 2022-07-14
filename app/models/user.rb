@@ -37,13 +37,20 @@ class User < ApplicationRecord
   scope :include_authorization, -> {includes(:authorization)}
   # finder scoopes
   scope :only_blocked, -> {where(blocked: true)}
+  scope :exclude_id, -> (id=nil) {where.not(id: id)}
   scope :by_gender, -> (value) { where(gender: value) }
   scope :by_phone_no, -> (value) { where(phone_no: value) }
   scope :by_email, -> (value) { where(email: email) }
   scope :by_city, -> (value) { where(city: value)}
   scope :only_staff, -> { where( rule: ['admin','staff']) }
-  scope :age_above,-> (value) {where(arel_table[:dob].lt(value.to_i.years.ago)) if Integer(value, exception:false)}
-  scope :age_below,-> (value) {where(arel_table[:dob].gt(value.to_i.years.ago)) if Integer(value, exception: false)}
+  scope :age_above,-> (value) {where(arel_table[:dob].lt(get_dob_from_age(value))) if valid_age?(value)}
+  scope :age_below,-> (value) {where(arel_table[:dob].gt(get_dob_from_age(value))) if valid_age?(value)}
+  scope :age_between, lambda { |age_range=[]|
+    where(
+      arel_table[:dob]
+            .between(get_dob_from_age(age_range.first)..get_dob_from_age(age_range.last))
+    ) if valid_age?(age_range.first) && valid_age?(age_range.last)
+  }
   #-----
     
 
@@ -51,6 +58,15 @@ class User < ApplicationRecord
     Cart.includes(cart_items: [:item]).find_by(user_id: self.id)
   end
 
+  
+  
+  def self.get_dob_from_age age
+    return age.to_i.years.ago if valid_age?(age)
+  end
+  def self.valid_age? age
+    return true if Integer(age, exception:false)
+    false
+  end
   
   private
   def password_pattern
@@ -76,5 +92,4 @@ class User < ApplicationRecord
       errors.add(:dob, I18n.t('errors.validations.user.invalid_dob'))
     end
   end
-
 end
