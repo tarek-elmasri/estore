@@ -16,7 +16,7 @@ class User < ApplicationRecord
 
   validates :email, format: { with: /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\Z/i }
   validates :email,:phone_no, uniqueness:true
-  validates :password, length: {minimum: 5}, if: :should_validate_password
+  validates :password, length: {minimum: 6}, if: :should_validate_password
   validate :password_pattern, if: :should_validate_password
   validates :city, length: {maximum: 253}
   validates :gender, inclusion: {in: ['male','female'], message: I18n.t('errors.validations.user.gender')}

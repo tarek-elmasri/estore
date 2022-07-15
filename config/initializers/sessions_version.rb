@@ -1,5 +1,5 @@
 
-APP_VERSION = JwtHandler::Coder.config.dig(:headers,:version) || ENV['APP_VERSION']
+#APP_VERSION = JwtHandler::Coder.config.dig(:headers,:version) || ENV['APP_VERSION']
 
 # jwt_config_file = File.join(Rails.root, 'config', 'jwt_handler.yml')
 # jwt_config = {}
