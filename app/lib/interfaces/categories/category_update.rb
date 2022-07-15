@@ -25,4 +25,5 @@ class Interfaces::Categories::CategoryUpdate
 
   def check_authorization
     raise Errors::Unauthorized unless Current.user.is_authorized_to_update_category?
+  end
 end
