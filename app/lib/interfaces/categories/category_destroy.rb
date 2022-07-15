@@ -25,4 +25,5 @@ class Interfaces::Categories::CategoryDestroy
 
   def check_authorization
     raise Errors::Unauthorized unless Current.user.is_authorized_to_delete_category?
+  end
 end
