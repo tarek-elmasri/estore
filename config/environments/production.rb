@@ -113,7 +113,7 @@ Rails.application.configure do
   # config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
   config.action_mailer.delivery_method = :smtp
   config.default_url_options = {
-    host: 'sajastores.herokuapp.com'
+    host: 'https://sajastores.herokuapp.com'
   }
   config.action_mailer.smtp_settings = {
     address: 'smtp.gmail.com',
