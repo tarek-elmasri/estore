@@ -58,4 +58,5 @@ class Api::V1::Dashboard::CategoriesController < Api::V1::Dashboard::Base
 
   def authorize_show
     raise Errors::Unauthorized unless Current.user.is_authorized_to_show_categories?
+  end
 end
