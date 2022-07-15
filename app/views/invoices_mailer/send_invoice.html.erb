@@ -1,4 +1,6 @@
-<h3>Thank you <%= @user.first_name%> for using our store.</h3>
+<%= @greetings
+=begin%>
+ <h3>Thank you <%= @user.first_name%> for using our store.</h3>
 <hr/>
 <br/>
 <h4> Your order is confirmed.</h4>
@@ -18,4 +20,6 @@
     <br/>
     total payment: <%= @order.t_payment %>
   </div>
-</p>
+</p> 
+<%
+=end%>
