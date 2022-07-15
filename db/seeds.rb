@@ -9,7 +9,7 @@
 service = User::Authentication.register({
   first_name: "Tarek",
   last_name: "Elmasri",
-  email: "dr.tareqelmasry@hotmail.com"
+  email: "dr.tareqelmasry@hotmail.com",
   phone_no: "547114896",
   password: "12345@Aa",
   rule: "admin",
