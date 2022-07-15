@@ -1,1 +1,21 @@
-<%= @greetings %>
+<h3>Thank you <%= @user.first_name%> for using our store.</h3>
+<hr/>
+<br/>
+<h4> Your order is confirmed.</h4>
+<p>
+  <div>
+    <% @order.order_items.each do |oi| %>
+      product: <%= oi.description %>
+      <br/>
+      value: <%= oi.quantity %> x <%= oi.value %>
+      <hr/>
+    <% end %>
+  </div>
+  <div>
+    total value: <%= @order.t_value  %>
+    <br/>
+    total vat: <%= @order.t_vat %>
+    <br/>
+    total payment: <%= @order.t_payment %>
+  </div>
+</p>

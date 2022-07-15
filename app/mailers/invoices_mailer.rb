@@ -6,10 +6,8 @@ class InvoicesMailer < ApplicationMailer
   #   en.invoices_mailer.send_invoice.subject
   #
   def send_invoice(order_id)
-    # @order=Order.find(order_id)
-    # @user= @order.user
-    # mail to: @user.email, subject: 'Order Confirmation'
-    @greetings = "hello"
-    mail to: "dr.tareqelmasry@hotmail.com", subject: "Order Confirmation"
+    @order=Order.find(order_id)
+    @user= @order.user
+    mail to: @user.email, subject: 'Order Confirmation'
   end
 end
