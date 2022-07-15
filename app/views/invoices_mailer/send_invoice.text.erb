@@ -1,15 +1,1 @@
-<%= @greetings
-=begin%>
- Thank you <%= @user.first_name%> for using our store
-
-Your order is confirmed.
-<% @order.order_items.each do |oi| %>
-product: <%= oi.description %>
-value: <%= oi.quantity %> X <%= oi.value %>
-<% end %>
-
-total value: <%= @order.t_value  %>
-total vat: <%= @order.t_vat %>
-total payment: <%= @order.t_payment %> 
-<%
-=end%>
+<%= @greetings %>
