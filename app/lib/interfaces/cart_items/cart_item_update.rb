@@ -12,7 +12,7 @@ class Interfaces::CartItems::CartItemUpdate
   end
 
   private
-  attr_writer :item_cart
+  attr_writer :cart_item
     
 
 end
