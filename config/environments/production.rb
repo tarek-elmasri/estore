@@ -112,7 +112,7 @@ Rails.application.configure do
   # config.active_record.database_resolver = ActiveRecord::Middleware::DatabaseSelector::Resolver
   # config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
   config.action_mailer.smtp_settings = {
-    address: 'smtp.gmail.com',,
+    address: 'smtp.gmail.com',
     domain: 'saja-stores.herokuapp.com',
     port: 587,
     user_name: Rails.application.credentials.dig(:gmail_account_settings, :username),
