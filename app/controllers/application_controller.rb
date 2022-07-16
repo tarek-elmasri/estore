@@ -3,13 +3,8 @@ class ApplicationController < ActionController::API
   include Responder::Json
   include Errors::ErrorHandler::Base
 
-  # before_action :raise_error
+  before_action :force_json
   before_action :set_request
-
-  # def raise_error
-    # raise Errors::BlockedUser
-  # end
-  
 
   def set_request
     broweser = Browser.new(request.headers['user-agent'])
@@ -50,4 +45,7 @@ class ApplicationController < ActionController::API
       nil
   end
 
+  def force_json
+    head :not_acceptable unless request.headers['Content-Type'] == 'application/json' || request.body.read.blank?
+  end
 end
