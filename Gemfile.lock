@@ -181,7 +181,6 @@ GEM
       concurrent-ruby (~> 1.0)
     tzinfo-data (1.2021.5)
       tzinfo (>= 1.0.0)
-    wdm (0.1.1)
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
@@ -210,7 +209,6 @@ DEPENDENCIES
   spring
   stripe
   tzinfo-data
-  wdm (>= 0.1.0)
 
 RUBY VERSION
    ruby 2.6.6p146
