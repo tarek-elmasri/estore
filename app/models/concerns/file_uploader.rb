@@ -2,30 +2,33 @@ module FileUploader
   extend ActiveSupport::Concern
 
   included do
-    attr_accessor :file_containers
+    #attr_accessor :file_containers
 
-    after_initialize { self.file_containers=self.file_containers || {}}
+    after_initialize { @file_containers=@file_containers || {}}
     validate :attachment_requirements
 
     def attachment_requirements
-      self.file_containers.map do |file_name,file_options|
+      @file_containers.map do |file_name,file_options|
         decoder= file_options[:decoder]
 
+        if decoder.code
         # validates bad encoding
-        unless decoder.file
-          self.errors.add(file_name, I18n.t("errors.validations.#{file_name}.invalid_base64_encoding")) 
-        end
-        
-        # validates file seize
-        if file_options[:options][:max_file_size] &&
-                                (decoder.file_size || 0 ) > file_options[:options][:max_file_size]
-          self.errors.add(file_name, I18n.t("errors.validations.#{file_name}.max_size_file"))
-        end
+          unless decoder.file
+            self.errors.add(file_name, I18n.t("errors.validations.#{file_name}.invalid_base64_encoding")) 
+          end
+          
+          # validates file seize
+          if file_options[:options][:max_file_size] &&
+                                  (decoder.file_size || 0 ) > file_options[:options][:max_file_size]
+            self.errors.add(file_name, I18n.t("errors.validations.#{file_name}.max_size_file"))
+          end
 
-        # validates content_type
-        if file_options[:options][:accepted_content_types] &&
-                                !file_options[:options][:accepted_content_types].include?(decoder.content_type)
-          self.errors.add(file_name, I18n.t("errors.validations.#{file_name}.accepted_content_types"))
+          # validates content_type
+          if file_options[:options][:accepted_content_types] &&
+                                  !file_options[:options][:accepted_content_types].include?(decoder.content_type)
+            self.errors.add(file_name, I18n.t("errors.validations.#{file_name}.accepted_content_types"))
+          end
+
         end
       end
     end
@@ -36,7 +39,7 @@ module FileUploader
     def has_one_file(field_name, options={})
       # --- checking implementation errors
       # checking extra params
-      options.except(:required, :accepted_content_types, :max_file_size, :filename).map do |k,v|
+      options.except(:required, :accepted_content_types, :max_file_size, :filename).map do |k,_|
         raise StandardError.new "'#{k}' key is not accepted for has_one_file"
       end
 
@@ -55,10 +58,10 @@ module FileUploader
       raise StandardError.new('ActiveStorage is required to implement has_one_file function') unless respond_to? :has_one_attached
       # ------------
 
-      has_one_attached field_name, dependent: :destroy
+      has_one_attached field_name
 
       if options[:required]
-        validates "base64_#{field_name}", presence: true
+        validates "base64_#{field_name}", presence: true, unless: Proc.new { |m| m.send("#{field_name}").attached?}
       end
 
       define_method("base64_#{field_name}=") do |code|
@@ -69,19 +72,18 @@ module FileUploader
           content_type: decoder.content_type,
           filename: options[:filename] || "#{self.class.to_s}_#{field_name}"
         }) if decoder.file
-        self.file_containers ||= {}
-        self.file_containers["#{field_name}"] = {
+        @file_containers ||= {}
+        @file_containers["#{field_name}"] = {
           decoder: decoder,
           options: options
         }
       end
 
       define_method("base64_#{field_name}") do
-        return nil unless self.file_containers && self.file_containers["#{field_name}"]
-        decoder = self.file_containers["#{field_name}"][:decoder]
+        return nil unless @file_containers && @file_containers["#{field_name}"]
+        decoder = @file_containers["#{field_name}"][:decoder]
         decoder.code
       end
-
     end
   end
 
