@@ -1,13 +1,13 @@
 class Uploader::Decoder
 
-  attr_accessor :code
-  attr_reader :file, :file_size, :content_type
+  attr_accessor :base64 
+  attr_reader :file, :file_size, :content_type, :filename
 
-  def initialize code
-    self.code = code 
+  def initialize obj={}
+    obj ||= {}
+    self.base64 = obj[:base64].to_s.split("base64,").last
+    self.filename = obj[:filename].to_s
     build
-    rescue
-      nil
   end
 
 
@@ -18,10 +18,10 @@ class Uploader::Decoder
 
 
   private
-  attr_writer :file, :file_size, :content_type
+  attr_writer :file, :file_size, :content_type, :filename
   
   def build
-    self.file = Base64.strict_decode64(code)
+    self.file = Base64.strict_decode64(base64)
     self.file_size = file.length
     self.content_type = Marcel::MimeType.for file
   rescue => exception
