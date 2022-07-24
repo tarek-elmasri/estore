@@ -1,5 +1,7 @@
 class Item < ApplicationRecord
   include Interfaces::Items
+  include Base64FileAttachment
+
 
   has_one :item_stock
   has_many :item_categories, dependent: :destroy
@@ -7,7 +9,7 @@ class Item < ApplicationRecord
   has_many :cart_items, dependent: :destroy
   has_many :carts , through: :cart_items
   has_many :cards
-  
+  has_one_base64_attached :image, dependent: :purge_later
   default_scope {includes(:item_stock)}
 
   accepts_nested_attributes_for :item_categories, allow_destroy: true
@@ -39,7 +41,7 @@ class Item < ApplicationRecord
   validate :discount_dates, if: :has_discount
   validates :max_quantity_per_customer, presence: true, if: :limited_quantity_per_customer
   validates :max_quantity_per_customer, numericality: {only_integer: true}, allow_nil: true
-
+  validates_attached :image, content_type: ['image/jpg', 'image/png'], max_file_size: 5000000
   #validate :stock_is_zero, if: :is_card?, on: :create
 
   scope :visible, -> {where(visible: true)}

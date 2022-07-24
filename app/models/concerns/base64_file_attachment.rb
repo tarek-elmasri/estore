@@ -46,25 +46,30 @@ module Base64FileAttachment
     def validates_attached(field_name, options={})
       validate {
           raise ArgumentError.new("#{field_name} is undefined") unless respond_to?(field_name)
-          accepted_options = [:required, :max_file_size, :content_type]
+          accepted_options = [:required, :max_file_size, :content_type, :if, :unless]
           options.except(*accepted_options).map do |k,_|
           raise ArgumentError.new("#{k} is not supported")
           end
-          target_field = send("#{field_name}")
-          if target_field.respond_to?(:attachment)
-            validate_presence_of_attachment(field_name, target_field.attachment) if options[:required]
-            validate_content_type(field_name, target_field.blob , options[:content_type]) if options[:content_type]
-            validate_file_size(field_name,target_field.blob, options[:max_file_size]) if options[:max_file_size]
-          elsif target_field.respond_to?(:attachments)
-            validate_presence_of_attachment(field_name, target_field.attachments.first) if options[:required]
-            target_field.blobs.each do |blob|
-              validate_content_type(field_name,blob, options[:content_type]) if options[:content_type]
-              validate_file_size(field_name,blob, options[:max_file_size]) if options[:max_file_size]
+          #-----
+          if_option = options[:if] ? send(options[:if]) : true
+          unless_option = options[:unless] ? !send(options[:unless]) : true
+          if (if_option && unless_option)
+          #-----
+            target_field = send("#{field_name}")
+            if target_field.respond_to?(:attachment)
+              validate_presence_of_attachment(field_name, target_field.attachment) if options[:required]
+              validate_content_type(field_name, target_field.blob , options[:content_type]) if options[:content_type]
+              validate_file_size(field_name,target_field.blob, options[:max_file_size]) if options[:max_file_size]
+            elsif target_field.respond_to?(:attachments)
+              validate_presence_of_attachment(field_name, target_field.attachments.first) if options[:required]
+              target_field.blobs.each do |blob|
+                validate_content_type(field_name,blob, options[:content_type]) if options[:content_type]
+                validate_file_size(field_name,blob, options[:max_file_size]) if options[:max_file_size]
+              end
+            else
+              raise ArgumentError.new("#{field_name} is not an 'ActiveStorage' class")
             end
-          else
-            raise ArgumentError.new("#{field_name} is not an 'ActiveStorage' class")
           end
-        end
       }
 
     end
