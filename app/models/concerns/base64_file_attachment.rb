@@ -6,6 +6,8 @@ module Base64FileAttachment
       raise ArgumentError.new("ActiveStorage must be installed") unless respond_to?(:has_one_attached)
       has_one_attached "#{field_name}_record", options
 
+      scope "with_attached_#{field_name}", -> {send("with_attached_#{field_name}_record")}
+
       define_method(field_name) do
         send("#{field_name}_record")
       end
@@ -23,6 +25,8 @@ module Base64FileAttachment
     def has_many_base64_attached(field_name, options={})
       raise ArgumentError.new("ActiveStorage must be installed") unless respond_to?(:has_many_attached)
       has_many_attached "#{field_name}_record", options
+
+      scope "with_attached_#{field_name}", -> {send("with_attached_#{field_name}_record")}
 
       define_method(field_name) do
         send("#{field_name}_record")

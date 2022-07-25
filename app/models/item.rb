@@ -3,13 +3,14 @@ class Item < ApplicationRecord
   include Base64FileAttachment
 
 
-  has_one :item_stock
+  has_one :item_stock, dependent: :destroy
   has_many :item_categories, dependent: :destroy
   has_many :categories, through: :item_categories
   has_many :cart_items, dependent: :destroy
   has_many :carts , through: :cart_items
-  has_many :cards
+  has_many :cards, dependent: :destroy
   has_one_base64_attached :image, dependent: :purge_later
+  
   default_scope {includes(:item_stock)}
 
   accepts_nested_attributes_for :item_categories, allow_destroy: true
