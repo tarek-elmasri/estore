@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_15_173241) do
+ActiveRecord::Schema.define(version: 2022_07_28_180949) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -145,6 +145,16 @@ ActiveRecord::Schema.define(version: 2022_07_15_173241) do
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "available", default: false
     t.boolean "pinned", default: false
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.string "msg_type", null: false
+    t.boolean "seen", default: false
+    t.bigint "notifiable_id", null: false
+    t.string "notifiable_type", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["notifiable_type", "notifiable_id"], name: "index_notifications_on_notifiable_type_and_notifiable_id"
   end
 
   create_table "order_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
