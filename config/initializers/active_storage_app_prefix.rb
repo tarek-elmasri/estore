@@ -1,27 +1,17 @@
-
-  # Rails.application.config.to_prepare do
-  #   require 'active_storage/blob'
-  #   class ActiveStorage::Blob
-  #     def self.generate_unique_secure_token(length: MINIMUM_TOKEN_LENGTH)
-  #       gust = SecureRandom.base36(length)
-  #       epoch = Time.now.to_i.to_s
-  #       checksum = Digest::MD5.hexdigest(gust + epoch)
-
-  #       folder = checksum.chars.first(9).each_slice(3).to_a.map(&:join).join('/')
-
-  #       "#{folder}/#{gust}"
-  #     end
-  #   end
-  # end
-
+  Rails.configuration.to_prepare do
+    ActiveStorage::Blob.class_eval do
+      before_create :generate_key_with_prefix
   
-  Rails.application.config.to_prepare do
-    require 'active_storage/blob'
-    class ActiveStorage::Blob
-      def self.generate_unique_secure_token(length: MINIMUM_TOKEN_LENGTH)
-        gust = SecureRandom.base36(length)
-
-        "admin/#{gust}"
+      def generate_key_with_prefix
+        self.key = if prefix
+          File.join prefix, self.class.generate_unique_secure_token
+        else
+          self.class.generate_unique_secure_token
+        end
+      end
+  
+      def prefix
+        "demo"
       end
     end
   end

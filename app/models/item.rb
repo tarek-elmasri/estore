@@ -42,7 +42,7 @@ class Item < ApplicationRecord
   validate :discount_dates, if: :has_discount
   validates :max_quantity_per_customer, presence: true, if: :limited_quantity_per_customer
   validates :max_quantity_per_customer, numericality: {only_integer: true}, allow_nil: true
-  validates_attached :image, content_type: ['image/jpg', 'image/png'], max_file_size: 5000000
+  validates_attached :image, content_type: ['image/jpeg','image/jpg', 'image/png'], max_file_size: 5000000
   #validate :stock_is_zero, if: :is_card?, on: :create
 
   scope :visible, -> {where(visible: true)}
