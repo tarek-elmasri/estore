@@ -150,7 +150,7 @@ ActiveRecord::Schema.define(version: 2022_07_28_180949) do
   create_table "notifications", force: :cascade do |t|
     t.string "msg_type", null: false
     t.boolean "seen", default: false
-    t.bigint "notifiable_id", null: false
+    t.uuid "notifiable_id", null: false
     t.string "notifiable_type", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

@@ -9,6 +9,7 @@ class Item < ApplicationRecord
   has_many :cart_items, dependent: :destroy
   has_many :carts , through: :cart_items
   has_many :cards, dependent: :destroy
+  has_many :notifications, as: :notifiable
   has_one_base64_attached :image, dependent: :purge_later
   
   default_scope {includes(:item_stock)}

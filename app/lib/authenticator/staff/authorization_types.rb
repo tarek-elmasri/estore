@@ -20,6 +20,8 @@ module Authenticator
         :update_user_status,
         :show_orders,
         :update_order_item,
+        :update_notification,
+        :delete_notification
       ]
 
       attr_accessor *TYPES
