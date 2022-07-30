@@ -49,7 +49,7 @@ class ItemStock < ApplicationRecord
     return unless has_limited_stock
     with_lock do
       active # hack to perform lock
-      self.increment!(:active, amount)
+      update!(active: (active + amount))
     end
   end
 
@@ -57,8 +57,7 @@ class ItemStock < ApplicationRecord
     return unless has_limited_stock
     with_lock do
       raise StandardError.new('exceeds available stock') if active < amount
-      active #hack to perform lock
-      decrement!(:active, amount)
+      update!(active: (active - amount))
     end
   end
 
@@ -71,9 +70,8 @@ class ItemStock < ApplicationRecord
 
     if stock_before_save > low_stock &&
                         stock_after_save <= low_stock
-      # create_notification
-      # NotificationsJob.with(notifiable_id: item_id, notifiable_type: "Item", msg_type: :low_stock).perform_later
-      puts "notification hit"
+      
+        NotificationJob.perform_later(model_id: item_id, msg_type: :low_stock)
     end
   end
 end

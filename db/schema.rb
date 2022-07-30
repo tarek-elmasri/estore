@@ -115,7 +115,7 @@ ActiveRecord::Schema.define(version: 2022_07_28_180949) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "low_stock", default: 0
     t.boolean "notify_on_low_stock", default: false
-    t.boolean "has_limited_stock", default: false
+    t.boolean "has_limited_stock", default: true
     t.index ["item_id"], name: "index_item_stocks_on_item_id"
   end
 
@@ -123,12 +123,8 @@ ActiveRecord::Schema.define(version: 2022_07_28_180949) do
     t.string "type_name", null: false
     t.string "name", null: false
     t.float "price", null: false
-    t.boolean "has_limited_stock", default: true, null: false
-    t.integer "stock"
-    t.integer "low_stock"
-    t.boolean "notify_on_low_stock", default: false
-    t.boolean "visible", default: false
-    t.string "code"
+    t.boolean "visible", default: true
+    t.string "sku_code"
     t.float "cost"
     t.float "discount_price"
     t.boolean "has_discount", default: false
@@ -136,7 +132,7 @@ ActiveRecord::Schema.define(version: 2022_07_28_180949) do
     t.datetime "discount_start_date"
     t.boolean "limited_quantity_per_customer", default: false
     t.integer "max_quantity_per_customer"
-    t.boolean "allow_multi_quantity", default: false
+    t.boolean "allow_multi_quantity", default: true
     t.boolean "allow_duplicate", default: false
     t.string "title"
     t.string "sub_title"
@@ -182,14 +178,6 @@ ActiveRecord::Schema.define(version: 2022_07_28_180949) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "delivery_status", default: "pending", null: false
     t.index ["user_id"], name: "index_orders_on_user_id"
-  end
-
-  create_table "sessions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "user_id", null: false
-    t.string "version", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
   create_table "staff_actions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -244,7 +232,6 @@ ActiveRecord::Schema.define(version: 2022_07_28_180949) do
   add_foreign_key "item_stocks", "items"
   add_foreign_key "order_items", "orders"
   add_foreign_key "orders", "users"
-  add_foreign_key "sessions", "users"
   add_foreign_key "staff_actions", "users"
   add_foreign_key "user_coupons", "coupons"
   add_foreign_key "user_coupons", "users"
