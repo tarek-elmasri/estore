@@ -2,6 +2,7 @@ class User < ApplicationRecord
   include Authenticator::User
   include Authenticator::Staff::Authorization
   include Interfaces::Users
+  include Base64FileAttachment
 
   DIRTY_CHARACTERS =['(',')','{','}','[',']','|',"`","¬","¦", '"',
                       '^','*',"'",'<','>',':',';',"~","_","-","+"]
