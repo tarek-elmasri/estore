@@ -48,6 +48,13 @@ module Responder
       }, status: e.status
     end
 
+    def respond_stripe_errors e
+      render json: {
+        error: e.message,
+        code: "SR100"
+      }, status: :unprocessable_entity
+    end
+
     def route_not_found
       render json: {
         error: I18n.t('error.routes.not_found'),

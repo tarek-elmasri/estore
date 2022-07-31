@@ -6,7 +6,8 @@ module Errors
       def self.included klazz
         klazz.class_eval do
           #include Errors::ErrorHandler::CartManagerErrorHandler
-
+          include Errors::ErrorHandler::StripeErrorsHandler
+          
           rescue_from JWT::DecodeError, with: :respond_invalid_token
           rescue_from JWT::ExpiredSignature, with: :respond_expired_token
 
