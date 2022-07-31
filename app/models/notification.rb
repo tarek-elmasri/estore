@@ -8,8 +8,9 @@ class Notification < ApplicationRecord
   validates :msg_type, presence: true
 
   scope :of_msg_type, -> (required_type) {where(msg_type: required_type)}
-  scope :seen,-> {where (seen: true)}
+  scope :seen,-> {where(seen: true)}
   scope :unseen, -> {where(seen: false)}
+  scope :order_by_recent, -> {order(created_at: :desc)}
   
   def message
     I18n.t("notifications.#{notifiable_type.pluralize.downcase}.#{msg_type}")

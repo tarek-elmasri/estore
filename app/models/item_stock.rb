@@ -71,7 +71,7 @@ class ItemStock < ApplicationRecord
     if stock_before_save > low_stock &&
                         stock_after_save <= low_stock
       
-        NotificationJob.perform_later(model_id: item_id, msg_type: :low_stock)
+        NotificationJob.perform_later(notifiable_id: item_id, notifiable_type: "Item", msg_type: :low_stock)
     end
   end
 end

@@ -100,6 +100,11 @@ Rails.application.routes.draw do
             scope :order_items do
               patch '/' => "order_items#update"
             end
+
+            scope :notifications do
+              get "/" => "notifications#index"
+              patch "/" => "notifications#update"
+            end
           end
         end
 

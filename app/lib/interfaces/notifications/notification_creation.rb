@@ -2,10 +2,13 @@ class Interfaces::Notifications::NotificationCreation
 
   attr_reader :notification
 
-  def initialize(model: , msg_type:) 
-    raise ArgumentError.new("#{model.class} is not notifiable") unless model.respond_to?(:notifications)
+  def initialize(notifiable_id: , notifiable_type: , msg_type:) 
 
-    self.notification = model.notifications.build(msg_type: msg_type)
+    self.notification = Notification.new(
+      notifiable_id: notifiable_id,
+      notifiable_type: notifiable_type,
+      msg_type: msg_type
+    )
   end
 
   def create!
