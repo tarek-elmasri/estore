@@ -38,9 +38,13 @@ class Item < ApplicationRecord
   validates :low_stock, presence: true , if: :notify_on_low_stock
   validates :low_stock, numericality: {only_integer: true}, allow_nil: true
   validates :cost, numericality: true, allow_nil: true
-  validates :discount_price,:discount_end_date,:discount_start_date, presence: true, if: :has_discount
+
+  validates :discount_price, presence: true, if: Proc.new{ |m| (m.discount_start_date? || m.discount_end_date?) }
   validates :discount_price, numericality: true, allow_nil: true
-  validate :discount_dates, if: :has_discount
+  validates :discount_start_date, presence: true , if: :discount_end_date?
+  validates :discount_end_date, presence: true, if: :discount_start_date?
+  validate :discount_dates
+  
   validates :max_quantity_per_customer, presence: true, if: :limited_quantity_per_customer
   validates :max_quantity_per_customer, numericality: {only_integer: true}, allow_nil: true
   validates_attached :image, content_type: ['image/jpeg','image/jpg', 'image/png'], max_file_size: 5000000
@@ -130,7 +134,7 @@ class Item < ApplicationRecord
   end
 
   def discount_dates
-    return unless discount_start_date || discount_end_date
+    return unless discount_start_date? && discount_end_date?
     if discount_start_date > discount_end_date
       errors.add(:discount_start_date, I18n.t('errors.validations.items.discount_start_date_invalid'))
     end
