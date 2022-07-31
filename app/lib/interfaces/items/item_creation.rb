@@ -10,11 +10,13 @@ class Interfaces::Items::ItemCreation
   
   def create!
     check_authorization
-    #self.item.stock = 0 if self.item.is_card?
+    set_discount_state
+
     Item.transaction do
-      # create is used to pass nested parameters attributes
+      # create is used to pass nested parameters attributes of item_categories
       self.item = Item.create!(item_params)
       Item::ItemStocker.new(self.item).update_item_stock!
+      create_discount_jobs
     end
 
     record(
@@ -34,4 +36,13 @@ class Interfaces::Items::ItemCreation
     raise Errors::Unauthorized unless Current.user.is_authorized_to_create_item?
   end
 
+  def set_discount_state
+    return unless item.discount_start_date? && item.discount_end_date?
+    self.item_params[:has_discount] = item.discount_start_date < DateTime.now
+  end
+
+  def create_discount_jobs
+    return unless item.has_discount?
+    
+  end
 end

@@ -135,7 +135,7 @@ class Item < ApplicationRecord
 
   def discount_dates
     return unless discount_start_date? && discount_end_date?
-    if discount_start_date > discount_end_date
+    if discount_start_date >= discount_end_date
       errors.add(:discount_start_date, I18n.t('errors.validations.items.discount_start_date_invalid'))
     end
   end
