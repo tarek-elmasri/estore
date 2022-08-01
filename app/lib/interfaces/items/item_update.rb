@@ -10,7 +10,7 @@ class Interfaces::Items::ItemUpdate
   def update! params
     check_authorization
     item.assign_attributes(params.except(:type_name))
-    set_discount_state
+    set_discount_state 
     Item.transaction do
       item.save!
       Item::ItemStocker.new(self.item).update_item_stock!
@@ -26,6 +26,10 @@ class Interfaces::Items::ItemUpdate
     return self.item.reload
   end
 
+  def update_discount_status! status
+    item.update!(has_discount: status)
+  end
+
   private
   attr_writer :item
 
@@ -34,19 +38,25 @@ class Interfaces::Items::ItemUpdate
   end
 
   def set_discount_state
-    return unless discount_dates_changed?
+    return unless has_discount_dates?
     item.has_discount = should_activate_discount?
   end
 
-  def discount_dates_changed?
-    item.discount_start_date_changed? || item.discount_end_date_changed?
-  end
-  
   def create_discount_jobs
     return unless has_discount_dates?
-    # create activate job if should_activate_discount?
-    # create deactivate job
+
+    DiscountActivatorJob
+                .set(wait_until: item.discount_start_date)
+                .perform_later(item.id, :activate) unless item.has_discount?
+    
+    DiscountActivatorJob
+                .set(wait_until: item.discount_end_date)
+                .perform_later(item.id, :deactivate) if item.discount_end_date_previously_changed? 
   end
+
+  # def discount_dates_previously_changed?
+  #   item.discount_start_date_previously_changed? || item.discount_end_date_previously_changed?
+  # end
   
   def has_discount_dates?
     item.discount_start_date? && item.discount_end_date?
@@ -54,8 +64,7 @@ class Interfaces::Items::ItemUpdate
   
   def should_activate_discount?
     return false unless has_discount_dates?
-    !item.has_discount? 
-        && item.discount_start_date < DateTime.now
-        && item.discount_end_date > DateTime.now
+
+    item.discount_start_date < DateTime.now && item.discount_end_date > DateTime.now
   end
 end

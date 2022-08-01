@@ -16,8 +16,9 @@ class Interfaces::Items::ItemCreation
       # create is used to pass nested parameters attributes of item_categories
       self.item = Item.create!(item_params)
       Item::ItemStocker.new(self.item).update_item_stock!
-      create_discount_jobs
     end
+
+    create_discount_jobs
 
     record(
       :create,
@@ -37,24 +38,27 @@ class Interfaces::Items::ItemCreation
   end
 
   def set_discount_state
-    self.item_params[:has_discount] = should_activate_discount?
+    item_params[:has_discount] = should_activate_discount?
   end
   
   def create_discount_jobs
     return unless has_discount_dates?
-    # create activate job if should_activate_discount?
-    # create deactivate job
+    DiscountActivatorJob
+                .set(wait_until: item.discount_start_date)
+                .perform_later(item.id, :activate) unless item.has_discount?
+    
+    DiscountActivatorJob
+                .set(wait_until: item.discount_end_date)
+                .perform_later(item.id, :deactivate) 
   end
   
   def has_discount_dates?
-    item.discount_start_date? && item.discount_end_date?
+    (item.discount_start_date?) && (item.discount_end_date?)
   end
   
   def should_activate_discount?
     return false unless has_discount_dates?
-    !item.has_discount? 
-        && item.discount_start_date < DateTime.now
-        && item.discount_end_date > DateTime.now
+    item.discount_start_date < DateTime.now && item.discount_end_date > DateTime.now
   end
 
 

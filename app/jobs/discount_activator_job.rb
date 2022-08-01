@@ -12,11 +12,11 @@ class DiscountActivatorJob < ApplicationJob
   private
   def activate(item)
     return if item.has_discount?
-    return unless item.discount_start_date?
+    return unless item.discount_start_date? || item.discount_end_date?
     return if item.discount_start_date > DateTime.now
     return if item.discount_end_date < DateTime.now
     
-    item.update!(has_discount: true)
+    Item::ItemUpdate.new(item).update_discount_status!(true)
   end
 
   def deactivate(item)
@@ -24,6 +24,7 @@ class DiscountActivatorJob < ApplicationJob
     return unless item.discount_end_date?
     return if item.discount_end_date > DateTime.now
 
-    item.update!(has_discount: false)
+    Item::ItemUpdate.new(item).update_discount_status!(false)
+
   end
 end
