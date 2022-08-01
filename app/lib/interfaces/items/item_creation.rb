@@ -37,12 +37,25 @@ class Interfaces::Items::ItemCreation
   end
 
   def set_discount_state
-    return unless item.discount_start_date? && item.discount_end_date?
-    self.item_params[:has_discount] = item.discount_start_date < DateTime.now
+    self.item_params[:has_discount] = should_activate_discount?
+  end
+  
+  def create_discount_jobs
+    return unless has_discount_dates?
+    # create activate job if should_activate_discount?
+    # create deactivate job
+  end
+  
+  def has_discount_dates?
+    item.discount_start_date? && item.discount_end_date?
+  end
+  
+  def should_activate_discount?
+    return false unless has_discount_dates?
+    !item.has_discount? 
+        && item.discount_start_date < DateTime.now
+        && item.discount_end_date > DateTime.now
   end
 
-  def create_discount_jobs
-    return unless item.has_discount?
-    
-  end
+
 end
