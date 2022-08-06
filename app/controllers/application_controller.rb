@@ -3,6 +3,7 @@ class ApplicationController < ActionController::API
   include Responder::Json
   include Errors::ErrorHandler::Base
 
+  before_action :set_locale
   before_action :force_json
   before_action :set_request
 
@@ -28,7 +29,7 @@ class ApplicationController < ActionController::API
       Current.user = User.new(id: id, rule: rule)
   end
 
-  def serialize_resource resource, options={}
+  def serialize_resource(resource, options={})
     ActiveModelSerializers::SerializableResource.new(resource, options)
   end
 
@@ -47,5 +48,14 @@ class ApplicationController < ActionController::API
 
   def force_json
     head :not_acceptable unless request.headers['Content-Type'] == 'application/json' || request.body.read.blank?
+  end
+
+  def set_locale
+    allowed_locales= ['en','ar']
+    I18n.locale = if allowed_locales.include?(params[:locale])
+      params[:locale]
+    else
+      'en'
+    end
   end
 end

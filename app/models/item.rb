@@ -53,6 +53,7 @@ class Item < ApplicationRecord
   scope :visible, -> {where(visible: true)}
   scope :available, -> {visible.where(available: true)}
   scope :include_categories, -> {includes(item_categories: [:category])}
+  scope :include_item_stock, -> {includes(:item_stock)}
   # scopes for finders 
   scope :not_available, ->{visible.where(available: false)}
   scope :of_category_ids, -> (ids=[]) {includes(:item_categories).where(item_categories: {category_id: ids})}

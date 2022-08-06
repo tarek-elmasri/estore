@@ -4,7 +4,7 @@ module Errors
       def self.included klazz
         klazz.class_eval do
           rescue_from Stripe::AuthenticationError,
-                      Stripe::APIConncectionError,
+                      Stripe::APIConnectionError,
                       Stripe::APIError,
                       Stripe::InvalidRequestError,
                       Stripe::CardError,

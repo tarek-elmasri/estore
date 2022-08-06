@@ -1,0 +1,10 @@
+ar:
+  errors:
+    not_found: "البيانات المطلوبة غير موجودة"
+    validations:
+      invalid_credentials: "رقم الهاتف او كلمة المرور غير صحيحة"
+      user:
+        invalid_phone_no: "رقم الهاتف يجب ان يتكون من 9 ارقام بدون الصفر"
+        invalid_email: "البريد الالكتروني غير صحيح"
+        gender: "الجنس يجب ان يكون 'male' او 'female'"
+        wrong_password: "كلمة السر غير مطابقة"
