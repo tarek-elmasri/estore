@@ -7,7 +7,7 @@ class Api::V1::Dashboard::ItemsController < Api::V1::Dashboard::Base
 
   def index
 
-    items= apply_scopes(Item.include_item_stock.visible.with_attached_image.include_categories.page(1))
+    items= apply_scopes(Item.visible.include_categories.page(1))
     respond({
       items: serialize_resource(
                 items,

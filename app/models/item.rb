@@ -2,6 +2,7 @@ class Item < ApplicationRecord
   include Interfaces::Items
   include Base64FileAttachment
 
+  default_scope {includes(:item_stock).with_attached_image}
 
   has_one :item_stock, dependent: :destroy
   has_many :item_categories, dependent: :destroy
@@ -12,17 +13,19 @@ class Item < ApplicationRecord
   has_many :notifications, as: :notifiable
   has_one_base64_attached :image, dependent: :purge_later
   
-  default_scope {includes(:item_stock)}
 
   accepts_nested_attributes_for :item_categories, allow_destroy: true
 
-  attr_accessor :has_limited_stock,:stock,:notify_on_low_stock,:low_stock
-  after_initialize {
-    self.has_limited_stock ||= item_stock&.has_limited_stock
-    self.stock ||= item_stock&.active
-    self.notify_on_low_stock ||= item_stock&.notify_on_low_stock
-    self.low_stock ||= item_stock&.low_stock
-  }
+
+
+  attr_writer :has_limited_stock,:stock,:notify_on_low_stock,:low_stock
+  # after_initialize {
+  #   self.has_limited_stock ||= item_stock&.has_limited_stock
+  #   self.stock ||= item_stock&.active
+  #   self.notify_on_low_stock ||= item_stock&.notify_on_low_stock
+  #   self.low_stock ||= item_stock&.low_stock
+  # }
+
   before_validation :set_stock_to_zero,if: :is_card?,  on: :create
 
   validates :name, presence: true
@@ -32,7 +35,6 @@ class Item < ApplicationRecord
   validates :has_limited_stock, inclusion: {in: [true,false,nil]}
   validate :stock_set_to_limited , if: :is_card?
   validates :stock, presence: true , if: :has_limited_stock, unless: :is_card?
-  #validate :stock_didnt_change ,if: :is_card?, unless: :new_record?
   validates :stock, numericality: {only_integer: true}, allow_nil: true
   validates :notify_on_low_stock, inclusion: {in: [true , false, nil]}
   validates :low_stock, presence: true , if: :notify_on_low_stock
@@ -48,12 +50,10 @@ class Item < ApplicationRecord
   validates :max_quantity_per_customer, presence: true, if: :limited_quantity_per_customer
   validates :max_quantity_per_customer, numericality: {only_integer: true}, allow_nil: true
   validates_attached :image, content_type: ['image/jpeg','image/jpg', 'image/png'], max_file_size: 5000000
-  #validate :stock_is_zero, if: :is_card?, on: :create
 
   scope :visible, -> {where(visible: true)}
   scope :available, -> {visible.where(available: true)}
   scope :include_categories, -> {includes(item_categories: [:category])}
-  scope :include_item_stock, -> {includes(:item_stock)}
   # scopes for finders 
   scope :not_available, ->{visible.where(available: false)}
   scope :of_category_ids, -> (ids=[]) {includes(:item_categories).where(item_categories: {category_id: ids})}
@@ -110,12 +110,39 @@ class Item < ApplicationRecord
     item_stock.sales
   end
 
+  def image_url(expires_in: 30.minutes)
+    image.url(expires_in: expires_in)
+  end
+#------ instead of after initialize solution ----------------
+  def has_limited_stock
+    @has_limited_stock.nil?  ? item_stock&.has_limited_stock : @has_limited_stock
+  end
+
+  def has_limited_stock?
+    !!has_limited_stock
+  end
+
+  def stock
+    @stock.nil? ? item_stock&.active : @stock
+  end
+
+  def notify_on_low_stock
+    @notify_on_low_stock.nil? ? item_stock&.notify_on_low_stock : @notify_on_low_stock
+  end
+
+  def notify_on_low_stock?
+    !!notify_on_low_stock
+  end
+
+  def low_stock
+    @low_stock.nil? ?  item_stock&.low_stock : @low_Stock
+  end
+
+  def low_stock?
+    !!low_stock
+  end
   private
   
-  # def stock_is_zero
-  #   return if stock == 0
-  #   errors.add(:stock, I18n.t('errors.item.stock_must_be_zero'))
-  # end
 
   def set_stock_to_zero
     #return if stock

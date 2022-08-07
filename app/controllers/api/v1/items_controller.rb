@@ -4,7 +4,7 @@ class Api::V1::ItemsController < ApplicationController
   apply_controller_scopes 
 
   def index
-    items= apply_scopes(Item.available.with_attached_image.page(1))
+    items= apply_scopes(Item.available.page(1))
     respond({
       items: serialize_resource(items),
       pagination_details: pagination_details(items)

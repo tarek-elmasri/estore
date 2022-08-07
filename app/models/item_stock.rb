@@ -14,6 +14,10 @@ class ItemStock < ApplicationRecord
     active
   end
 
+  def stock
+    active
+  end
+
   def move_to_pending!(amount)
     return unless has_limited_stock
     with_lock do
