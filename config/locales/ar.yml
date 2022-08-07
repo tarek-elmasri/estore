@@ -1,6 +1,17 @@
 ar:
   errors:
-    not_found: "البيانات المطلوبة غير موجودة"
+    not_found: "لا يوجد نتائج"
+
+    authorization:
+      unauthorized: "حدث غير مصرح"
+      invalid_token: "التصريح غير صحيح"
+      expired_token: "التصريح منتهي الصلاحية"
+      invalid_password_token: "التصريح خاطئ او منتهي الصلاحية"
+      blocked_user: "الحساب محظور"
+      #auth_for_staff_only: "Authorizations for staff accounts only."
+      invalid_rule: "القيم المقبولة احدى 'user' او 'admin' او 'staff'"
+      staff_only: "الحساب الحالي لا يملك الصلاحية للقيام بهذا الحدث"
+
     validations:
       invalid_credentials: "رقم الهاتف او كلمة المرور غير صحيحة"
       user:
@@ -8,3 +19,47 @@ ar:
         invalid_email: "البريد الالكتروني غير صحيح"
         gender: "الجنس يجب ان يكون 'male' او 'female'"
         wrong_password: "كلمة السر غير مطابقة"
+        password_format: "كلمة المرور يجب الا تقل عن 6 احرف و يجب ان تحتوي على الاقل حرفا و رقما و حرفا مميز"
+        password_dirty_characters: " كلمة المرور تحتوي على احرف غير مسموح بها"
+        status: "القيم المقبولة 'active' او 'blocked'"
+        invalid_dob: "تاريخ المرور يجب الا يتعدى تاريخ اليوم"
+        invalid_rule: "القيم المقبولة 'user' او 'admin' او 'staff'"
+        avatar:
+          content_type: "القيم المقبولة 'jpg', 'png', 'jpeg', 'gif'"
+          max_file_size: "حجم الملف يجب الا يتجاوز 2MB"
+
+      authorization:
+        auth_for_staff_only: "لا يمكن تسجيل تصاريح لحساب ليست له صلاحيات"
+
+      card:
+        item_not_card: "المنتج المطلوب ليست من نوع 'card'"
+
+      cart_items:
+        no_stock: "لا يوجد مخزون"
+        not_available: "المنتج غير متاح"
+        invalid_quantity: "الكمية يجب الا تقل عن 1"
+        multiple_quantity: "تعدد المنتج غير مسموح"
+        duplicate: "المنتج موجود في السلة و التكرار غير مسموح به"
+
+      item:
+        type_name: "القيم المسموح بها 'item' او 'card'"
+        must_limited_stock_with_card: "يجب ان تكون قيمة صحيحة عندما يكون نوع المنتج 'كارت'"
+        discount_start_date_invalid: "تاريخ بداية التخفيض يجب الا تتعدي تاريخ انتهاء التخفيض"
+
+      order_item:
+        delivery_status: "القيم المقبولة 'pending', 'delivered', 'partial_delivery' او 'failed'"
+
+  # githup complete refrence
+  # https://github.com/svenfuchs/rails-i18n/blob/master/rails/locale/en.yml
+  activerecord:
+    errors:
+      messages:
+        required: "غير موجود"
+        not_a_number: "يجب ان تكون قيمة عدديدة"
+        not_an_integer: "يجب ان تكون عدد صحيح"
+        blank: "الحقل مطلوب"
+        taken: "متواجد سابقا"
+        invalid: "غير صحيح 'format'"
+        too_long: "طويل"
+        too_short: "قصير"
+        wrong_length: "طول خاطئ"
