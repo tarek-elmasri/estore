@@ -18,12 +18,12 @@ class Card < ApplicationRecord
 
   def item_is_visible
     return unless item
-    errors.add(:item, I18n.t('errors.card.item_not_visible')) unless item.visible
+    errors.add(:item, I18n.t('activerecord.errors.messages.required')) unless item.visible
   end
 
   def item_is_card
     return unless item
-    errors.add(:item, I18n.t('errors.card.item_not_card')) unless item.is_card?
+    errors.add(:item, I18n.t('errors.validations.card.item_not_card')) unless item.is_card?
   end
  
 end

@@ -39,7 +39,7 @@ en:
       expired_token: "Expired provided token."
       invalid_password_token: "Invalid or expired forget password token"
       blocked_user: "Account is blocked"
-      auth_for_staff_only: "Authorizations for staff accounts only."
+      #auth_for_staff_only: "Authorizations for staff accounts only."
       invalid_rule: "Rule must be one of 'user', 'staff' or 'admin'"
       staff_only: "Current user doesn't have authorization to perform this action"
 
@@ -50,6 +50,35 @@ en:
         invalid_email: "Invalid email format"
         gender: "Gender must be 'male' or 'female'"
         wrong_password: "Password don't match."
+        password_format: "Password must be at least of 8 characters and contain at least one capital letter, one number and one special character."
+        password_dirty_characters: "Password have characters that's not allowed."
+        status: "Accepted values are 'active', 'blocked'."
+        invalid_dob: "Date of birth can't exceed today's date."
+        invalid_rule: "Rule must be one of 'user', 'staff' or 'admin'"
+        avatar:
+          content_type: "Accpeted file types are 'jpg', 'png', 'jpeg', 'gif'"
+          max_file_size: "Maximum accepted file size is 2MB."
+
+      authorization:
+        auth_for_staff_only: "Authorizations can't be given to regular user."
+
+      card:
+        item_not_card: 'Cards are only for items of type_name of "card"'
+
+      cart_items:
+        no_stock: "No stock available."
+        not_available: "Item is not available in store."
+        invalid_quantity: "Quantity can't be less than 1"
+        multiple_quantity: "Multi quantity is not allowed for this item."
+        duplicate: "Irem already exists in cart and duplicate is not allowed."
+
+      item:
+        type_name: "Current supported types are 'item' and 'card'"
+        must_limited_stock_with_card: "has_limited_stock must be set to true when item type_name is card."
+        discount_start_date_invalid: "Must be before discount_end_date value."
+
+      order_item:
+        delivery_status: "Supported values are 'pending', 'delivered', 'partial_delivery' and 'failed'"
 
   # githup complete refrence
   # https://github.com/svenfuchs/rails-i18n/blob/master/rails/locale/en.yml

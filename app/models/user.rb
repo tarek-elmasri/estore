@@ -16,9 +16,9 @@ class User < ApplicationRecord
 
   attr_accessor :should_validate_password
 
-  validates :email, format: { with: /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\Z/i }
+  validates :email, format: { with: /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\Z/i , message: "errors.validations.user.invalid_email"}
   validates :email,:phone_no, uniqueness:true
-  validates :password, length: {minimum: 6}, if: :should_validate_password
+  #validates :password, length: {minimum: 6}, if: :should_validate_password
   validate :password_pattern, if: :should_validate_password
   validates :city, length: {maximum: 253}
   validates :gender, inclusion: {in: ['male','female'], message: I18n.t('errors.validations.user.gender')}
@@ -26,6 +26,7 @@ class User < ApplicationRecord
   validates :last_name, length: { minimum: 2, maximum: 20}
   validates :phone_no, numericality: { only_integer: true, message: I18n.t('errors.validations.user.invalid_phone_no') }
   validates :status, inclusion: {in: ['active', 'blocked'] , message: I18n.t('errors.validations.user.status')}
+  validates :rule, inclusion: {in: ['user', 'admin', 'staff'], message: I18n.t("errors.validations.user.invalid_rule")}
   validate :valid_phone_no
   validate :valid_dob
   validates_attached :avatar, content_type: ['image/jpeg','image/jpg', 'image/png'], max_file_size: 1000000
@@ -75,10 +76,10 @@ class User < ApplicationRecord
   def password_pattern
     return unless password
     unless Regexp.new(PASS_PATTERN).match?(password)
-      errors.add(:password, I18n.t('errors.validations.password.invalid_pattern'))
+      errors.add(:password, I18n.t('errors.validations.user.password_format'))
     end
     if password.split('').any?{|char| DIRTY_CHARACTERS.include?(char)}
-      errors.add(:password, I18n.t('errors.validations.password.dirty_characters'))
+      errors.add(:password, I18n.t('errors.validations.user.password_dirty_characters'))
     end
   end
 

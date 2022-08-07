@@ -13,28 +13,28 @@ class CartItem < ApplicationRecord
   def available_quantity?
     return unless item
     return true if item.has_stock?(quantity)
-    errors.add(:quantity, I18n.t('errors.cart_items.no_stock'))
+    errors.add(:quantity, I18n.t('errors.validations.cart_items.no_stock'))
     return false
   end
 
   def available_item?
     return unless item
     return true if item.is_available?
-    errors.add(:item , I18n.t('errors.cart_items.not_available'))
+    errors.add(:item , I18n.t('errors.validations.cart_items.not_available'))
     return false
   end
 
   private
   def zero_quantity
     if quantity < 1
-      errors.add(:quantity, I18n.t('errors.cart_items.invalid_quantity'))
+      errors.add(:quantity, I18n.t('errors.validations.cart_items.invalid_quantity'))
     end
   end
 
   def multi_quantity
     return unless item
     unless item.multi_quantity_allowed?
-      errors.add(:quantity, I18n.t('errors.cart_items.multiple_quantity')) if quantity > 1
+      errors.add(:quantity, I18n.t('errors.validations.cart_items.multiple_quantity')) if quantity > 1
     end
   end
 
@@ -42,7 +42,7 @@ class CartItem < ApplicationRecord
     return unless item
     target_item = CartItem.where.not(id: id).find_by(cart_id: cart_id , item_id: item_id)
     unless item.duplicate_allowed?
-      errors.add(:item, I18n.t('errors.cart_items.duplicate')) if target_item
+      errors.add(:item, I18n.t('errors.validations.cart_items.duplicate')) if target_item
     end
   end
 

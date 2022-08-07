@@ -5,7 +5,7 @@ class OrderItem < ApplicationRecord
   has_many :cards
 
   validates :quantity, :value, :t_value, :description, :type_name, :item_id,:delivery_status, presence: true
-  validates :delivery_status, inclusion: {in: ['pending', 'delivered', 'partial_delivery', 'failed']}
+  validates :delivery_status, inclusion: {in: ['pending', 'delivered', 'partial_delivery', 'failed'], message: I18n.t("errors.validations.order_item.delivery_status")}
   validates :quantity, numericality: {only_integer: true}
   validates :value, :t_value, numericality: true
 

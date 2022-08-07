@@ -30,7 +30,7 @@ class Item < ApplicationRecord
 
   validates :name, presence: true
   validates :name, length: { maximum: 253}
-  validates :type_name, inclusion: { in: ['card' , 'item']}
+  validates :type_name, inclusion: { in: ['card' , 'item'], message: I18n.t("errors.validations.item.type_name")}
   validates :price, numericality: true
   validates :has_limited_stock, inclusion: {in: [true,false,nil]}
   validate :stock_set_to_limited , if: :is_card?
@@ -151,7 +151,7 @@ class Item < ApplicationRecord
 
   def stock_set_to_limited
     unless has_limited_stock
-      errors.add(:has_limited_stock, I18n.t('errors.item.must_limited_stock'))
+      errors.add(:has_limited_stock, I18n.t('errors.validations.item.must_limited_stock_with_card'))
     end
   end
 
@@ -164,7 +164,7 @@ class Item < ApplicationRecord
   def discount_dates
     return unless discount_start_date? && discount_end_date?
     if discount_start_date >= discount_end_date
-      errors.add(:discount_start_date, I18n.t('errors.validations.items.discount_start_date_invalid'))
+      errors.add(:discount_start_date, I18n.t('errors.validations.item.discount_start_date_invalid'))
     end
   end
   
