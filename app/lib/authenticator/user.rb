@@ -11,17 +11,23 @@ module Authenticator
 
       def self.find_by_password_token! pass_token
         raise ActiveRecord::RecordNotFound unless pass_token
-        find_by!(forget_password_token: pass_token)
+        user= find_by!(forget_password_token: pass_token)
+        raise Errors::BlockedUser if user.blocked?
+        user
       end
 
       def find_by_refresh_token! token
         raise ActiveRecord::RecordNotFound unless token
-        find_by!(refresh_token: token)
+        user= find_by!(refresh_token: token)
+        raise Errors::BlockedUser if user.blocked?
+        user
       end
 
       def self.find_by_email email
         return unless email
-        find_by(email: email)
+        user= find_by(email: email)
+        raise Errors::BlockedUser if user.blocked?
+        user
       end
 
       def blocked?

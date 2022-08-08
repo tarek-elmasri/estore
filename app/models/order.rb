@@ -21,6 +21,8 @@ class Order < ApplicationRecord
   scope :delivered, -> {where(delivery_status: 'delivered')}
   scope :pending_delivery, -> { where(delivery_status: ['partial_delivery','pending'])}
   scope :failed_delivery, -> {where( delivery_status: 'failed')}
+  scope :by_user_phone_no, -> (phone_no) {includes(:user).where(user: {phone_no: phone_no})}
+  scope :by_user_id, -> (id) {includes(:user).where(user: {id: id})}
   #--------
 
   def is_fullfilled?

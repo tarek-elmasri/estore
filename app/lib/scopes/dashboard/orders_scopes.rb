@@ -10,7 +10,9 @@ module Scopes::Dashboard::OrdersScopes
       has_scope :only_cards, type: :boolean , as: :cards, **accepted_options
       has_scope :delivered, type: :boolean, **accepted_options
       has_scope :pending_delivery, type: :boolean, **accepted_options
-      has_scope :failed_delivery, type: :boolean, **accepted_options    
+      has_scope :failed_delivery, type: :boolean, **accepted_options
+      has_scope :by_user_phone_no, as: :user_hpne_no, **accepted_options
+      has_scope :by_user_id, as: :user_id, **accepted_options    
     end
   end
 

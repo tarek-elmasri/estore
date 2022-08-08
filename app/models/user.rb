@@ -62,7 +62,9 @@ class User < ApplicationRecord
     Cart.includes(cart_items: [:item]).find_by(user_id: self.id)
   end
 
-  
+  def avatar_url(expires_in: 30.minutes)
+    avatar.url(expires_in)
+  end
   
   def self.get_dob_from_age age
     return age.to_i.years.ago if valid_age?(age)
