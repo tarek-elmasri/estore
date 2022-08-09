@@ -2,12 +2,13 @@ Rails.application.routes.draw do
   
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   #constraints subdomain: "api" do
+  
   scope :api do
     scope "(/:locale)", locale: /en|ar/ do # between parenthesess as optional
       scope module: "api" do
-
+        
         scope module: "v1" do
-
+          
           scope :sessions do
             post "/" => "sessions#create"
             patch "/" => "sessions#update"

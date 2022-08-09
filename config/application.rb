@@ -43,6 +43,8 @@ module Store
       g.orm :active_record, primary_key_type: :uuid
     end
 
+    # removing active storage routes
+    config.active_storage.draw_routes = false
     
   end
 end

@@ -8,9 +8,7 @@ class ForgetPasswordsMailer < ApplicationMailer
   def send_reset_mail(email , token , reset_link)
     @greeting = "Hi"
 
-    mail to: email, subject: 'Reset Password', template_path: 'forget_passwords_mailer', template_name: 'send_reset_mail' do |format|
-
-    end
+    mail to: email, subject: 'Reset Password'
   end
 
   def send_successfull_reset_mail(name,email)
