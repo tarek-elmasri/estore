@@ -1,6 +1,7 @@
 class Item < ApplicationRecord
   include Interfaces::Items
   include Base64FileAttachment
+  include PresignedUploader::Model
 
   default_scope {includes(:item_stock).with_attached_image}
 
@@ -11,8 +12,8 @@ class Item < ApplicationRecord
   has_many :carts , through: :cart_items
   has_many :cards, dependent: :destroy
   has_many :notifications, as: :notifiable
-  has_one_base64_attached :image, dependent: :purge_later
-  
+  #has_one_base64_attached :image, dependent: :purge_later
+  has_one_file :image, file_size: 10000, content_type: ['image/jpeg']
 
   accepts_nested_attributes_for :item_categories, allow_destroy: true
 
@@ -50,7 +51,7 @@ class Item < ApplicationRecord
   validates :max_quantity_per_customer, presence: true, if: :limited_quantity_per_customer
   validates :max_quantity_per_customer, numericality: {only_integer: true}, allow_nil: true
   validates_attached :image, content_type: ['image/jpeg','image/jpg', 'image/png'], max_file_size: 5000000
-
+  #validate_attachment :image, maximum_file_size: "1000", accepted_content_types: ['jpg']
   scope :visible, -> {where(visible: true)}
   scope :available, -> {visible.where(available: true)}
   scope :include_categories, -> {includes(item_categories: [:category])}

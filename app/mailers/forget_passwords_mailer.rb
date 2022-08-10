@@ -6,8 +6,10 @@ class ForgetPasswordsMailer < ApplicationMailer
   #   en.forget_passwords_mailer.send_reset_mail.subject
   #
   def send_reset_mail(email , token , reset_link)
-    @greeting = "Hi"
-
+    @email = email
+    @token = token
+    @reset_link = reset_link
+    
     mail to: email, subject: 'Reset Password'
   end
 
