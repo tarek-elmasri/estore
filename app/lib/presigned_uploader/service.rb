@@ -36,6 +36,7 @@ class PresignedUploader::Service
   def service_data
     raise ActiveRecord::RecordInvalid.new(record) unless valid?
     blob= ActiveStorage::Blob.create_before_direct_upload!(
+      key: "demo/#{ActiveStorage::Blob.generate_unique_secure_token}",
       filename: filename,
       checksum: checksum,
       content_type: content_type,
