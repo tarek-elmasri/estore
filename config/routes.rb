@@ -107,6 +107,10 @@ Rails.application.routes.draw do
                 get "/" => "notifications#index"
                 patch "/" => "notifications#update"
               end
+
+              scope :uploads do
+                post "/" => "uploader#create"
+              end
             end
           end
 

@@ -2,23 +2,19 @@ class PresignedUploader::Service
 
   attr_accessor :field_name, :record , :filename , :checksum, :byte_size, :content_type
   
-  def initialize(name: , record_id: , record_type: , filename: , checksum: , byte_size: , content_type: )
-    #self.field_name = name
-    #self.errors={}
+  def initialize(field_name: , record_id: , record_type: , filename: , checksum: , byte_size: , content_type: )
     self.filename = filename
     self.checksum = checksum
     self.byte_size = byte_size
     self.content_type = content_type
+    self.field_name = field_name
     begin
       self.record = ActiveStorage::Attachment.new(
-                      name: name, record_id: record_id, record_type: record_type&.to_s.capitalize
+                      name: field_name, record_id: record_id, record_type: record_type&.to_s.capitalize
                     ).record
     rescue 
       self.record= nil
     end
-    self.field_name = name
-    #raise ActiveRecord::RecordNotFound unless record
-    # raise error if record doesnt respond to name
   end
 
   def valid?
@@ -29,8 +25,7 @@ class PresignedUploader::Service
     validate_content_type
     validate_byte_size
 
-    if errors.any?
-      record.errors.add(field_name, errors)
+    if record.errors.any?
       return false
     else
       return true
@@ -38,7 +33,7 @@ class PresignedUploader::Service
     
   end
 
-  def service_url_for_direct_upload
+  def service_data
     raise ActiveRecord::RecordInvalid.new(record) unless valid?
     blob= ActiveStorage::Blob.create_before_direct_upload!(
       filename: filename,
@@ -54,7 +49,7 @@ class PresignedUploader::Service
     }
   end
 
-  #private
+  private
   attr_accessor :errors
 
 
@@ -69,8 +64,7 @@ class PresignedUploader::Service
   end
 
   def add_error(field, msg)
-    errors[field] ?
-      errors[field].push(msg) : errors[field] = [msg]
+    record.errors.add(field, msg)
   end
 
   def validate_record
@@ -85,7 +79,7 @@ class PresignedUploader::Service
 
   def validate_field_name
     return if valid_field_name?
-    add_error(field_name, I18n.t("errors.validations.#{record.class.to_s.downcase}.invalid_field_name_for_upload"))
+    add_error(:field_name, I18n.t("errors.validations.#{record.class.to_s.downcase}.invalid_field_name_for_upload"))
   end
 
   def validate_inclusion_of_model_class
@@ -100,7 +94,7 @@ class PresignedUploader::Service
   def validate_byte_size
     return unless valid_field_name?
 
-    if byte_size.to_i > maximum_file_size
+    if byte_size.to_i > maximum_file_size || byte_size.to_i == 0
       add_error(:byte_size, I18n.t("errors.validations.#{record.class.to_s.downcase}.#{field_name}.byte_size"))
     end
   end

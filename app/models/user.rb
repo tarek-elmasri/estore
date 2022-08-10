@@ -2,7 +2,7 @@ class User < ApplicationRecord
   include Authenticator::User
   include Authenticator::Staff::Authorization
   include Interfaces::Users
-  include Base64FileAttachment
+  include PresignedUploader::Model
 
   DIRTY_CHARACTERS =['(',')','{','}','[',']','|',"`","¬","¦", '"',
                       '^','*',"'",'<','>',':',';',"~","_","-","+"]
@@ -12,7 +12,7 @@ class User < ApplicationRecord
   has_many :orders
   has_one :cart
   has_many :cart_items , through: :cart
-  has_one_base64_attached :avatar, dependent: :purge_later
+  has_one_file :avatar, file_size: 2000000, content_type: ['image/jpg', 'image/jpeg', 'image/gif', 'image/png'], dependent: :purge_later
 
   attr_accessor :should_validate_password
 
@@ -29,7 +29,6 @@ class User < ApplicationRecord
   validates :rule, inclusion: {in: ['user', 'admin', 'staff'], message: I18n.t("errors.validations.user.invalid_rule")}
   validate :valid_phone_no
   validate :valid_dob
-  validates_attached :avatar, content_type: ['image/jpeg','image/jpg', 'image/png'], max_file_size: 1000000
 
 
   scope :load_with_cart_and_authorization, ->(id) {
