@@ -14,6 +14,8 @@ class ForgetPasswordsMailer < ApplicationMailer
   end
 
   def send_successfull_reset_mail(name,email)
+    @name = name
 
+    mail to: email, subject: 'Password Successfully Reset'
   end
 end

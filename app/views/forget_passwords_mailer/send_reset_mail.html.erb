@@ -1,5 +1,18 @@
-<h1>ForgetPasswords#send_reset_mail</h1>
+<h1>Demo Store</h1>
+
+<h3>You can use this link to sign back in</h3>
+<p>
+you can now reset your password and sign back in to <%=@email%>. 
+This link will work for 30 minutes.
+</p>
+
+<%= link_to 'Get Started', "#{@reset_link}?token=#{@token}" %>
+<p>
+If you didn't ask to recover <%=@email %>, someone may have accidentally entered your email.
+You can safely ignore this message.
+</p>
 
 <p>
-  <%= @greeting %>, find me in app/views/forget_passwords_mailer/send_reset_mail.html.erb
+Sincerely,
+Demo Store Team
 </p>
