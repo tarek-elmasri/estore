@@ -133,7 +133,7 @@ class Item < ApplicationRecord
   end
 
   def low_stock
-    @low_stock.nil? ?  item_stock&.low_stock : @low_Stock
+    @low_stock.nil? ?  item_stock&.low_stock : @low_stock
   end
 
   def low_stock?
