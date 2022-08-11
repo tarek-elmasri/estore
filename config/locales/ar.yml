@@ -63,3 +63,14 @@ ar:
         too_long: "طويل"
         too_short: "قصير"
         wrong_length: "طول خاطئ"
+
+  presigned_uploader:
+    user:
+      invalid_field_name_for_upload: "حقل خاطئ لتحميل الملف"
+      byte_size: "الحد الاقصى لحجم الملف يجب الا يتجاوز 2 ميجا بايت"
+      content_type: "نوع الملف المسموح به ['jpg','jpeg','png','gif']"
+
+    item:
+      invalid_field_name_for_upload: "حقل خاطئ لتحميل الملف"
+      byte_size: "الحد الاقصى لحجم الملف يجب الا يتجاوز 2 ميجا بايت"
+      content_type: "نوع الملف المسموح به ['jpg','jpeg','png','gif']"

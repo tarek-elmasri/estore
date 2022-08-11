@@ -24,9 +24,6 @@ en:
         status: "Accepted values are 'active', 'blocked'."
         invalid_dob: "Date of birth can't exceed today's date."
         invalid_rule: "Rule must be one of 'user', 'staff' or 'admin'"
-        avatar:
-          content_type: "Accpeted file types are 'jpg', 'png', 'jpeg', 'gif'"
-          max_file_size: "Maximum accepted file size is 2MB."
 
       authorization:
         auth_for_staff_only: "Authorizations can't be given to regular user."
@@ -63,3 +60,14 @@ en:
         too_long: "Too long"
         too_short: "Too short"
         wrong_length: "Wrong length"
+
+  presigned_uploader:
+    user:
+      invalid_field_name_for_upload: "Invalid field name for uploads"
+      byte_size: "Maximum accepted file size is 2MB."
+      content_type: "Accepted file types are ['jpg','jpeg','png','gif']"
+
+    item:
+      invalid_field_name_for_upload: "Invalid field name for uploads"
+      byte_size: "Maximum accepted file size is 2MB."
+      content_type: "Accepted file types are ['jpg','jpeg','png','gif']"

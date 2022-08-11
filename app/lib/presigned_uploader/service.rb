@@ -80,7 +80,7 @@ class PresignedUploader::Service
 
   def validate_field_name
     return if valid_field_name?
-    add_error(:field_name, I18n.t("errors.validations.#{record.class.to_s.downcase}.invalid_field_name_for_upload"))
+    add_error(:field_name, I18n.t("presigned_uploader.#{record.class.to_s.downcase}.invalid_field_name_for_upload"))
   end
 
   def validate_inclusion_of_model_class
@@ -96,7 +96,7 @@ class PresignedUploader::Service
     return unless valid_field_name?
 
     if byte_size.to_i > maximum_file_size || byte_size.to_i == 0
-      add_error(:byte_size, I18n.t("errors.validations.#{record.class.to_s.downcase}.#{field_name}.byte_size"))
+      add_error(:byte_size, I18n.t("presigned_uploader.#{record.class.to_s.downcase}.byte_size"))
     end
   end
 
@@ -104,7 +104,7 @@ class PresignedUploader::Service
     return unless valid_field_name?
     
     unless accepted_content_types.include?(content_type)
-      add_error(:content_type, I18n.t("errors.validations.#{record.class.to_s.downcase}.#{field_name}.content_type"))
+      add_error(:content_type, I18n.t("presigned_uploader.#{record.class.to_s.downcase}.content_type"))
     end
   end
 
