@@ -5,12 +5,14 @@ class PresignedUploader::Base
     
     
     self.field_name = field_name
-    begin
-      self.record = ActiveStorage::Attachment.new(
-                      name: field_name, record_id: record_id, record_type: record_type&.to_s.singularize.capitalize
-                    ).record
-    rescue 
-      self.record= nil
+    if record_id && record_type && field_name
+      begin
+        self.record = ActiveStorage::Attachment.new(
+                        name: field_name, record_id: record_id, record_type: record_type&.to_s.singularize.capitalize
+                      ).record
+      rescue 
+        self.record= nil
+      end
     end
   end
 

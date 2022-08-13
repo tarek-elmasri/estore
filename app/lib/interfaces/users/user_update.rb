@@ -40,7 +40,7 @@ class Interfaces::Users::UserUpdate
   def update_avatar!(signed_id)
 
     authorize_update()
-    self.user = PresignedUploader::RecordUpdate.new(
+    PresignedUploader::RecordUpdate.new(
       record_id: user.id,
       record_type: :user,
       field_name: :avatar,
@@ -48,7 +48,19 @@ class Interfaces::Users::UserUpdate
       skip_authorization: true
     ).call
     staff_recorder()
-    return user
+    return user.reload
+  end
+
+  def destroy_avatar!
+    authorize_update()
+
+    PresignedUploader::RecordDestroy.new(
+      attachment_id: user.avatar.attachment.id,
+      skip_authorization: true
+    ).call
+
+    staff_recorder()
+    return user.reload
   end
 
   private
