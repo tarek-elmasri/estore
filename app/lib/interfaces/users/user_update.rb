@@ -47,8 +47,10 @@ class Interfaces::Users::UserUpdate
       signed_id: signed_id,
       skip_authorization: true
     ).call
+
     staff_recorder()
-    return user.reload
+    
+    return user
   end
 
   def destroy_avatar!
@@ -60,7 +62,7 @@ class Interfaces::Users::UserUpdate
     ).call
 
     staff_recorder()
-    return user.reload
+    return user
   end
 
   private

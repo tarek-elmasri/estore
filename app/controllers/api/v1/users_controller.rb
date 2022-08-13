@@ -30,8 +30,15 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def update_avatar
-    user = User::UserUpdate.new(Current.user.reload).update_avatar!(params.require(:signed_id))
-    respond(user)
+    User::UserUpdate.new(Current.user.reload)
+                    .update_avatar!(params.require(:signed_id))
+    respond(Current.user.reload)
+  end
+
+  def destroy_avatar
+    User::UserUpdate.new(Current.user.reload)
+                    .destroy_avatar!()
+    respond_ok()
   end
 
   private

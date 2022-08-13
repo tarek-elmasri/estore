@@ -5,7 +5,7 @@ class PresignedUploader::RecordDestroy < PresignedUploader::Base
   def initialize(attachment_id: , skip_authorization: false)
     self.attachment = ActiveStorage::Attachment.find_by(id: attachment_id)
     super(
-      skip_authorization: skip_authorization
+      skip_authorization: skip_authorization,
       record_type: attachment&.record_type,
       record_id: attachment&.record_id,
       field_name: attachment&.name

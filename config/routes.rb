@@ -33,6 +33,7 @@ Rails.application.routes.draw do
             scope :uploads do
               post "/" => 'users#create_avatar'
               patch "/" => "users#update_avatar"
+              delete "/" => "users#destroy_avatar"
             end
           end
 
@@ -98,6 +99,12 @@ Rails.application.routes.draw do
                 post "/" => "items#create"
                 patch "/" => "items#update"
                 delete "/" => "items#delete"
+
+                scope :image_uploads , record_type: :item, field_name: :image do
+                  post "/" => "uploader#create"
+                  patch "/" => "uploader#update"
+                  delete "/" => "uploader#destroy"
+                end
               end
 
               scope :orders do
@@ -116,6 +123,7 @@ Rails.application.routes.draw do
               scope :uploads do
                 post "/" => "uploader#create"
                 patch "/" => "uploader#update"
+                delete "/" => "uploader#destroy"
               end
             end
           end
