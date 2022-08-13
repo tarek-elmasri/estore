@@ -11,7 +11,7 @@ class Interfaces::Categories::CategoryUpdate
     check_authorization
     category.update!(params)
 
-    record(
+    record_action(
       :update,
       "category",
       category.id

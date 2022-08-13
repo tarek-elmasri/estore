@@ -11,7 +11,7 @@ class Interfaces::Authorizations::AuthorizationUpdate
     authorize_update
     authorization.update!(params)
 
-    record(
+    record_action(
       :update,
       "authorization",
       authorization.id

@@ -60,7 +60,7 @@ class Interfaces::Items::ItemUpdate
   attr_writer :item
 
   def staff_recorder
-    record(
+    record_action(
       :update,
       "item",
       self.item.id

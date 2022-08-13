@@ -11,7 +11,7 @@ class Interfaces::Categories::CategoryDestroy
     check_authorization
     category.destroy!
 
-    record(
+    record_action(
       :delete,
       "category",
       category.id

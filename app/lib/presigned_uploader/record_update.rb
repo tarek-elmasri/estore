@@ -1,4 +1,6 @@
 class PresignedUploader::RecordUpdate < PresignedUploader::Base
+  include StaffTracker::Recorder
+
   attr_accessor :skip_authorization, :signed_id
 
   def initialize(record_id: , record_type: , field_name:, signed_id:, skip_authorization: false)
@@ -15,7 +17,7 @@ class PresignedUploader::RecordUpdate < PresignedUploader::Base
       record.send("#{field_name}").attach(signed_id)  
       record.save!
 
-      StaffTracker::Recorder.record(
+      record_action(
         :update,
         record.class.to_s.downcase,
         record.id

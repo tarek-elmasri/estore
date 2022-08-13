@@ -1,5 +1,6 @@
 class PresignedUploader::RecordDestroy < PresignedUploader::Base
-
+  include StaffTracker::Recorder
+  
   attr_accessor :attachment
 
   def initialize(attachment_id: , skip_authorization: false)
@@ -20,7 +21,7 @@ class PresignedUploader::RecordDestroy < PresignedUploader::Base
 
     attachment.purge_later
 
-    StaffTracker::Recorder.record(
+    record_action(
       :update,
       record.class.to_s.downcase,
       record.id

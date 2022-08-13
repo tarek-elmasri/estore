@@ -15,7 +15,7 @@ class Interfaces::Cards::CardCreation
                       .add_to_stock!(1)
     end
 
-    record(
+    record_action(
       :create,
       "card",
       self.card.id

@@ -11,7 +11,7 @@ class Interfaces::Categories::CategoryCreation
     check_authorization
     category.save!
 
-    record(
+    record_action(
       :create,
       "category",
       category.id

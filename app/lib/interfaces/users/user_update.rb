@@ -70,7 +70,7 @@ class Interfaces::Users::UserUpdate
 
   def staff_recorder
     if updated_by_staff?
-      record(
+      record_action(
         :update,
         "user",
         user.id

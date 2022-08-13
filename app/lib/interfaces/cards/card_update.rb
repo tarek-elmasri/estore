@@ -11,7 +11,7 @@ class Interfaces::Cards::CardUpdate
     check_authorization
     self.card.update!(params)
 
-    record(
+    record_action(
       :update,
       "card",
       self.card.id

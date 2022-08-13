@@ -17,7 +17,7 @@ class Interfaces::OrderItems::UpdateDeliveryStatus
                         .update_delivery_status!
     end
 
-    record(
+    record_action(
       :update,
       "order_item",
       self.order_item.id

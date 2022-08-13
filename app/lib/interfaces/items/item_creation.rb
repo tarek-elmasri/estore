@@ -20,7 +20,7 @@ class Interfaces::Items::ItemCreation
 
     create_discount_jobs
 
-    record(
+    record_action(
       :create,
       "item",
       self.item.id

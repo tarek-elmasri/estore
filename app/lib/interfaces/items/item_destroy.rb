@@ -13,7 +13,7 @@ class Interfaces::Items::ItemDestroy
     self.item.visible = false
     self.item.available = false
     self.item.save!
-    record(
+    record_action(
       :delete_item,
       "item",
       self.item.id

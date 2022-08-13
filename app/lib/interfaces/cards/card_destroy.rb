@@ -21,7 +21,7 @@ class Interfaces::Cards::CardDestroy
                         .remove_stock!(1)
     end
 
-    record(
+    record_action(
       :delete,
       "card",
       self.card.id
