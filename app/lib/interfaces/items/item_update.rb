@@ -17,11 +17,7 @@ class Interfaces::Items::ItemUpdate
       create_discount_jobs
     end
 
-    record(
-      :update,
-      "item",
-      self.item.id
-    )
+    staff_recorder()
 
     return self.item.reload
   end
@@ -30,8 +26,46 @@ class Interfaces::Items::ItemUpdate
     item.update!(has_discount: status)
   end
 
+  def data_for_image_upload(filename: , checksum: , byte_size: , content_type: )
+    check_authorization()
+
+    PresignedUploader::Service.new(
+      field_name: :image,
+      record_id: item.id,
+      record_type: :item,
+      filename: filename,
+      checksum: checksum,
+      byte_size: byte_size,
+      content_type: content_type
+    ).service_data
+
+  end
+
+  def update_image!(signed_id)
+
+    check_authorization()
+
+    self.item = PresignedUploader::Service::RecordUpdate.new(
+      record: item,
+      field_name: :image,
+      signed_id: signed_id
+    ).call
+    
+    staff_recorder()
+    return item
+
+  end
+
   private
   attr_writer :item
+
+  def staff_recorder
+    record(
+      :update,
+      "item",
+      self.item.id
+    )
+  end
 
   def check_authorization
     raise Errors::Unauthorized unless Current.user.is_authorized_to_update_item?
@@ -67,4 +101,5 @@ class Interfaces::Items::ItemUpdate
 
     item.discount_start_date < DateTime.now && item.discount_end_date > DateTime.now
   end
+
 end

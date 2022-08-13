@@ -16,6 +16,45 @@ class Interfaces::Users::UserUpdate
       destroy_authorizations if user.is_admin? || user.is_user?
     end
   
+    staff_recorder()
+
+    return user
+  end
+
+  def data_for_avatar_upload(filename: , checksum: , byte_size: , content_type: )
+    authorize_update()
+
+    PresignedUploader::Service.new(
+      field_name: :avatar,
+      record_id: user.id,
+      record_type: :user,
+      filename: filename,
+      checksum: checksum,
+      byte_size: byte_size,
+      content_type: content_type,
+      skip_authorization: true
+    ).call
+
+  end
+
+  def update_avatar!(signed_id)
+
+    authorize_update()
+    self.user = PresignedUploader::RecordUpdate.new(
+      record_id: user.id,
+      record_type: :user,
+      field_name: :avatar,
+      signed_id: signed_id,
+      skip_authorization: true
+    ).call
+    staff_recorder()
+    return user
+  end
+
+  private
+  attr_writer :user
+
+  def staff_recorder
     if updated_by_staff?
       record(
         :update,
@@ -23,12 +62,7 @@ class Interfaces::Users::UserUpdate
         user.id
       )
     end
-
-    return user
   end
-
-  private
-  attr_writer :user
 
   def authorize_update
     raise Errors::Unauthorized unless Current.user.id == user.id || Current.user.is_authorized_to_update_user?
@@ -65,5 +99,6 @@ class Interfaces::Users::UserUpdate
   def updated_by_staff?
     Current.user.is_admin? || Current.user.is_staff?
   end
+
 
 end

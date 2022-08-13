@@ -18,6 +18,22 @@ class Api::V1::UsersController < ApplicationController
     respond({tokens: user.tokens})
   end
 
+  def create_avatar
+    upload_data = User::UserUpdate.new(Current.user)
+                                  .data_for_avatar_upload(
+                                    filename: params.require(:filename),
+                                    checksum: params.require(:checksum),
+                                    byte_size: params.require(:byte_size),
+                                    content_type: params.require(:content_type)
+                                  )
+    respond({data: upload_data})
+  end
+
+  def update_avatar
+    user = User::UserUpdate.new(Current.user.reload).update_avatar!(params.require(:signed_id))
+    respond(user)
+  end
+
   private
   def users_params
     params.require(:user).permit(

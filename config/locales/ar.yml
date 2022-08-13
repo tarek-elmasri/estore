@@ -65,6 +65,10 @@ ar:
         wrong_length: "طول خاطئ"
 
   presigned_uploader:
+    record_not_uploadable: "حقل خاطئ . لا يوجد حقل لتحميل ملفات."
+    blob_must_exist: "رمز الملف حاطئ. الرجاء التأكد من تحميل الملف اولا"
+    file_not_found: "الملف غير موجود. الرجاء التأكد من نجاح عملية التحميل اولا"
+
     user:
       invalid_field_name_for_upload: "حقل خاطئ لتحميل الملف"
       byte_size: "الحد الاقصى لحجم الملف يجب الا يتجاوز 2 ميجا بايت"

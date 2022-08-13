@@ -62,6 +62,10 @@ en:
         wrong_length: "Wrong length"
 
   presigned_uploader:
+    record_not_uploadable: "Invalid record type. This record doesn't have fields for uploads."
+    blob_must_exist: "Invalid signed id. File should be uploaded firstly."
+    file_not_found: "File Not Found. Make sure you have uploaded file successfully."
+
     user:
       invalid_field_name_for_upload: "Invalid field name for uploads"
       byte_size: "Maximum accepted file size is 2MB."

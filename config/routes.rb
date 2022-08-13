@@ -29,6 +29,11 @@ Rails.application.routes.draw do
             get "/" => "users#index"
             patch "/" => "users#update"
             post "/" => 'users#create'
+
+            scope :uploads do
+              post "/" => 'users#create_avatar'
+              patch "/" => "users#update_avatar"
+            end
           end
 
           scope :items do
@@ -110,6 +115,7 @@ Rails.application.routes.draw do
 
               scope :uploads do
                 post "/" => "uploader#create"
+                patch "/" => "uploader#update"
               end
             end
           end
