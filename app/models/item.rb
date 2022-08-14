@@ -2,7 +2,7 @@ class Item < ApplicationRecord
   include Interfaces::Items
   include PresignedUploader::Model
 
-  default_scope {includes(:item_stock).with_attached_image}
+  default_scope {includes(:item_stock).with_attached_images}
 
   has_one :item_stock, dependent: :destroy
   has_many :item_categories, dependent: :destroy
@@ -11,7 +11,7 @@ class Item < ApplicationRecord
   has_many :carts , through: :cart_items
   has_many :cards, dependent: :destroy
   has_many :notifications, as: :notifiable
-  has_one_file :image, file_size: 2000000, content_type: ['image/jpeg'], dependent: :purge_later
+  has_many_files :images, file_size: 2000000, content_type: ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'], dependent: :purge_later
 
   accepts_nested_attributes_for :item_categories, allow_destroy: true
 
@@ -108,14 +108,14 @@ class Item < ApplicationRecord
     item_stock.sales
   end
 
-  def image_url(expires_in: 30.minutes)
-    attachment = image.attachment
-    return unless attachment
-    return {
-      attachment_id: image.attachment.id,
-      url: image.url(expires_in: expires_in)
-    }
-  end
+  # def image_url(expires_in: 30.minutes)
+  #   attachment = image.attachment
+  #   return unless attachment
+  #   return {
+  #     attachment_id: image.attachment.id,
+  #     url: image.url(expires_in: expires_in)
+  #   }
+  # end
 #------ instead of after initialize solution ----------------
   def has_limited_stock
     @has_limited_stock.nil?  ? item_stock&.has_limited_stock : @has_limited_stock

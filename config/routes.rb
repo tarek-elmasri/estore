@@ -106,7 +106,7 @@ Rails.application.routes.draw do
                 patch "/" => "items#update"
                 delete "/" => "items#delete"
 
-                scope :image_uploads , record_type: :item, field_name: :image do
+                scope :images_uploads , record_type: :item, field_name: :images do
                   post "/" => "uploader#create"
                   patch "/" => "uploader#update"
                   delete "/" => "uploader#destroy"

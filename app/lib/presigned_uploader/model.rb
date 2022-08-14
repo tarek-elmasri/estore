@@ -13,12 +13,32 @@ module PresignedUploader::Model
       has_one_attached field_name, dependent: dependent
       const_set "#{field_name.upcase}_MAXIMUM_FILE_SIZE", file_size
       const_set "#{field_name.upcase}_ACCEPTED_CONTENT_TYPES", content_type
+
+      define_method("#{field_name}_data") do |expires_in: 30.minutes|
+        attachment = send(field_name).attachment
+        return unless attachment
+        return {
+          attachment_id: attachment.id,
+          url: attachment.url(expires_in: expires_in)
+        }
+      end
     end
     
     define_method(:has_many_files) do |field_name, file_size: , content_type: , dependent: |
       has_many_attached field_name, dependent: dependent
       const_set "#{field_name.upcase}_MAXIMUM_FILE_SIZE", file_size
       const_set "#{field_name.upcase}_ACCEPTED_CONTENT_TYPES", content_type
+      
+      define_method("#{field_name}_data") do |expires_in: 30.minutes|
+        attachments = send(field_name).attachments
+        #return [] unless attachments.any?
+        attachments.map do |attachment|
+          {
+          attachment_id: attachment.id,
+          url: attachment.url(expires_in: expires_in)
+          }
+        end
+      end
     end
 
   end

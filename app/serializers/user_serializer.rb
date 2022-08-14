@@ -8,6 +8,6 @@ class UserSerializer < ActiveModel::Serializer
   has_one :cart
 
   def avatar
-    object.avatar_url
+    object.avatar_data
   end
 end

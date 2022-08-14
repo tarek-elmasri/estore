@@ -73,14 +73,14 @@ class User < ApplicationRecord
     false
   end
 
-  def avatar_url(expires_in: 30.minutes)
-    attachment = avatar.attachment
-    return unless attachment
-    return {
-      attachment_id: attachment.id,
-      url: avatar.url(expires_in: expires_in)
-    }
-  end
+  # def avatar_url(expires_in: 30.minutes)
+  #   attachment = avatar.attachment
+  #   return unless attachment
+  #   return {
+  #     attachment_id: attachment.id,
+  #     url: avatar.url(expires_in: expires_in)
+  #   }
+  # end
   
   private
   def password_pattern

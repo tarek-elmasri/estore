@@ -8,6 +8,6 @@ class Dashboard::UserSerializer < ActiveModel::Serializer
   has_one :authorization, serializer: Dashboard::AuthorizationSerializer
 
   def avatar
-    object.avatar_url
+    object.avatar_data
   end
 end

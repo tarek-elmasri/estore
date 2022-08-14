@@ -2,7 +2,7 @@
 class PresignedUploader::Service < PresignedUploader::Base
   attr_accessor :filename , :checksum, :byte_size, :content_type
 
-  DEFAULT_SERVICE_EXPIRE_TIME = 30.minutes
+  DEFAULT_SERVICE_EXPIRE_TIME = 1.minute
 
   def initialize(filename: ,checksum: , byte_size: , content_type: ,
                   record_id: , record_type: , field_name: , skip_authorization: false)
