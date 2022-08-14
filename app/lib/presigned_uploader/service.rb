@@ -2,6 +2,8 @@
 class PresignedUploader::Service < PresignedUploader::Base
   attr_accessor :filename , :checksum, :byte_size, :content_type
 
+  DEFAULT_SERVICE_EXPIRE_TIME = 30.minutes
+
   def initialize(filename: ,checksum: , byte_size: , content_type: ,
                   record_id: , record_type: , field_name: , skip_authorization: false)
     
@@ -26,7 +28,7 @@ class PresignedUploader::Service < PresignedUploader::Base
     
   end
 
-  def call
+  def call(expires_in: nil)
     check_authorization unless skip_authorization
 
     raise ActiveRecord::RecordInvalid.new(record) unless valid?
@@ -42,8 +44,10 @@ class PresignedUploader::Service < PresignedUploader::Base
       }
     )
 
+    BlobsCleanupJob.set(wait: expires_in || DEFAULT_SERVICE_EXPIRE_TIME).perform_later(blob.id)
+
     return {
-      url: blob.service_url_for_direct_upload(expires_in: 30.minutes),
+      url: blob.service_url_for_direct_upload(expires_in: expires_in || DEFAULT_SERVICE_EXPIRE_TIME),
       headers: blob.service_headers_for_direct_upload,
       signed_id: blob.signed_id
     }

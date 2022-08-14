@@ -72,6 +72,15 @@ class User < ApplicationRecord
     return true if Integer(age, exception:false)
     false
   end
+
+  def avatar_url(expires_in: 30.minutes)
+    attachment = avatar.attachment
+    return unless attachment
+    return {
+      attachment_id: attachment.id,
+      url: avatar.url(expires_in: expires_in)
+    }
+  end
   
   private
   def password_pattern

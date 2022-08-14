@@ -109,7 +109,12 @@ class Item < ApplicationRecord
   end
 
   def image_url(expires_in: 30.minutes)
-    image.url(expires_in: expires_in)
+    attachment = image.attachment
+    return unless attachment
+    return {
+      attachment_id: image.attachment.id,
+      url: image.url(expires_in: expires_in)
+    }
   end
 #------ instead of after initialize solution ----------------
   def has_limited_stock

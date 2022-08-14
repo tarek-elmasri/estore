@@ -1,11 +1,11 @@
 module StaffTracker::Recorder
 
-  # TODO: switch to job
   def record_action(action , model_name , model_id)
-    Current.user.staff_actions.new(
+    StaffTrackerRecorderJob.perform_later(
+      user_id: Current.user.id,
       action: action, 
-      model: model_name, 
+      model_name: model_name, 
       model_id: model_id
-    ).save
+    )
   end
 end

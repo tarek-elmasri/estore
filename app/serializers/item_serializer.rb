@@ -1,6 +1,6 @@
 class ItemSerializer < ActiveModel::Serializer
   attributes :id, :name , :type_name, :price, :has_stock, 
-              :image_url, :has_discount, :discount_start_date,
+              :image, :has_discount, :discount_start_date,
               :discount_end_date, :discount_price, 
               :allow_duplicate, :allow_multi_quantity,
               :title, :sub_title, :hint, :pinned
@@ -17,6 +17,10 @@ class ItemSerializer < ActiveModel::Serializer
     return false unless object.has_limited_stock
     return false if object.low_stock.blank?
     !object.has_stock?(object.low_stock)
+  end
+
+  def image
+    object.image_url
   end
   
 end
