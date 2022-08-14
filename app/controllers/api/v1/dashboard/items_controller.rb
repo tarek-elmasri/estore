@@ -71,7 +71,6 @@ class Api::V1::Dashboard::ItemsController < Api::V1::Dashboard::Base
       :hint,
       :pinned,
       item_categories_attributes: [:id, :category_id, :_destroy],
-      image: [:base64, :filename]
     )
   end
 
