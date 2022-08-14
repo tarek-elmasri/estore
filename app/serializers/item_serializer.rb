@@ -20,7 +20,7 @@ class ItemSerializer < ActiveModel::Serializer
   end
 
   def images
-    object.image_data
+    object.images_data
   end
   
 end
