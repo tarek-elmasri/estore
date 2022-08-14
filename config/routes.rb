@@ -43,6 +43,7 @@ Rails.application.routes.draw do
 
           scope :carts do
             get '/' => 'carts#index'
+            post '/sync' => 'carts#sync'
           end
 
           scope :categories do

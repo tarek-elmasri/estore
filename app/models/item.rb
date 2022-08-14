@@ -85,7 +85,7 @@ class Item < ApplicationRecord
   end
 
   def multi_quantity_allowed?
-    allow_multi_quantity
+    allow_multi_quantity?
   end
 
   def duplicate_allowed?
