@@ -72,7 +72,7 @@ class Interfaces::Orders::OrderCreation
   end
 
   def create_cleanup_job
-    OrderCleanupJob.set(wait: 5.minutes).perform_later(order.id)
+    OrderCleanupJob.set(wait: 20.minutes).perform_later(order.id)
   end
 
 end

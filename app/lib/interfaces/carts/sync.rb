@@ -8,7 +8,7 @@ class Interfaces::Carts::Sync
 
 
   def sync mem_cart=[]
-    mem_cart.each do |new_ci|
+    [mem_cart].flatten.compact.each do |new_ci|
       existed_ci = cart.cart_items.find_by(item_id: new_ci[:item_id])
       if existed_ci
         existed_ci.item.duplicate_allowed? ?
@@ -18,6 +18,7 @@ class Interfaces::Carts::Sync
       end
     end
 
+    return cart.reload
   end
 
   private 

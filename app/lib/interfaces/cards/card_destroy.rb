@@ -8,12 +8,8 @@ class Interfaces::Cards::CardDestroy
   end
 
   def destroy!
-    # Card.transaction do
-    #   this.card.destroy!
-    #   Item::ItemStocker.new(cart.item)
-    #                   .remove_from_stock!(1)
-    # end
-
+    check_authorization
+    
     self.card.with_lock do
       raise StandardError.new('card attached to order') unless self.card.active
       self.card.destroy!

@@ -1,6 +1,10 @@
 class Cart < ApplicationRecord
   include Interfaces::Carts
   
+  default_scope {
+    includes(cart_items: [:item])
+  }
+  
   belongs_to :user
   has_many :cart_items
   has_many :items , through: :cart_items
