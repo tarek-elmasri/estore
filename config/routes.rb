@@ -71,6 +71,12 @@ Rails.application.routes.draw do
               scope :users do
                 get "/" => "users#index"
                 patch "/" => "users#update"
+
+                scope :avatar_uploads, field_name: :avatar, record_type: :user do
+                  post "/" => "uploader#create"
+                  patch "/" => "uploader#update"
+                  delete "/" => "uploader#destroy"
+                end
               end
               scope :authorizations do
                 patch "/" => "authorizations#update"
