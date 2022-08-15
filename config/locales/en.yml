@@ -31,6 +31,9 @@ en:
       card:
         item_not_card: 'Cards are only for items of type_name of "card"'
 
+      cart:
+        empty: "Cart is empty. Cart must have at least one item."
+
       cart_items:
         no_stock: "No stock available."
         not_available: "Item is not available in store."

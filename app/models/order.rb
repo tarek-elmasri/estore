@@ -1,6 +1,8 @@
 class Order < ApplicationRecord
   include StripeManager::Base
   include Interfaces::Orders
+
+  DEFAULT_DESTROY_TIME = 15.minute
   
   attr_accessor :cart
 

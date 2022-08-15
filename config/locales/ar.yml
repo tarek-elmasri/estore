@@ -24,15 +24,15 @@ ar:
         status: "القيم المقبولة 'active' او 'blocked'"
         invalid_dob: "تاريخ المرور يجب الا يتعدى تاريخ اليوم"
         invalid_rule: "القيم المقبولة 'user' او 'admin' او 'staff'"
-        avatar:
-          content_type: "القيم المقبولة 'jpg', 'png', 'jpeg', 'gif'"
-          max_file_size: "حجم الملف يجب الا يتجاوز 2MB"
 
       authorization:
         auth_for_staff_only: "لا يمكن تسجيل تصاريح لحساب ليست له صلاحيات"
 
       card:
         item_not_card: "المنتج المطلوب ليست من نوع 'card'"
+
+      cart:
+        empty: "السلة فارغة. السلة يجب ان تحتوي منتج واحد على الأقل"
 
       cart_items:
         no_stock: "لا يوجد مخزون"

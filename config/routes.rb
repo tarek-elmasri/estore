@@ -60,6 +60,7 @@ Rails.application.routes.draw do
           scope :orders do
             get "/" => "orders#index"
             post "/" => "orders#create"
+            delete "/" => "orders#destroy"
           end
 
           scope :payments do

@@ -19,4 +19,13 @@ class Api::V1::OrdersController < ApplicationController
                                 .create!
     respond(order)
   end
+
+  def destroy
+    order = Current.user.orders.not_fullfilled.find_by(id: params.require(:id))
+    if order
+      Order::OrderDestroy.new(order)
+                          .destroy!
+    end
+    respond_ok
+  end
 end

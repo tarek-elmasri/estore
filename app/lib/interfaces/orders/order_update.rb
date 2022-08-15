@@ -30,8 +30,6 @@ class Interfaces::Orders::OrderUpdate
     if (self.order.status_previously_changed? && self.order.status == 'succeeded')
       OrderHandlerJob.perform_later(self.order.id)
       InvoicesMailer.send_invoice(self.order.id).deliver_later
-    elsif self.order.failed_payment?
-      Order::OrderDestroy.new(self.order).destroy!
     end
 
     return self.order
