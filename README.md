@@ -1,6 +1,6 @@
 # Reguler Routes
 
-https://estore-demo-api/api/:locale(en|ar)
+https://estore-demo-api.herokuapp.com/api/:locale(en|ar)
 
 - Sessions Routes:
 
@@ -82,7 +82,7 @@ https://estore-demo-api/api/:locale(en|ar)
 
 # Dashboard Routes
 
-https://estore-demo-api/api/:locale/dashboard
+https://estore-demo-api.herokuapp.com/api/:locale/dashboard
 
 - Users Routes:
 
