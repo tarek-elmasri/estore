@@ -17,7 +17,7 @@ class ApplicationController < ActionController::API
   end
 
   def unknown_route
-    respond_not_acceptable("Invalid route. Please check our documentation for further information.")
+    respond_not_acceptable("Invalid route. Please check github page for further information. https://github.com/tarek-elmasri/estore")
   end
 
   protected
