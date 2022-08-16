@@ -144,4 +144,5 @@ Rails.application.routes.draw do
     end
   end
 
+  match "*path" => "application#unknown_route",  via: [:get, :post, :patch, :put, :delete]
 end

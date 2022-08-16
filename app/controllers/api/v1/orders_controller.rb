@@ -6,7 +6,7 @@ class Api::V1::OrdersController < ApplicationController
   apply_controller_scopes only: [:index]
   
   def index
-    orders= apply_scopes(Current.user.orders.fullfilled)
+    orders= apply_scopes(Current.user.orders.fullfilled.include_order_items)
     
     respond({
       orders: serialize_resource(orders),

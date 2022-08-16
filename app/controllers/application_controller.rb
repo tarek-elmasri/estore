@@ -16,6 +16,10 @@ class ApplicationController < ActionController::API
 
   end
 
+  def unknown_route
+    respond_not_acceptable("Invalid route. Please check our documentation for further information.")
+  end
+
   protected
   
   def create_session_cookies user
@@ -47,7 +51,9 @@ class ApplicationController < ActionController::API
   end
 
   def force_json
-    head :not_acceptable unless request.headers['Content-Type'] == 'application/json' || request.body.read.blank?
+    unless request.headers['Content-Type'] == 'application/json' || request.body.read.blank?
+      respond_not_acceptable("Content-Type must be application/json")
+    end
   end
 
   def set_locale

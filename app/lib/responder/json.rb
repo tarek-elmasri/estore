@@ -41,6 +41,13 @@ module Responder
       respond_unprocessable(e.record.errors)
     end
 
+    def respond_not_acceptable(msg)
+      render json: {
+        code: "not_acceptable",
+        errors: msg 
+      }, status: :not_acceptable
+    end
+
     def respond_error e
       render json: {
         error: I18n.t(e.error),
