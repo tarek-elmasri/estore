@@ -24,7 +24,7 @@ class Api::V1::Dashboard::UsersController < Api::V1::Dashboard::Base
       serialize_resource(
         updated_user,
         serializer: Dashboard::UserSerializer
-      )
+      ).to_json
     )
   end
 

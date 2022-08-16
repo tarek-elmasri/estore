@@ -7,7 +7,7 @@ class Api::V1::Dashboard::OrderItemsController < Api::V1::Dashboard::Base
       serialize_resource(
         updated_oi,
         serializer: Dashboard::OrderItemSerializer
-      )
+      ).to_json
     )
   end
 
