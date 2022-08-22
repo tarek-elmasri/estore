@@ -16,7 +16,7 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
     end
   elsif Rails.env == "production" 
     allow do
-      origins '*'
+      origins 'http://localhost:3000'
 
       resource '*',
         headers: :any, # TODO: add spescific headers
