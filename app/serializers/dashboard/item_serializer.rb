@@ -6,7 +6,7 @@ class Dashboard::ItemSerializer < ActiveModel::Serializer
               :has_discount, :discount_start_date,
               :discount_end_date, :allow_multi_quantity, :allow_duplicate,
               :title, :sub_title, :hint, :pinned,
-              :notify_on_low_stock, :low_stock
+              :notify_on_low_stock, :low_stock, :has_limited_stock
  
 
   has_many :item_categories, serializer: Dashboard::ItemCategorySerializer
